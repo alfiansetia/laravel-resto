@@ -15,7 +15,13 @@ return new class extends Migration
     {
         Schema::create('dtorder', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('order_id')->nullable();
+            $table->unsignedBigInteger('menu_id')->nullable();
+            $table->integer('price')->default(0);
+            $table->integer('total')->default(0);
             $table->timestamps();
+            $table->foreign('order_id')->references('id')->on('order')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreign('menu_id')->references('id')->on('menu')->nullOnDelete()->cascadeOnUpdate();
         });
     }
 

@@ -15,7 +15,15 @@ return new class extends Migration
     {
         Schema::create('order', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('table_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->dateTime('date', $precision = 0)->useCurrent();
+            $table->enum('category', ['take away', 'dine in'])->default('dine in');
+            $table->enum('status', ['paid', 'unpaid'])->default('unpaid');
+            $table->string('desc')->nullable();
             $table->timestamps();
+            $table->foreign('table_id')->references('id')->on('table')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete()->cascadeOnUpdate();
         });
     }
 

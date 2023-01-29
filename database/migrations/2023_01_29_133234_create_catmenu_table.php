@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('catmenu', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('img')->nullable();
+            $table->enum('status', ['active', 'nonactive'])->default('active');
+            $table->string('desc')->nullable();
             $table->timestamps();
         });
     }

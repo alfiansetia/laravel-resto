@@ -15,6 +15,14 @@ return new class extends Migration
     {
         Schema::create('comp', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slogan');
+            $table->string('address');
+            $table->string('telp');
+            $table->string('wa')->nullable;
+            $table->string('ig')->nullable;
+            $table->string('fb')->nullable;
+            $table->string('desc')->nullable;
             $table->timestamps();
         });
     }

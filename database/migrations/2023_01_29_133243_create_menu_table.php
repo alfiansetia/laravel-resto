@@ -15,7 +15,16 @@ return new class extends Migration
     {
         Schema::create('menu', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->unsignedBigInteger('catmenu_id')->nullable();
+            $table->integer('price')->default(0);
+            $table->integer('disc')->default(0);
+            $table->integer('stock')->default(0);
+            $table->enum('status', ['active', 'nonactive'])->default('active');
+            $table->string('img')->nullable();
+            $table->string('desc')->nullable();
             $table->timestamps();
+            $table->foreign('catmenu_id')->references('id')->on('catmenu')->nullOnDelete()->cascadeOnUpdate();
         });
     }
 

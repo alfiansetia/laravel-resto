@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('table', function (Blueprint $table) {
             $table->id();
+            $table->integer('number');
+            $table->integer('name');
+            $table->enum('status', ['booked', 'free', 'nonactive'])->default('free');
+            $table->string('desc')->nullable();
             $table->timestamps();
         });
     }
