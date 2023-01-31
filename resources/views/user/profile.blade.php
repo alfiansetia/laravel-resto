@@ -1,11 +1,23 @@
 @extends('layouts.template')
 
+@push('csslib')
+@endpush
+
+@push('css')
+@endpush
+
 @section('content')
+
 <div class="section-header">
-    <h1>Home</h1>
+    <h1>Dashboard</h1>
 </div>
 <div class="section-body">
     asfnasjkjk
 </div>
-
 @endsection
+
+@push('jslib')
+@endpush
+
+@push('js')
+@endpush

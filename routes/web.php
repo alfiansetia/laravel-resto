@@ -19,6 +19,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/blank', function () {
+    return view('blank');
+});
 // Auth::routes();
 Auth::routes([
     'register' => false, // Routes of Registration
@@ -30,5 +33,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::delete('/user', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::resource('user', UserController::class)->except('create', 'show', 'destroy');
 });
