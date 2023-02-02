@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Comp extends Model
 {
     use HasFactory;
+
+    protected $table = 'comp';
+
     protected $fillable = [
         'name',
         'slogan',

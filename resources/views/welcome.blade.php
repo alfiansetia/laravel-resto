@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('layouts.template', ['title' => 'Dashboard'])
 
 @push('csslib')
 <link rel="stylesheet" href="{{ asset('library/jqvmap/dist/jqvmap.min.css') }}">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comp;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,13 @@ class HomeController extends Controller
      *
      * @return void
      */
+
+    protected $comp;
+
     public function __construct()
     {
         $this->middleware('auth');
+        $this->comp = Comp::first();
     }
 
     /**
@@ -24,7 +29,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Menu::with('catmenu')->get();
-        return view('home', compact('data'));
+        return view('home')->with('comp', $this->comp);
     }
 }
