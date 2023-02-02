@@ -1,4 +1,4 @@
-@extends('layouts.template', ['title' => 'User Profile'])
+@extends('layouts.template')
 
 @push('csslib')
 <link rel="stylesheet" href="{{ asset('library/bootstrap-social/bootstrap-social.css') }}">
@@ -8,9 +8,8 @@
 @endpush
 
 @section('content')
-
 <div class="section-header">
-    <h1>Profile</h1>
+    <h1>Profile </h1>
     <div class="section-header-breadcrumb">
         <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
         <div class="breadcrumb-item">Profile</div>
@@ -66,42 +65,61 @@
         </div>
         <div class="col-12 col-md-12 col-lg-7">
             <div class="card">
-                <form method="POST" action="" class="needs-validation" novalidate="">
+                <form method="POST" action="{{ route('user.profileUpdate') }}" class="needs-validation" novalidate="">
                     @csrf
                     <div class="card-header">
-                        <h4>Edit Profile</h4>
+                        <h4>{{ $title }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-12">
-                                <label>Full Name</label>
-                                <input type="text" name="name" class="form-control" value="{{ auth()->user()->name }}" minlength="3" maxlength="25" placeholder="Please Input Name" required>
+                                <label for="name">Full Name</label>
+                                <input type="text" name="name" id="name" class="form-control" value="{{ auth()->user()->name }}" minlength="3" maxlength="25" placeholder="Please Input Name" required>
                                 <div class="invalid-feedback">
                                     Please fill in the full name
                                 </div>
+                                @error('name')
+                                <div class="alert alert-danger mt-2">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-7 col-12">
-                                <label>Email</label>
-                                <input type="email" name="email" class="form-control" value="{{ auth()->user()->email }}" placeholder="Please Input Email" disabled>
+                                <label for="email">Email</label>
+                                <input type="email" name="email" id="email" class="form-control" value="{{ auth()->user()->email }}" placeholder="Please Input Email" disabled>
                                 <div class="invalid-feedback">
                                     Please fill in the email
                                 </div>
                             </div>
                             <div class="form-group col-md-5 col-12">
-                                <label>WA</label>
-                                <input type="tel" name="wa" class="form-control" value="{{ auth()->user()->wa }}" minlength="3" maxlength="15" placeholder="Please Input WA" required>
+                                <label for="wa">WA</label>
+                                <input type="tel" name="wa" id="wa" class="form-control" value="{{ auth()->user()->wa }}" minlength="3" maxlength="15" placeholder="Please Input WA" required>
                                 <div class="invalid-feedback">
                                     Please fill in the WA
                                 </div>
+                                @error('wa')
+                                <div class="alert alert-danger mt-2">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-12">
-                                <label>Address</label>
-                                <textarea name="address" class="form-control" cols="30" rows="10" maxlength="150" required>{{ auth()->user()->address }}</textarea>
+                                <label for="address">Address</label>
+                                <textarea name="address" id="address" class="form-control" cols="30" rows="10" maxlength="150" required>{{ auth()->user()->address }}</textarea>
+                                <div class="invalid-feedback">
+                                    Please fill in the Address
+                                </div>
+                                @error('address')
+                                <div class="alert alert-danger mt-2">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
+
                         </div>
                     </div>
                     <div class="card-footer text-right">

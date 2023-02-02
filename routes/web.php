@@ -34,7 +34,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('/user/profile', [UserController::class, 'profileUpdate'])->name('user.profileUpdate');
-    
+    Route::get('/user/password', [UserController::class, 'password'])->name('user.password');
+    Route::post('/user/password', [UserController::class, 'passwordUpdate'])->name('user.passwordUpdate');
+
     Route::delete('/user', [UserController::class, 'destroy'])->name('user.destroy');
     Route::resource('user', UserController::class)->except('create', 'show', 'destroy');
 });

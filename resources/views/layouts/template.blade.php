@@ -68,6 +68,16 @@
 
     <!-- Page Specific JS File -->
     @stack('js')
+    @if(session()->has('success'))
+    <script>
+        swal("Success", "{{ session('success') }}", 'success');
+    </script>
+    @elseif(session()->has('error'))
+    <script>
+        swal("Error", "{{ session('error') }}", 'error');
+    </script>
+    @endif
+
 
     <script>
         function logout_() {

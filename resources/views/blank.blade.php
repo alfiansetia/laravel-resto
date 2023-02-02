@@ -1,4 +1,4 @@
-@extends('layouts.template', ['title' => 'dashboard'])
+@extends('layouts.template')
 
 @push('csslib')
 @endpush

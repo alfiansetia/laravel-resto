@@ -1,4 +1,4 @@
-@extends('layouts.template', ['title' => 'Dashboard'])
+@extends('layouts.template')
 
 @section('content')
 <div class="section-header">
