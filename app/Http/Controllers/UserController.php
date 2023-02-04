@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comp;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -15,6 +17,92 @@ class UserController extends Controller
     public function __construct()
     {
         $this->comp = Comp::first();
+    }
+
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::with('roles')->get();
+            if ($request->email) {
+                $data = User::where('email', 'like', "%{$request->email}%")->get();
+            }
+            return DataTables::of($data)->toJson();
+        }
+        return view('user.data')->with(['comp' => $this->comp, 'title' => 'Data User']);
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'name'      => 'required|max:25|min:3',
+            'email'     => 'required|email|unique:users,email',
+            'password'  => 'required|min:7',
+            'wa'        => 'max:15',
+            'address'   => 'max:150',
+            'role'      => 'required',
+        ]);
+        $user = User::create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => Hash::make($request->password),
+            'wa'        => $request->wa,
+            'address'   => $request->address,
+        ]);
+        $user->assignRole($request->role);
+        if ($user) {
+            return response()->json(['status' => true, 'message' => 'Success Insert Data', 'data' => '']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Failed Insert Data', 'data' => '']);
+        }
+    }
+
+    public function edit(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $user = User::with('roles')->find($id);
+            return response()->json(['status' => true, 'message' => '', 'data' => $user]);
+        } else {
+            abort(404);
+        }
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $this->validate($request, [
+            'name'      => 'required|max:25|min:3',
+            'email'     => 'required|email|unique:users,email,' . $user->id,
+            'wa'        => 'max:15',
+            'address'   => 'max:150',
+            'role'      => 'required',
+        ]);
+        $user = User::findOrFail($user->id);
+        $user->update([
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'wa'            => $request->wa,
+            'address'       => $request->address,
+        ]);
+        $user->syncRoles($request->role);
+        if ($user) {
+            return response()->json(['status' => true, 'message' => 'Success Update Data', 'data' => '']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Failed Update Data', 'data' => '']);
+        }
+    }
+
+
+    public function destroy(Request $request)
+    {
+        if ($request->id) {
+            $count = count($request->id);
+            foreach ($request->id as $id) {
+                $user = User::findOrFail($id);
+                $user->delete();
+            }
+            return response()->json(['status' => true, 'message' => 'Success Delete ' . $count . ' Data', 'data' => '']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'No Selected Data', 'data' => '']);
+        }
     }
 
 

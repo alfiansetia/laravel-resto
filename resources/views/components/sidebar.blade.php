@@ -47,10 +47,10 @@
                 </ul>
             </li>
             <li class="menu-header">Pages</li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown {{ $title == 'Data User' ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-bicycle"></i> <span>Features</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="features-activities.html">Activities</a></li>
+                    <li class="{{ $title == 'Data User' ? 'active' : '' }}"><a class="nav-link" href="{{ route('user.index') }}">Data User</a></li>
                     <li><a class="nav-link" href="features-post-create.html">Post Create</a></li>
                     <li><a class="nav-link" href="features-posts.html">Posts</a></li>
                     <li><a class="nav-link" href="features-profile.html">Profile</a></li>

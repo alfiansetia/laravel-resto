@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
             'email_verified_at' => date('Y-m-d H:i:s'),
         ]);
         $admin->assignRole('admin');
-        
+
         $kasir = User::create([
             'name'              => 'Alfi',
             'email'             => 'kasir@gmail.com',
@@ -36,6 +36,17 @@ class UserSeeder extends Seeder
             'email_verified_at' => date('Y-m-d H:i:s'),
         ]);
         $kasir->assignRole('kasir');
+
+        $all = User::factory(100)->create();
+
+        foreach ($all as $a) {
+            $a->assignRole('kasir');
+        }
+
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
 
     }
 }
