@@ -10,6 +10,12 @@ class Catmenu extends Model
     use HasFactory;
     protected $table = 'catmenu';
 
+    protected $fillable = [
+        'name',
+        'status',
+        'desc',
+    ];
+
     public function menu()
     {
         return $this->hasMany(Menu::class);
