@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TableController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -40,4 +41,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::delete('/user', [UserController::class, 'destroy'])->name('user.destroy');
     Route::resource('user', UserController::class)->except('create', 'show', 'destroy');
+
+    Route::post('/table/change', [TableController::class, 'change'])->name('table.change');
+    Route::delete('/table', [TableController::class, 'destroy'])->name('table.destroy');
+    Route::resource('table', TableController::class)->except('create', 'show', 'destroy');
 });

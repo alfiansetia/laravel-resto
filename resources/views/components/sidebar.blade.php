@@ -12,10 +12,10 @@
                 <a class="nav-link" href="{{ route('home') }}"><i class="fas fa-fire"></i> <span>Dashboard</span></a>
             </li>
             <li class="menu-header">Master Data</li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown {{ $title == 'Data Table' ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Layout</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="layout-default.html">Default Layout</a></li>
+                    <li class="{{ $title == 'Data Table' ? 'active' : '' }}"><a class="nav-link" href="{{ route('table.index') }}">Data Table</a></li>
                     <li><a class="nav-link" href="layout-transparent.html">Transparent Sidebar</a></li>
                     <li><a class="nav-link" href="layout-top-navigation.html">Top Navigation</a></li>
                 </ul>

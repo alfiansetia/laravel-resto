@@ -56,10 +56,10 @@ class UserController extends Controller
         }
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request, User $user)
     {
         if ($request->ajax()) {
-            $user = User::with('roles')->find($id);
+            $user = User::with('roles')->find($user->id);
             return response()->json(['status' => true, 'message' => '', 'data' => $user]);
         } else {
             abort(404);
@@ -90,18 +90,25 @@ class UserController extends Controller
         }
     }
 
-
     public function destroy(Request $request)
     {
-        if ($request->id) {
-            $count = count($request->id);
-            foreach ($request->id as $id) {
-                $user = User::findOrFail($id);
-                $user->delete();
+        if ($request->ajax()) {
+            if ($request->id) {
+                $count = count($request->id);
+                $counter = 0;
+                foreach ($request->id as $id) {
+                    $user = User::findOrFail($id);
+                    $user->delete();
+                    if ($user) {
+                        $counter = $counter + 1;
+                    }
+                }
+                return response()->json(['status' => true, 'message' => 'Success Delete ' . $count . '/' . $counter . ' Data', 'data' => '']);
+            } else {
+                return response()->json(['status' => false, 'message' => 'No Selected Data', 'data' => '']);
             }
-            return response()->json(['status' => true, 'message' => 'Success Delete ' . $count . ' Data', 'data' => '']);
         } else {
-            return response()->json(['status' => false, 'message' => 'No Selected Data', 'data' => '']);
+            abort(404);
         }
     }
 

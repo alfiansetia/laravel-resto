@@ -30,11 +30,10 @@
                                 <thead>
                                     <tr>
                                         <th class="dt-no-sorting" style="width: 30px;">Id</th>
+                                        <th>Number</th>
                                         <th>Name</th>
-                                        <th>Email</th>
-                                        <th>WA</th>
-                                        <th>Role</th>
-                                        <th>Address</th>
+                                        <th>Status</th>
+                                        <th>Desc</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -62,37 +61,28 @@
             <div class="modal-body">
                 <form id="form" class="form-vertical" action="" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label class="control-label" for="name"><i class="far fa-user mr-1" data-toggle="tooltip" title="Full Name User"></i>Name :</label>
+                        <label class="control-label" for="number"><i class="fas fa-table mr-1" data-toggle="tooltip" title="Number Table"></i>Number :</label>
+                        <input type="number" name="number" class="form-control" id="number" placeholder="Please Enter Number" max="1000" required>
+                        <span id="err_number" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Table"></i>Name :</label>
                         <input type="text" name="name" class="form-control" id="name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
                         <span id="err_name" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="email"><i class="far fa-envelope mr-1" data-toggle="tooltip" title="Email User"></i>Email :</label>
-                        <input type="email" name="email" class="form-control" id="email" placeholder="Please Enter Email" required>
-                        <span id="err_email" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="wa"><i class="fab fa-whatsapp mr-1" data-toggle="tooltip" title="WA User"></i>WA :</label>
-                        <input type="tel" name="wa" class="form-control" id="wa" placeholder="Please Enter WA" maxlength="15">
-                        <span id="err_wa" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="password"><i class="fas fa-lock mr-1" data-toggle="tooltip" title="Password User"></i>Password :</label>
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Please Enter Password" minlength="5" required>
-                        <span id="err_password" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="role"><i class="fas fa-user-tag mr-1" data-toggle="tooltip" title="Role User"></i>Role :</label>
-                        <select name="role" id="role" class="form-control select2" style="width: 100%;" required>
-                            <option value="admin">Admin</option>
-                            <option value="kasir">Kasir</option>
+                        <label class="control-label" for="status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
+                        <select name="status" id="status" class="form-control select2" style="width: 100%;" required>
+                            <option value="free">free</option>
+                            <option value="booked">booked</option>
+                            <option value="nonactive">nonactive</option>
                         </select>
-                        <span id="err_role" class="error invalid-feedback" style="display: hide;"></span>
+                        <span id="err_status" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="address"><i class="fas fa-map-marker mr-1" data-toggle="tooltip" title="Address User"></i>Address :</label>
-                        <textarea name="address" class="form-control" id="address" placeholder="Please Enter Address" maxlength="150"></textarea>
-                        <span id="err_address" class="error invalid-feedback" style="display: hide;"></span>
+                        <label class="control-label" for="desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
+                        <textarea name="desc" class="form-control" id="desc" placeholder="Please Enter desc" maxlength="150"></textarea>
+                        <span id="err_desc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
             </div>
             <div class="modal-footer">
@@ -118,34 +108,28 @@
                 <form id="formEdit" class="fofrm-vertical" action="" method="POST" enctype="multipart/form-data">
                     {{ method_field('PUT') }}
                     <div class="form-group">
-                        <label class="control-label" for="edit_name"><i class="far fa-user mr-1" data-toggle="tooltip" title="Full Name User"></i>Name :</label>
-                        <input type="hidden" name="id" id="edit_id">
+                        <label class="control-label" for="edit_number"><i class="fas fa-table mr-1" data-toggle="tooltip" title="Number Table"></i>Number :</label>
+                        <input type="number" name="number" class="form-control" id="edit_number" placeholder="Please Enter Number" max="1000" required>
+                        <span id="err_edit_number" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Table"></i>Name :</label>
                         <input type="text" name="name" class="form-control" id="edit_name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
                         <span id="err_edit_name" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="edit_email"><i class="far fa-envelope mr-1" data-toggle="tooltip" title="Email User"></i>Email :</label>
-                        <input type="email" name="email" class="form-control" id="edit_email" placeholder="Please Enter Email" required>
-                        <span id="err_edit_email" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_wa"><i class="fab fa-whatsapp mr-1" data-toggle="tooltip" title="WA User"></i>WA :</label>
-                        <input type="text" name="wa" class="form-control" id="edit_wa" placeholder="Please Enter WA" maxlength="15">
-                        <span id="err_edit_wa" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_role"><i class="fas fa-user-tag mr-1" data-toggle="tooltip" title="Role User"></i>Role :</label>
-                        <select name="role" id="edit_role" class="form-control select2" style="width: 100%;" required>
-                            <option value="">Please Select Role</option>
-                            <option value="admin">Admin</option>
-                            <option value="kasir">Kasir</option>
+                        <label class="control-label" for="edit_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
+                        <select name="status" id="edit_status" class="form-control select2" style="width: 100%;" required>
+                            <option value="free">free</option>
+                            <option value="booked">booked</option>
+                            <option value="nonactive">nonactive</option>
                         </select>
-                        <span id="err_edit_role" class="error invalid-feedback" style="display: hide;"></span>
+                        <span id="err_edit_status" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="edit_address"><i class="fas fa-map-marker mr-1" data-toggle="tooltip" title="Address User"></i>Address :</label>
-                        <textarea name="address" class="form-control" id="edit_address" placeholder="Please Enter Address" maxlength="150"></textarea>
-                        <span id="err_edit_address" class="error invalid-feedback" style="display: hide;"></span>
+                        <label class="control-label" for="edit_desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
+                        <textarea name="desc" class="form-control" id="edit_desc" placeholder="Please Enter desc" maxlength="150"></textarea>
+                        <span id="err_edit_desc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
             </div>
             <div class="modal-footer">
@@ -154,6 +138,34 @@
                 <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane mr-1" data-toggle="tooltip" title="Save"></i>Save</button>
             </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal animated fade fadeInDown" id="modalChange" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-edit mr-1" data-toggle="tooltip" title="Change Data"></i>Change Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" data-toggle="tooltip" title="Close">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label" for="change_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
+                    <select name="status" id="change_status" class="form-control select2" style="width: 100%;" required>
+                        <option value="free">free</option>
+                        <option value="booked">booked</option>
+                        <option value="nonactive">nonactive</option>
+                    </select>
+                    <span id="err_change_status" class="error invalid-feedback" style="display: hide;"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
+                <button type="button" id="submitChange" class="btn btn-primary"><i class="fas fa-paper-plane mr-1" data-toggle="tooltip" title="Save"></i>Save</button>
+            </div>
         </div>
     </div>
 </div>
@@ -181,7 +193,7 @@
         processing: true,
         serverSide: true,
         rowId: 'id',
-        ajax: "{{ route('user.index') }}",
+        ajax: "{{ route('table.index') }}",
         dom: "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
             "<'table-responsive'tr>" +
             "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
@@ -211,13 +223,21 @@
                 return `<div class="custom-checkbox custom-control"><input type="checkbox" id="check${data}" data-checkboxes="mygroup" name="id[]" value="${data}" class="custom-control-input child-chk select-customers-info"><label for="check${data}" class="custom-control-label">&nbsp;</label></div>`
             }
         }, {
+            title: "Number",
+            data: 'number',
+        }, {
             title: "Name",
             data: 'name',
+        }, {
+            title: "Status",
+            data: 'status',
             render: function(data, type, row, meta) {
-                if (row.email_verified_at != null) {
-                    text = `<i class="fas fa-circle text-success" data-toggle="tooltip" title="Active"></i> ${data}`;
+                if (data == 'free') {
+                    text = `<span class="badge badge-success">${data}</span>`;
+                } else if (data == 'nonactive') {
+                    text = `<span class="badge badge-danger">${data}</span>`;
                 } else {
-                    text = `<i class="fas fa-circle text-danger" data-toggle="tooltip" title="Nonactive"></i> ${data}`;
+                    text = `<span class="badge badge-warning">${data}</span>`;
                 }
                 if (type == 'display') {
                     return text
@@ -226,81 +246,59 @@
                 }
             }
         }, {
-            title: "Email",
-            data: 'email',
-        }, {
-            title: "WA",
-            data: 'wa',
-        }, {
-            title: 'Role',
-            data: 'roles[0].name',
-            orderable: false,
-            searchable: false,
-            render: function(data, type, row, meta) {
-                let text = '';
-                if (data != '') {
-                    if (data == 'admin') {
-                        text = `<span class="badge badge-success">${data}</span>`
-                    } else {
-                        text = `<span class="badge badge-danger">${data}</span>`
-                    }
-                }
-                if (type == 'display') {
-                    return text
-                } else {
-                    return data
-                }
-            }
-        }, {
-            title: "Address",
-            data: 'address',
+            title: "Desc",
+            data: 'desc',
         }, ],
         buttons: [, {
-                text: '<i class="fa fa-plus"></i>Add',
-                className: 'btn btn-sm btn-primary bs-tooltip',
-                attr: {
-                    'data-toggle': 'tooltip',
-                    'title': 'Add Data'
-                },
-                action: function(e, dt, node, config) {
-                    $('#modalAdd').modal('show');
-                    $('#modalAdd').on('shown.bs.modal', function() {
-                        $('#name').focus();
-                    })
-                }
+            text: '<i class="fa fa-plus"></i>Add',
+            className: 'btn btn-sm btn-primary bs-tooltip',
+            attr: {
+                'data-toggle': 'tooltip',
+                'title': 'Add Data'
             },
-            {
-                text: '<i class="fa fa-tools"></i>Action',
-                className: 'btn btn-sm btn-info bs-tooltip',
-                attr: {
-                    'data-toggle': 'tooltip',
-                    'title': 'Action'
-                },
-                extend: 'collection',
-                autoClose: true,
-                buttons: [{
-                    text: 'Remove',
-                    className: 'btn btn-danger',
-                    action: function(e, dt, node, config) {
-                        deleteData();
-                    }
-                }]
-            }, {
-                extend: "colvis",
-                attr: {
-                    'data-toggle': 'tooltip',
-                    'title': 'Column Visible'
-                },
-                className: 'btn btn-sm btn-primary'
-            }, {
-                extend: "pageLength",
-                attr: {
-                    'data-toggle': 'tooltip',
-                    'title': 'Page Length'
-                },
-                className: 'btn btn-sm btn-info'
+            action: function(e, dt, node, config) {
+                $('#modalAdd').modal('show');
+                $('#modalAdd').on('shown.bs.modal', function() {
+                    $('#number').focus();
+                })
             }
-        ],
+        }, {
+            text: '<i class="fa fa-tools"></i>Action',
+            className: 'btn btn-sm btn-info bs-tooltip',
+            attr: {
+                'data-toggle': 'tooltip',
+                'title': 'Action'
+            },
+            extend: 'collection',
+            autoClose: true,
+            buttons: [{
+                text: 'Change',
+                className: 'btn btn-info',
+                action: function(e, dt, node, config) {
+                    changeData();
+                }
+            }, {
+                text: 'Remove',
+                className: 'btn btn-danger',
+                action: function(e, dt, node, config) {
+                    deleteData();
+                }
+            }]
+        }, {
+            extend: "colvis",
+            attr: {
+                'data-toggle': 'tooltip',
+                'title': 'Column Visible'
+            },
+            className: 'btn btn-sm btn-primary'
+        }, {
+            extend: "pageLength",
+            attr: {
+                'data-toggle': 'tooltip',
+                'title': 'Page Length'
+            },
+            className: 'btn btn-sm btn-info'
+        }],
         headerCallback: function(e, a, t, n, s) {
             e.getElementsByTagName("th")[0].innerHTML = '<div class="custom-checkbox custom-control"><input type="checkbox" class="custom-control-input chk-parent select-customers-info" id="checkbox-all"><label for="checkbox-all" class="custom-control-label">&nbsp;</label></div>'
         },
@@ -335,7 +333,7 @@
             });
             $.ajax({
                 type: 'POST',
-                url: "{{ route('user.store') }}",
+                url: "{{ route('table.store') }}",
                 data: $(formData).serialize(),
                 beforeSend: function() {
                     block();
@@ -393,7 +391,7 @@
 
     $('#edit_reset').click(function() {
         id = $(this).val();
-        let url = "{{ route('user.edit', ':id') }}";
+        let url = "{{ route('table.edit', ':id') }}";
         url = url.replace(':id', id);
         $.ajax({
             url: url,
@@ -402,15 +400,10 @@
                 unblock();
                 $('#edit_reset').val(result.data.id);
                 $('#edit_id').val(result.data.id);
+                $('#edit_number').val(result.data.number);
                 $('#edit_name').val(result.data.name);
-                $('#edit_email').val(result.data.email);
-                $('#edit_wa').val(result.data.wa);
-                $('#edit_address').val(result.data.address);
-                if (result.data.roles.length > 0) {
-                    $('#edit_role').val(result.data.roles[0].name).change();
-                } else {
-                    $('#edit_role').val('').change();
-                }
+                $('#edit_status').val(result.data.status).change();
+                $('#edit_desc').val(result.data.desc);
                 $('#edit_reset').prop('disabled', false);
             },
             beforeSend: function() {
@@ -439,46 +432,38 @@
         });
         row = $(this).parents('tr')[0];
         id = table.row(row).data().id
-        if (id != "{{ auth()->user()->id }}") {
-            let url = "{{ route('user.edit', ':id') }}";
-            url = url.replace(':id', id);
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(result) {
-                    unblock();
-                    $('#edit_reset').val(result.data.id);
-                    $('#edit_id').val(result.data.id);
-                    $('#edit_name').val(result.data.name);
-                    $('#edit_email').val(result.data.email);
-                    $('#edit_wa').val(result.data.wa);
-                    $('#edit_address').val(result.data.address);
-                    if (result.data.roles.length > 0) {
-                        $('#edit_role').val(result.data.roles[0].name).change();
-                    } else {
-                        $('#edit_role').val('').change();
-                    }
-                    $('#modalEdit').modal('show');
-                    $('#modalEdit').on('shown.bs.modal', function() {
-                        $('#edit_name').focus();
-                    })
-                },
-                beforeSend: function() {
-                    block();
-                },
-                error: function(xhr, status, error) {
-                    unblock();
-                    er = xhr.responseJSON.errors
-                    swal(
-                        'Failed!',
-                        'Server Error',
-                        'error'
-                    )
-                }
-            });
-        } else {
-            window.open("{{ route('user.profile') }}", '_blank');
-        }
+        let url = "{{ route('table.edit', ':id') }}";
+        url = url.replace(':id', id);
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(result) {
+                unblock();
+                $('#edit_reset').val(result.data.id);
+                $('#edit_id').val(result.data.id);
+                $('#edit_number').val(result.data.number);
+                $('#edit_name').val(result.data.name);
+                $('#edit_status').val(result.data.status).change();
+                $('#edit_desc').val(result.data.desc);
+
+                $('#modalEdit').modal('show');
+                $('#modalEdit').on('shown.bs.modal', function() {
+                    $('#edit_number').focus();
+                })
+            },
+            beforeSend: function() {
+                block();
+            },
+            error: function(xhr, status, error) {
+                unblock();
+                er = xhr.responseJSON.errors
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
+        });
     });
 
     $('#formEdit').submit(function(event) {
@@ -502,7 +487,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 }
             });
-            let url = "{{ route('user.update', ':id') }}";
+            let url = "{{ route('table.update', ':id') }}";
             url = url.replace(':id', id);
             $.ajax({
                 type: 'POST',
@@ -557,11 +542,77 @@
                             $('#err_edit_' + obname).show();
                         }
                     }
-
                 }
             });
         }
     });
+
+    function changeData() {
+        if (selected()) {
+            $('#modalChange').modal('show');
+            $('#modalChange').on('shown.bs.modal', function() {
+                $('#change_status').focus();
+            })
+        }
+    }
+
+    $("#submitChange").click(function() {
+        let btn = $(this);
+        let status = $('#change_status').val();
+        let form = $("#formSelected");
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('table.change') }}",
+            data: $(form).serialize() + '&status=' + status,
+            beforeSend: function() {
+                btn.prop('disabled', true);
+                block();
+            },
+            success: function(res) {
+                btn.prop('disabled', false);
+                unblock();
+                table.ajax.reload();
+                if (res.status == true) {
+                    swal(
+                        'Changed!',
+                        res.message,
+                        'success'
+                    )
+                } else {
+                    swal(
+                        'Failed!',
+                        res.message,
+                        'error'
+                    )
+                }
+            },
+            error: function(xhr, status, error) {
+                btn.prop('disabled', false);
+                unblock();
+                er = xhr.responseJSON.errors
+                if (xhr.status == 500) {
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                } else {
+                    erlen = Object.keys(er).length
+                    for (i = 0; i < erlen; i++) {
+                        obname = Object.keys(er)[i];
+                        $('#' + obname).addClass('is-invalid');
+                        $('#err_change_' + obname).text(er[obname][0]);
+                        $('#err_change_' + obname).show();
+                    }
+                }
+            }
+        });
+    })
 
     function deleteData() {
         if (selected()) {
@@ -581,7 +632,7 @@
                     });
                     $.ajax({
                         type: 'DELETE',
-                        url: "{{ route('user.destroy') }}",
+                        url: "{{ route('table.destroy') }}",
                         data: $(form).serialize(),
                         beforeSend: function() {
                             block();
