@@ -9,7 +9,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class CatmenuController extends Controller
 {
-
     protected $comp;
 
     public function __construct()
@@ -26,9 +25,9 @@ class CatmenuController extends Controller
     {
         if ($request->ajax()) {
             $data = Catmenu::get();
-            // if ($request->email) {
-            //     $data = User::Table('email', 'like', "%{$request->email}%")->get();
-            // }
+            if ($request->name) {
+                $data = Catmenu::where('name', 'like', "%{$request->name}%")->get();
+            }
             return DataTables::of($data)->toJson();
         }
         return view('catmenu.data')->with(['comp' => $this->comp, 'title' => 'Data Category']);
@@ -67,7 +66,6 @@ class CatmenuController extends Controller
      */
     public function edit(Request $request, Catmenu $catmenu)
     {
-        //
         if ($request->ajax()) {
             return response()->json(['status' => true, 'message' => '', 'data' => $catmenu]);
         } else {

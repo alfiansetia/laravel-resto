@@ -30,8 +30,11 @@
                                 <thead>
                                     <tr>
                                         <th class="dt-no-sorting" style="width: 30px;">Id</th>
-                                        <th>Number</th>
                                         <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Disc</th>
+                                        <th>Stok</th>
                                         <th>Status</th>
                                         <th>Desc</th>
                                     </tr>
@@ -49,7 +52,7 @@
 @endsection
 
 @push('modal')
-<div class="modal animated fade fadeInDown" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+<div class="modal animated fade fadeInDown" id="modalAdd" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -61,20 +64,36 @@
             <div class="modal-body">
                 <form id="form" class="form-vertical" action="" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label class="control-label" for="number"><i class="fas fa-table mr-1" data-toggle="tooltip" title="Number Table"></i>Number :</label>
-                        <input type="number" name="number" class="form-control" id="number" placeholder="Please Enter Number" max="1000" required>
-                        <span id="err_number" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Table"></i>Name :</label>
+                        <label class="control-label" for="name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Menu"></i>Name :</label>
                         <input type="text" name="name" class="form-control" id="name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
                         <span id="err_name" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="catmenu"><i class="fas fa-tags mr-1" data-toggle="tooltip" title="Category Menu"></i>Category :</label>
+                        <select name="catmenu" id="catmenu" class="form-control" style="width: 100%;" required>
+                            <!-- <option value="">Please Select Category</option> -->
+                        </select>
+                        <span id="err_catmenu" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="price"><i class="fas fa-money-bill mr-1" data-toggle="tooltip" title="Price Menu"></i>Price :</label>
+                        <input type="number" name="price" class="form-control" id="price" placeholder="Please Enter Price" value="0">
+                        <span id="err_price" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="disc"><i class="fas fa-percent mr-1" data-toggle="tooltip" title="Disc Menu"></i>Disc :</label>
+                        <input type="number" name="disc" class="form-control" id="disc" placeholder="Please Enter Disc" value="0">
+                        <span id="err_disc" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="stok"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stok Menu"></i>Stok :</label>
+                        <input type="number" name="stok" class="form-control" id="stok" placeholder="Please Enter Stok" value="0">
+                        <span id="err_stok" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
                         <select name="status" id="status" class="form-control select2" style="width: 100%;" required>
-                            <option value="free">free</option>
-                            <option value="booked">booked</option>
+                            <option value="active">active</option>
                             <option value="nonactive">nonactive</option>
                         </select>
                         <span id="err_status" class="error invalid-feedback" style="display: hide;"></span>
@@ -95,7 +114,7 @@
     </div>
 </div>
 
-<div class="modal animated fade fadeInDown" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+<div class="modal animated fade fadeInDown" id="modalEdit" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -108,20 +127,36 @@
                 <form id="formEdit" class="fofrm-vertical" action="" method="POST" enctype="multipart/form-data">
                     {{ method_field('PUT') }}
                     <div class="form-group">
-                        <label class="control-label" for="edit_number"><i class="fas fa-table mr-1" data-toggle="tooltip" title="Number Table"></i>Number :</label>
-                        <input type="number" name="number" class="form-control" id="edit_number" placeholder="Please Enter Number" max="1000" required>
-                        <span id="err_edit_number" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Table"></i>Name :</label>
+                        <label class="control-label" for="edit_name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Menu"></i>Name :</label>
                         <input type="text" name="name" class="form-control" id="edit_name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
                         <span id="err_edit_name" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="edit_catmenu"><i class="fas fa-tags mr-1" data-toggle="tooltip" title="Category Menu"></i>Category :</label>
+                        <select name="catmenu" id="edit_catmenu" class="form-control select2" style="width: 100%;" required>
+                            <!-- <option value="">Please Select Category</option> -->
+                        </select>
+                        <span id="err_edit_catmenu" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_price"><i class="fas fa-money-bill mr-1" data-toggle="tooltip" title="Price Menu"></i>Price :</label>
+                        <input type="number" name="price" class="form-control" id="edit_price" placeholder="Please Enter Price" value="0">
+                        <span id="err_edit_price" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_disc"><i class="fas fa-percent mr-1" data-toggle="tooltip" title="Disc Menu"></i>Disc :</label>
+                        <input type="number" name="disc" class="form-control" id="edit_disc" placeholder="Please Enter Disc" value="0">
+                        <span id="err_edit_disc" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_stok"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stok Menu"></i>Stok :</label>
+                        <input type="number" name="stok" class="form-control" id="edit_stok" placeholder="Please Enter Stok" value="0">
+                        <span id="err_edit_stok" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="edit_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
                         <select name="status" id="edit_status" class="form-control select2" style="width: 100%;" required>
-                            <option value="free">free</option>
-                            <option value="booked">booked</option>
+                            <option value="active">active</option>
                             <option value="nonactive">nonactive</option>
                         </select>
                         <span id="err_edit_status" class="error invalid-feedback" style="display: hide;"></span>
@@ -155,8 +190,7 @@
                 <div class="form-group">
                     <label class="control-label" for="change_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
                     <select name="status" id="change_status" class="form-control select2" style="width: 100%;" required>
-                        <option value="free">free</option>
-                        <option value="booked">booked</option>
+                        <option value="active">active</option>
                         <option value="nonactive">nonactive</option>
                     </select>
                     <span id="err_change_status" class="error invalid-feedback" style="display: hide;"></span>
@@ -189,12 +223,46 @@
 
 @push('js')
 <script>
+    $(document).ready(function() {
+        $("#catmenu, #edit_catmenu").select2({
+            placeholder: "Select a Category",
+            ajax: {
+                delay: 1000,
+                url: "{{ route('catmenu.index') }}",
+                data: function(params) {
+                    return {
+                        name: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data.data, function(item) {
+                            return {
+                                text: item.name,
+                                id: item.id,
+                                disabled: item.status == 'nonactive' ? true : false,
+                            }
+                        })
+                    };
+                },
+            },
+            sorter: function(results) {
+                var query = $('.select2-search__field').val().toLowerCase();
+                return results.sort(function(a, b) {
+                    return a.text.toLowerCase().indexOf(query) -
+                        b.text.toLowerCase().indexOf(query);
+                });
+            }
+        });
+    });
+
     var table = $("#table").DataTable({
         processing: true,
         serverSide: true,
         rowId: 'id',
         ajax: {
-            url: "{{ route('table.index') }}",
+            url: "{{ route('menu.index') }}",
             error: function(xhr, error, code) {
                 swal(
                     'Failed!',
@@ -232,21 +300,39 @@
                 return `<div class="custom-checkbox custom-control"><input type="checkbox" id="check${data}" data-checkboxes="mygroup" name="id[]" value="${data}" class="custom-control-input child-chk select-customers-info"><label for="check${data}" class="custom-control-label">&nbsp;</label></div>`
             }
         }, {
-            title: "Number",
-            data: 'number',
-        }, {
             title: "Name",
             data: 'name',
+        }, {
+            title: "Category",
+            data: 'catmenu_id',
+            render: function(data, type, row, meta) {
+                let text = ''
+                if (data != null) {
+                    text = row.catmenu.name
+                }
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
+        }, {
+            title: "Price",
+            data: 'price',
+        }, {
+            title: "Disc",
+            data: 'disc',
+        }, {
+            title: "Stock",
+            data: 'stock',
         }, {
             title: "Status",
             data: 'status',
             render: function(data, type, row, meta) {
-                if (data == 'free') {
+                if (data == 'active') {
                     text = `<span class="badge badge-success">${data}</span>`;
-                } else if (data == 'nonactive') {
-                    text = `<span class="badge badge-danger">${data}</span>`;
                 } else {
-                    text = `<span class="badge badge-warning">${data}</span>`;
+                    text = `<span class="badge badge-danger">${data}</span>`;
                 }
                 if (type == 'display') {
                     return text
@@ -268,7 +354,7 @@
             action: function(e, dt, node, config) {
                 $('#modalAdd').modal('show');
                 $('#modalAdd').on('shown.bs.modal', function() {
-                    $('#number').focus();
+                    $('#name').focus();
                 })
             }
         }, {
@@ -334,7 +420,6 @@
             $(element).addClass('is-valid');
         },
         submitHandler: function(form) {
-            let formData = form;
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -342,8 +427,8 @@
             });
             $.ajax({
                 type: 'POST',
-                url: "{{ route('table.store') }}",
-                data: $(formData).serialize(),
+                url: "{{ route('menu.store') }}",
+                data: $(form).serialize(),
                 beforeSend: function() {
                     block();
                     $('button[type="submit"]').prop('disabled', true);
@@ -408,7 +493,7 @@
 
     $('#edit_reset').click(function() {
         id = $(this).val();
-        let url = "{{ route('table.edit', ':id') }}";
+        let url = "{{ route('menu.edit', ':id') }}";
         url = url.replace(':id', id);
         $.ajax({
             url: url,
@@ -417,10 +502,18 @@
                 unblock();
                 $('#edit_reset').val(result.data.id);
                 $('#edit_id').val(result.data.id);
-                $('#edit_number').val(result.data.number);
                 $('#edit_name').val(result.data.name);
+                if (result.data.catmenu_id != null) {
+                    let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
+                    $('#edit_catmenu').append(option).change();
+                } else {
+                    $('#edit_catmenu').val('').change();
+                }
+                $('#edit_price').val(result.data.price);
+                $('#edit_stok').val(result.data.stock);
                 $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
+
                 $('#edit_reset').prop('disabled', false);
             },
             beforeSend: function() {
@@ -449,7 +542,7 @@
         });
         row = $(this).parents('tr')[0];
         id = table.row(row).data().id
-        let url = "{{ route('table.edit', ':id') }}";
+        let url = "{{ route('menu.edit', ':id') }}";
         url = url.replace(':id', id);
         $.ajax({
             url: url,
@@ -458,14 +551,21 @@
                 unblock();
                 $('#edit_reset').val(result.data.id);
                 $('#edit_id').val(result.data.id);
-                $('#edit_number').val(result.data.number);
                 $('#edit_name').val(result.data.name);
+                if (result.data.catmenu_id != null) {
+                    let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
+                    $('#edit_catmenu').append(option).change();
+                } else {
+                    $('#edit_catmenu').val('').change();
+                }
+                $('#edit_price').val(result.data.price);
+                $('#edit_stok').val(result.data.stock);
                 $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
 
                 $('#modalEdit').modal('show');
                 $('#modalEdit').on('shown.bs.modal', function() {
-                    $('#edit_number').focus();
+                    $('#edit_name').focus();
                 })
             },
             beforeSend: function() {
@@ -504,7 +604,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 }
             });
-            let url = "{{ route('table.update', ':id') }}";
+            let url = "{{ route('menu.update', ':id') }}";
             url = url.replace(':id', id);
             $.ajax({
                 type: 'POST',
@@ -513,7 +613,6 @@
                 beforeSend: function() {
                     block();
                     $('button[type="submit"]').prop('disabled', true);
-                    console.log('loading bro');
                     $('#formEdit .error.invalid-feedback').each(function(i) {
                         $(this).hide();
                     });
@@ -584,7 +683,7 @@
         });
         $.ajax({
             type: 'POST',
-            url: "{{ route('table.change') }}",
+            url: "{{ route('menu.change') }}",
             data: $(form).serialize() + '&status=' + status,
             beforeSend: function() {
                 btn.prop('disabled', true);
@@ -649,7 +748,7 @@
                     });
                     $.ajax({
                         type: 'DELETE',
-                        url: "{{ route('table.destroy') }}",
+                        url: "{{ route('menu.destroy') }}",
                         data: $(form).serialize(),
                         beforeSend: function() {
                             block();

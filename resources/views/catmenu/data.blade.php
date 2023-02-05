@@ -179,7 +179,16 @@
         processing: true,
         serverSide: true,
         rowId: 'id',
-        ajax: "{{ route('catmenu.index') }}",
+        ajax: {
+            url: "{{ route('catmenu.index') }}",
+            error: function(xhr, error, code) {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
+        },
         dom: "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
             "<'table-responsive'tr>" +
             "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
@@ -348,12 +357,20 @@
                     unblock();
                     $('button[type="submit"]').prop('disabled', false);
                     er = xhr.responseJSON.errors
-                    erlen = Object.keys(er).length
-                    for (i = 0; i < erlen; i++) {
-                        obname = Object.keys(er)[i];
-                        $('#' + obname).addClass('is-invalid');
-                        $('#err_' + obname).text(er[obname][0]);
-                        $('#err_' + obname).show();
+                    if (xhr.status == 500) {
+                        swal(
+                            'Failed!',
+                            'Server Error',
+                            'error'
+                        )
+                    } else {
+                        erlen = Object.keys(er).length
+                        for (i = 0; i < erlen; i++) {
+                            obname = Object.keys(er)[i];
+                            $('#' + obname).addClass('is-invalid');
+                            $('#err_' + obname).text(er[obname][0]);
+                            $('#err_' + obname).show();
+                        }
                     }
                 }
             });

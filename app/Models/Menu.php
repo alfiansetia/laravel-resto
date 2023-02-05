@@ -10,6 +10,17 @@ class Menu extends Model
     use HasFactory;
     protected $table = 'menu';
 
+    protected $fillable = [
+        'name',
+        'catmenu_id',
+        'img',
+        'price',
+        'disc',
+        'stock',
+        'status',
+        'desc',
+    ];
+
     public function catmenu()
     {
         return $this->belongsTo(Catmenu::class);

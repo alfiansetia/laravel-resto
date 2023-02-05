@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CatmenuController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -50,4 +51,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('/catmenu/change', [CatmenuController::class, 'change'])->name('catmenu.change');
     Route::delete('/catmenu', [CatmenuController::class, 'destroy'])->name('catmenu.destroy');
     Route::resource('catmenu', CatmenuController::class)->except('create', 'show', 'destroy');
+
+    Route::post('/menu/change', [MenuController::class, 'change'])->name('menu.change');
+    Route::delete('/menu', [MenuController::class, 'destroy'])->name('menu.destroy');
+    Route::resource('menu', MenuController::class)->except('create', 'show', 'destroy');
 });
