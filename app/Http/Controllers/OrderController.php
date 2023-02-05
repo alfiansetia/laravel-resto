@@ -2,19 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comp;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
 {
+    protected $comp;
+
+    public function __construct()
+    {
+        $this->comp = Comp::first();
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = Order::with('dtorder')->get();
+            if ($request->name) {
+                $data = Order::where('name', 'like', "%{$request->name}%")->get();
+            }
+            return DataTables::of($data)->toJson();
+        }
+        return view('order.data')->with(['comp' => $this->comp, 'title' => 'Data Order']);
     }
 
     /**

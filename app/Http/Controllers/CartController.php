@@ -3,18 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Comp;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class CartController extends Controller
 {
+    protected $comp;
+
+    public function __construct()
+    {
+        $this->comp = Comp::first();
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = Cart::with('user', 'menu')->get();
+            if ($request->name) {
+                $data = Cart::where('name', 'like', "%{$request->name}%")->get();
+            }
+            return DataTables::of($data)->toJson();
+        }
+        return view('cart.data')->with(['comp' => $this->comp, 'title' => 'New Order']);
     }
 
     /**

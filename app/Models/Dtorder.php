@@ -13,7 +13,8 @@ class Dtorder extends Model
         'order_id',
         'menu_id',
         'price',
-        'total',
+        'disc',
+        'qty',
     ];
     use HasFactory;
 

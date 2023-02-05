@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('order', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->unsignedBigInteger('table_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->dateTime('date', $precision = 0)->useCurrent();
