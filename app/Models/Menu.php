@@ -25,4 +25,9 @@ class Menu extends Model
     {
         return $this->belongsTo(Catmenu::class);
     }
+
+    public function menu()
+    {
+        return $this->hasOne(Cart::class);
+    }
 }
