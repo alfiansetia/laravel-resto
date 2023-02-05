@@ -48,7 +48,7 @@ class MenuController extends Controller
             'status'    => 'required|in:active,nonactive',
             'price'     => 'integer',
             'disc'      => 'integer',
-            'stok'      => 'integer',
+            'stock'     => 'integer',
             'desc'      => 'max:150',
         ]);
         $menu = Menu::create([
@@ -57,7 +57,7 @@ class MenuController extends Controller
             'status'    => $request->status,
             'price'     => $request->price,
             'disc'      => $request->disc,
-            'stok'      => $request->stok,
+            'stock'     => $request->stock,
             'desc'      => $request->desc,
         ]);
         if ($menu) {
@@ -98,7 +98,7 @@ class MenuController extends Controller
             'status'    => 'required|in:active,nonactive',
             'price'     => 'integer',
             'disc'      => 'integer',
-            'stok'      => 'integer',
+            'stock'     => 'integer',
             'desc'      => 'max:150',
         ]);
         $menu->update([
@@ -107,7 +107,7 @@ class MenuController extends Controller
             'status'    => $request->status,
             'price'     => $request->price,
             'disc'      => $request->disc,
-            'stok'      => $request->stok,
+            'stock'     => $request->stock,
             'desc'      => $request->desc,
         ]);
         if ($menu) {

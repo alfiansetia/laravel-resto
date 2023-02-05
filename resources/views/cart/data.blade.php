@@ -107,157 +107,37 @@
 @endsection
 
 @push('modal')
-<div class="modal animated fade fadeInDown" id="modalAdd" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+<div class="modal animated fade fadeInDown" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-plus mr-1" data-toggle="tooltip" title="Add Data"></i>Add Data</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">
+                    <div class="input-group">
+                        <input type="search" name="name" class="form-control form-control-lg" id="search_menu" placeholder="Search Menu">
+                        <div class="input-group-append">
+                            <button id="btn_search" class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" data-toggle="tooltip" title="Close">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="form" class="form-vertical" action="" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label class="control-label" for="name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Menu"></i>Name :</label>
-                        <input type="text" name="name" class="form-control" id="name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
-                        <span id="err_name" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="catmenu"><i class="fas fa-tags mr-1" data-toggle="tooltip" title="Category Menu"></i>Category :</label>
-                        <select name="catmenu" id="catmenu" class="form-control" style="width: 100%;" required>
-                            <!-- <option value="">Please Select Category</option> -->
-                        </select>
-                        <span id="err_catmenu" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="price"><i class="fas fa-money-bill mr-1" data-toggle="tooltip" title="Price Menu"></i>Price :</label>
-                        <input type="number" name="price" class="form-control" id="price" placeholder="Please Enter Price" value="0">
-                        <span id="err_price" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="disc"><i class="fas fa-percent mr-1" data-toggle="tooltip" title="Disc Menu"></i>Disc :</label>
-                        <input type="number" name="disc" class="form-control" id="disc" placeholder="Please Enter Disc" value="0">
-                        <span id="err_disc" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="stok"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stok Menu"></i>Stok :</label>
-                        <input type="number" name="stok" class="form-control" id="stok" placeholder="Please Enter Stok" value="0">
-                        <span id="err_stok" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
-                        <select name="status" id="status" class="form-control select2" style="width: 100%;" required>
-                            <option value="active">active</option>
-                            <option value="nonactive">nonactive</option>
-                        </select>
-                        <span id="err_status" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
-                        <textarea name="desc" class="form-control" id="desc" placeholder="Please Enter desc" maxlength="150"></textarea>
-                        <span id="err_desc" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
+                <table class="table table-lg table-hover" id="tblmenu" style="width: 100%;">
+                    <thead></thead>
+                    <tbody> </tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
                 <button type="reset" id="reset" class="btn btn-warning"><i class="fas fa-undo mr-1" data-toggle="tooltip" title="Reset"></i>Reset</button>
                 <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane mr-1" data-toggle="tooltip" title="Save"></i>Save</button>
             </div>
-            </form>
         </div>
     </div>
 </div>
 
-<div class="modal animated fade fadeInDown" id="modalEdit" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titleEdit"><i class="fas fa-edit mr-1" data-toggle="tooltip" title="Edit Data"></i>Edit Data</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formEdit" class="fofrm-vertical" action="" method="POST" enctype="multipart/form-data">
-                    {{ method_field('PUT') }}
-                    <div class="form-group">
-                        <label class="control-label" for="edit_name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Menu"></i>Name :</label>
-                        <input type="text" name="name" class="form-control" id="edit_name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
-                        <span id="err_edit_name" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_catmenu"><i class="fas fa-tags mr-1" data-toggle="tooltip" title="Category Menu"></i>Category :</label>
-                        <select name="catmenu" id="edit_catmenu" class="form-control select2" style="width: 100%;" required>
-                            <!-- <option value="">Please Select Category</option> -->
-                        </select>
-                        <span id="err_edit_catmenu" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_price"><i class="fas fa-money-bill mr-1" data-toggle="tooltip" title="Price Menu"></i>Price :</label>
-                        <input type="number" name="price" class="form-control" id="edit_price" placeholder="Please Enter Price" value="0">
-                        <span id="err_edit_price" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_disc"><i class="fas fa-percent mr-1" data-toggle="tooltip" title="Disc Menu"></i>Disc :</label>
-                        <input type="number" name="disc" class="form-control" id="edit_disc" placeholder="Please Enter Disc" value="0">
-                        <span id="err_edit_disc" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_stok"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stok Menu"></i>Stok :</label>
-                        <input type="number" name="stok" class="form-control" id="edit_stok" placeholder="Please Enter Stok" value="0">
-                        <span id="err_edit_stok" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
-                        <select name="status" id="edit_status" class="form-control select2" style="width: 100%;" required>
-                            <option value="active">active</option>
-                            <option value="nonactive">nonactive</option>
-                        </select>
-                        <span id="err_edit_status" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
-                        <textarea name="desc" class="form-control" id="edit_desc" placeholder="Please Enter desc" maxlength="150"></textarea>
-                        <span id="err_edit_desc" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
-                <button type="button" id="edit_reset" class="btn btn-warning"><i class="fas fa-undo mr-1" data-toggle="tooltip" title="Reset"></i>Reset</button>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane mr-1" data-toggle="tooltip" title="Save"></i>Save</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="modal animated fade fadeInDown" id="modalChange" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-edit mr-1" data-toggle="tooltip" title="Change Data"></i>Change Data</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" data-toggle="tooltip" title="Close">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="control-label" for="change_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
-                    <select name="status" id="change_status" class="form-control select2" style="width: 100%;" required>
-                        <option value="active">active</option>
-                        <option value="nonactive">nonactive</option>
-                    </select>
-                    <span id="err_change_status" class="error invalid-feedback" style="display: hide;"></span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
-                <button type="button" id="submitChange" class="btn btn-primary"><i class="fas fa-paper-plane mr-1" data-toggle="tooltip" title="Save"></i>Save</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endpush
 
 
@@ -311,7 +191,57 @@
         $('#name_cart').focus()
     });
 
-    $("#add_to_cart").click(function(){
+    var tblmenu = $("#tblmenu").DataTable({
+        processing: true,
+        serverSide: true,
+        rowId: 'id',
+        ajax: {
+            url: "{{ route('menu.index') }}",
+            error: function(xhr, error, code) {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
+        },
+        dom: 'lrt',
+        lengthChange: false,
+        paging: false,
+        searching: true,
+        columnDefs: [],
+        info: false,
+        columns: [{
+            title: "Name",
+            data: 'name',
+        }, {
+            title: "Category",
+            data: 'catmenu_id',
+        }, {
+            title: "Price",
+            data: 'price',
+        }, {
+            title: "Disc",
+            data: 'disc',
+        }, {
+            title: "Stok",
+            data: 'stock',
+        }, {
+            title: "Desc",
+            data: 'desc',
+        }]
+    });
+
+    $('#search_menu').keyup(function() {
+        tblmenu.search($(this).val()).draw();
+    })
+
+    $('#btn_search').click(function() {
+        tblmenu.search($('#search_menu').val()).draw();
+    })
+
+
+    $("#add_to_cart").click(function() {
         $('#modalAdd').modal('show');
     })
 
@@ -541,55 +471,107 @@
         });
     })
 
-    $('#table tbody').on('click', 'tr td:not(:first-child)', function() {
-        $('#formEdit .error.invalid-feedback').each(function(i) {
-            $(this).hide();
-        });
-        $('#formEdit input.is-invalid').each(function(i) {
-            $(this).removeClass('is-invalid');
-        });
-        row = $(this).parents('tr')[0];
-        id = table.row(row).data().id
-        let url = "{{ route('menu.edit', ':id') }}";
-        url = url.replace(':id', id);
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(result) {
-                unblock();
-                $('#edit_reset').val(result.data.id);
-                $('#edit_id').val(result.data.id);
-                $('#edit_name').val(result.data.name);
-                if (result.data.catmenu_id != null) {
-                    let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
-                    $('#edit_catmenu').append(option).change();
-                } else {
-                    $('#edit_catmenu').val('').change();
-                }
-                $('#edit_price').val(result.data.price);
-                $('#edit_stok').val(result.data.stock);
-                $('#edit_status').val(result.data.status).change();
-                $('#edit_desc').val(result.data.desc);
-
-                $('#modalEdit').modal('show');
-                $('#modalEdit').on('shown.bs.modal', function() {
-                    $('#edit_name').focus();
-                })
-            },
-            beforeSend: function() {
-                block();
-            },
-            error: function(xhr, status, error) {
-                unblock();
-                er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
+    $('#tblmenu tbody').on('click', 'tr', function() {
+        let data = tblmenu.row(this).data()
+        if (data.stock > 0) {
+            if (confirm('Add ' + data.name + ' to cart?')) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('cart.store') }}",
+                    data: {
+                        menu: data.id,
+                        qty: 1,
+                    },
+                    beforeSend: function() {
+                        block();
+                    },
+                    success: function(res) {
+                        unblock();
+                        table.ajax.reload();
+                        if (res.status == true) {
+                            swal(
+                                'Success!',
+                                res.message,
+                                'success'
+                            )
+                        } else {
+                            swal(
+                                'Failed!',
+                                res.message,
+                                'error'
+                            )
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        unblock();
+                        swal(
+                            'Failed!',
+                            'Server Error',
+                            'error'
+                        )
+                    }
+                });
             }
-        });
+        } else {
+            alert('Stock 0')
+        }
+
     });
+
+    // $('#table tbody').on('click', 'tr td:not(:first-child)', function() {
+    //     $('#formEdit .error.invalid-feedback').each(function(i) {
+    //         $(this).hide();
+    //     });
+    //     $('#formEdit input.is-invalid').each(function(i) {
+    //         $(this).removeClass('is-invalid');
+    //     });
+    //     row = $(this).parents('tr')[0];
+    //     id = table.row(row).data().id
+    //     let url = "{{ route('menu.edit', ':id') }}";
+    //     url = url.replace(':id', id);
+    //     $.ajax({
+    //         url: url,
+    //         method: 'GET',
+    //         success: function(result) {
+    //             unblock();
+    //             $('#edit_reset').val(result.data.id);
+    //             $('#edit_id').val(result.data.id);
+    //             $('#edit_name').val(result.data.name);
+    //             if (result.data.catmenu_id != null) {
+    //                 let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
+    //                 $('#edit_catmenu').append(option).change();
+    //             } else {
+    //                 $('#edit_catmenu').val('').change();
+    //             }
+    //             $('#edit_price').val(result.data.price);
+    //             $('#edit_stok').val(result.data.stock);
+    //             $('#edit_status').val(result.data.status).change();
+    //             $('#edit_desc').val(result.data.desc);
+
+    //             $('#modalEdit').modal('show');
+    //             $('#modalEdit').on('shown.bs.modal', function() {
+    //                 $('#edit_name').focus();
+    //             })
+    //         },
+    //         beforeSend: function() {
+    //             block();
+    //         },
+    //         error: function(xhr, status, error) {
+    //             unblock();
+    //             er = xhr.responseJSON.errors
+    //             swal(
+    //                 'Failed!',
+    //                 'Server Error',
+    //                 'error'
+    //             )
+    //         }
+    //     });
+    // });
 
     $('#formEdit').submit(function(event) {
         event.preventDefault();

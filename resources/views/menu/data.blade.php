@@ -86,9 +86,9 @@
                         <span id="err_disc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="stok"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stok Menu"></i>Stok :</label>
-                        <input type="number" name="stok" class="form-control" id="stok" placeholder="Please Enter Stok" value="0">
-                        <span id="err_stok" class="error invalid-feedback" style="display: hide;"></span>
+                        <label class="control-label" for="stock"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stock Menu"></i>Stock :</label>
+                        <input type="number" name="stock" class="form-control" id="stok" placeholder="Please Enter Stock" value="0">
+                        <span id="err_stock" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
@@ -149,9 +149,9 @@
                         <span id="err_edit_disc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="edit_stok"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stok Menu"></i>Stok :</label>
-                        <input type="number" name="stok" class="form-control" id="edit_stok" placeholder="Please Enter Stok" value="0">
-                        <span id="err_edit_stok" class="error invalid-feedback" style="display: hide;"></span>
+                        <label class="control-label" for="edit_stock"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stock Menu"></i>Stock :</label>
+                        <input type="number" name="stock" class="form-control" id="edit_stock" placeholder="Please Enter Stock" value="0">
+                        <span id="err_edit_stock" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
@@ -510,7 +510,7 @@
                     $('#edit_catmenu').val('').change();
                 }
                 $('#edit_price').val(result.data.price);
-                $('#edit_stok').val(result.data.stock);
+                $('#edit_stock').val(result.data.stock);
                 $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
 
@@ -559,7 +559,7 @@
                     $('#edit_catmenu').val('').change();
                 }
                 $('#edit_price').val(result.data.price);
-                $('#edit_stok').val(result.data.stock);
+                $('#edit_stock').val(result.data.stock);
                 $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
 
