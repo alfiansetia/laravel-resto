@@ -55,7 +55,7 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    cdf
+                    <h1 id="grandtotal"></h1>
                 </div>
             </div>
         </div>
@@ -63,45 +63,44 @@
             <div class="card">
                 <div class="card-body">
                     <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Total</label>
-                        <div class="col-sm-12 col-md-7">
+                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Total</label>
+                        <div class="col-sm-12 col-md-8">
                             <input type="number" id="total" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Disc</label>
-                        <div class="col-sm-12 col-md-7">
-                            <input type="number" id="disc" class="form-control">
+                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Disc</label>
+                        <div class="col-sm-12 col-md-8">
+                            <input type="number" id="disc" class="form-control" value="0" onchange="zero(this)">
                         </div>
                     </div>
                     <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Grand Total</label>
-                        <div class="col-sm-12 col-md-7">
+                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Grand Total</label>
+                        <div class="col-sm-12 col-md-8">
                             <input type="number" id="gtotal" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Bill</label>
-                        <div class="col-sm-12 col-md-7">
+                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Bill</label>
+                        <div class="col-sm-12 col-md-8">
                             <input type="number" id="bill" class="form-control">
                         </div>
                     </div>
                     <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Return</label>
-                        <div class="col-sm-12 col-md-7">
+                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Return</label>
+                        <div class="col-sm-12 col-md-8">
                             <input type="number" id="return" class="form-control">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-8">
+        <!-- <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
-                    cdf
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 @endsection
@@ -155,6 +154,32 @@
 
 @push('js')
 <script>
+    function zero(dom) {
+        if ($(dom).val() == '' || $(dom).val() < 0) {
+            $(dom).val(0)
+        } else if ($(dom).val() > 100)[
+            $(dom).val(100)
+        ]
+        table.ajax.reload()
+    }
+
+    function total(data) {
+        var total = 0;
+        $.each(data, function(i, v) {
+            total += (v.menu.price * v.qty) - (v.menu.price * v.qty * v.menu.disc / 100);
+        });
+        gtotal = parseInt((total) - (total * parseInt($('#disc').val()) / 100))
+        $('#total').val(total);
+        $('#gtotal').val(gtotal);
+        $('#grandtotal').text('Rp. ' + hrg(gtotal));
+        console.log(total)
+    }
+
+    function hrg(x) {
+        let a = parseInt(x)
+        return a.toLocaleString('en-US')
+    }
+
     $(document).ready(function() {
         $("#catmenu, #edit_catmenu").select2({
             placeholder: "Select a Category",
@@ -214,18 +239,47 @@
         columns: [{
             title: "Name",
             data: 'name',
+            render: function(data, type, row, meta) {
+                let text;
+                if (data != null) {
+                    if (row.status == 'active') {
+                        text = `<i class="fas fa-circle text-success" data-toggle="tooltip" title="Active"></i> ${data}`;
+                    } else {
+                        text = `<i class="fas fa-circle text-danger" data-toggle="tooltip" title="Nonactive"></i> ${data}`;
+                    }
+                }
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
         }, {
             title: "Category",
             data: 'catmenu_id',
         }, {
             title: "Price",
             data: 'price',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    return hrg(data)
+                } else {
+                    return data
+                }
+            }
         }, {
             title: "Disc",
             data: 'disc',
         }, {
             title: "Stok",
             data: 'stock',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    return hrg(data)
+                } else {
+                    return data
+                }
+            }
         }, {
             title: "Desc",
             data: 'desc',
@@ -242,6 +296,7 @@
 
 
     $("#add_to_cart").click(function() {
+        tblmenu.ajax.reload();
         $('#modalAdd').modal('show');
     })
 
@@ -292,7 +347,7 @@
             render: function(data, type, row, meta) {
                 let text = ''
                 if (data != null) {
-                    text = row.menu.price
+                    text = hrg(row.menu.price)
                 }
                 if (type == 'display') {
                     return text
@@ -303,6 +358,13 @@
         }, {
             title: "Qty",
             data: 'qty',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    return hrg(data)
+                } else {
+                    return data
+                }
+            }
         }, {
             title: "Disc",
             data: 'menu_id',
@@ -321,12 +383,12 @@
             title: "Subtotal",
             data: 'menu_id',
             render: function(data, type, row, meta) {
-                let text = ''
+                let text
                 if (data != null) {
                     text = (row.menu.price * row.qty) - (row.menu.price * row.qty * row.menu.disc / 100)
                 }
                 if (type == 'display') {
-                    return text
+                    return hrg(text)
                 } else {
                     return data
                 }
@@ -335,8 +397,12 @@
             title: "Desc",
             data: 'desc',
         }, ],
-        headerCallback: function(e, a, t, n, s) {
-            e.getElementsByTagName("th")[0].innerHTML = '<div class="custom-checkbox custom-control"><input type="checkbox" class="custom-control-input chk-parent select-customers-info" id="checkbox-all"><label for="checkbox-all" class="custom-control-label">&nbsp;</label></div>'
+        headerCallback: function(thead, data, start, end, display) {
+            thead.getElementsByTagName("th")[0].innerHTML = '<div class="custom-checkbox custom-control"><input type="checkbox" class="custom-control-input chk-parent select-customers-info" id="checkbox-all"><label for="checkbox-all" class="custom-control-label">&nbsp;</label></div>'
+        },
+        drawCallback: function(settings) {
+            let data = this.api().ajax.json().data
+            total(data)
         },
     });
     multiCheck(table);
@@ -473,7 +539,7 @@
 
     $('#tblmenu tbody').on('click', 'tr', function() {
         let data = tblmenu.row(this).data()
-        if (data.stock > 0) {
+        if (data.stock > 0 && data.status == 'active') {
             if (confirm('Add ' + data.name + ' to cart?')) {
                 $.ajaxSetup({
                     headers: {
@@ -518,7 +584,7 @@
                 });
             }
         } else {
-            alert('Stock 0')
+            alert('Stock 0 / Nonactive')
         }
 
     });

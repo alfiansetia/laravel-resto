@@ -26,6 +26,12 @@ class CartController extends Controller
 
     public function index(Request $request)
     {
+        $carts = Cart::where('user_id', '=', Auth::user()->id)->WhereRelation('menu', 'stock', '<', 1)->orWhereRelation('menu', 'status', '=', 'nonactive')->get();
+        if (count($carts) > 0) {
+            foreach ($carts as $cart) {
+                $cart->delete();
+            }
+        }
         if ($request->ajax()) {
             $data = Cart::with('user', 'menu')->get();
             if ($request->name) {
@@ -63,8 +69,8 @@ class CartController extends Controller
         $cart = Cart::where('user_id', '=', Auth::user()->id)->where('menu_id', '=', $request->menu)->first();
         $menu = Menu::find($request->menu);
         if ($cart) {
-            if ($menu->stock < ($cart->qty + $request->qty)) {
-                return response()->json(['status' => false, 'message' => 'Out of stock', 'data' => '']);
+            if (($menu->stock < ($cart->qty + $request->qty)) || ($menu->status == 'nonactive')) {
+                return response()->json(['status' => false, 'message' => 'Out of stock / Nonactive', 'data' => '']);
             } else {
                 $cart->update([
                     'qty'       => $cart->qty + $request->qty,
