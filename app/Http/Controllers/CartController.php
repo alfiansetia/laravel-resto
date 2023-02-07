@@ -123,7 +123,17 @@ class CartController extends Controller
      */
     public function update(Request $request, Cart $cart)
     {
-        //
+        $this->validate($request, [
+            'qty'   => 'required|integer|gt:0|lte:' . $cart->menu->stock,
+        ]);
+        $cart->update([
+            'qty'  => $request->qty,
+        ]);
+        if ($cart) {
+            return response()->json(['status' => true, 'message' => 'Success Update Data', 'data' => '']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Failed Update Data', 'data' => '']);
+        }
     }
 
     /**
@@ -132,8 +142,25 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cart $cart)
+    public function destroy(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            if ($request->id) {
+                $count = count($request->id);
+                $counter = 0;
+                foreach ($request->id as $id) {
+                    $cart = Cart::findOrFail($id);
+                    $cart->delete();
+                    if ($cart) {
+                        $counter = $counter + 1;
+                    }
+                }
+                return response()->json(['status' => true, 'message' => 'Success Delete ' . $count . '/' . $counter . ' Data', 'data' => '']);
+            } else {
+                return response()->json(['status' => false, 'message' => 'No Selected Data', 'data' => '']);
+            }
+        } else {
+            abort(404);
+        }
     }
 }

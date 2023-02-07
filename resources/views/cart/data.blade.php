@@ -14,6 +14,7 @@
     <h1>{{ $title }} </h1>
     <div class="section-header-button">
         <button type="button" id="add_to_cart" class="btn btn-primary">Add to cart</a>
+            <button type="button" id="btn_delete" class="btn btn-danger ml-1">Delete</a>
     </div>
     <div class="section-header-breadcrumb">
         <div class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></div>
@@ -71,7 +72,7 @@
                     <div class="form-group row mb-4">
                         <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Disc</label>
                         <div class="col-sm-12 col-md-8">
-                            <input type="number" id="disc" class="form-control" value="0" onchange="zero(this)">
+                            <input type="number" id="disc" class="form-control" value="0" min="0" max="100" onchange="zero(this)">
                         </div>
                     </div>
                     <div class="form-group row mb-4">
@@ -154,6 +155,10 @@
 
 @push('js')
 <script>
+    // function qty(value){
+    //     console.log(value)
+    // }
+
     function zero(dom) {
         if ($(dom).val() == '' || $(dom).val() < 0) {
             $(dom).val(0)
@@ -214,6 +219,72 @@
         });
 
         $('#name_cart').focus()
+
+    });
+
+    $('#btn_delete').click(function() {
+        deleteData()
+    })
+
+    $('#table').on('change', '#qty', function() {
+        let row = $(this).parents('tr')[0];
+        data = table.row(row).data()
+        if (this.value > 0) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                }
+            });
+            let url = "{{ route('cart.update', ':id') }}";
+            url = url.replace(':id', data.id);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    qty: this.value,
+                    _method: 'put',
+                },
+                beforeSend: function() {
+                    block();
+                },
+                success: function(res) {
+                    table.ajax.reload();
+                    unblock();
+                    if (res.status == false) {
+                        swal(
+                            'Failed!',
+                            res.message,
+                            'error'
+                        )
+                    }
+                },
+                error: function(xhr, status, error) {
+                    table.ajax.reload()
+                    unblock();
+                    er = xhr.responseJSON.errors
+                    if (xhr.status == 500) {
+                        swal(
+                            'Failed!',
+                            'Server Error',
+                            'error'
+                        )
+                    } else if (xhr.status == 422) {
+                        swal(
+                            'Failed!',
+                            xhr.responseJSON.message,
+                            'error'
+                        )
+                    }
+                }
+            });
+        } else {
+            swal(
+                'Failed!',
+                'Qty must greater than 0',
+                'error'
+            )
+            $(this).val(1)
+        }
     });
 
     var tblmenu = $("#tblmenu").DataTable({
@@ -360,7 +431,7 @@
             data: 'qty',
             render: function(data, type, row, meta) {
                 if (type == 'display') {
-                    return hrg(data)
+                    return `<input type="number" id="qty" class="form-control form-control-sm" value="${data}" min="1">`
                 } else {
                     return data
                 }
@@ -804,12 +875,14 @@
                     });
                     $.ajax({
                         type: 'DELETE',
-                        url: "{{ route('menu.destroy') }}",
+                        url: "{{ route('cart.destroy') }}",
                         data: $(form).serialize(),
                         beforeSend: function() {
                             block();
+                            $('#btn_delete').prop('disabled', true);
                         },
                         success: function(res) {
+                            $('#btn_delete').prop('disabled', false);
                             unblock();
                             table.ajax.reload();
                             if (res.status == true) {
@@ -827,6 +900,7 @@
                             }
                         },
                         error: function(xhr, status, error) {
+                            $('#btn_delete').prop('disabled', false);
                             unblock();
                             er = xhr.responseJSON.errors
                             swal(
