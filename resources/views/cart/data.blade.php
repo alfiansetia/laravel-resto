@@ -44,7 +44,7 @@
                             <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
                                 <thead>
                                     <tr>
-                                        <th class="dt-no-sorting" style="width: 30px;">Id</th>
+                                        <th class="dt-no-sorting" style="width: 30px;"><i class="fas fa-cog"></i></th>
                                         <th>Menu</th>
                                         <th>Price</th>
                                         <th>Qty</th>
@@ -161,7 +161,6 @@
 
 @push('js')
 <script>
-
     function zero(dom) {
         if ($(dom).val() == '' || $(dom).val() < 0) {
             $(dom).val(0)
@@ -384,12 +383,12 @@
         columnDefs: [],
         info: false,
         columns: [{
-            title: 'Id',
+            title: '<i class="fas fa-cog"></i>',
             data: 'id',
             orderable: false,
             width: "30px",
             render: function(data, type, row, meta) {
-                return `<div class="custom-checkbox custom-control"><input type="checkbox" id="check${data}" data-checkboxes="mygroup" name="id[]" value="${data}" class="custom-control-input child-chk select-customers-info"><label for="check${data}" class="custom-control-label">&nbsp;</label></div>`
+                return `<button class="btn btn-sm btn-danger" id="btn_delete" value="${data}" type="button"><i class="fas fa-trash"></i></button>`
             }
         }, {
             title: "Menu",
@@ -461,9 +460,6 @@
             title: "Desc",
             data: 'desc',
         }, ],
-        headerCallback: function(thead, data, start, end, display) {
-            thead.getElementsByTagName("th")[0].innerHTML = '<div class="custom-checkbox custom-control"><input type="checkbox" class="custom-control-input chk-parent select-customers-info" id="checkbox-all"><label for="checkbox-all" class="custom-control-label">&nbsp;</label></div>'
-        },
         drawCallback: function(settings) {
             let data = this.api().ajax.json().data
             total(data)
@@ -850,76 +846,64 @@
         });
     })
 
-    function deleteData() {
-        if (selected()) {
-            swal({
-                title: 'Delete Selected Data?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                buttons: true,
-                dangerMode: true,
-            }).then(function(result) {
-                if (result) {
-                    let form = $("#formSelected");
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.ajax({
-                        type: 'DELETE',
-                        url: "{{ route('cart.destroy') }}",
-                        data: $(form).serialize(),
-                        beforeSend: function() {
-                            block();
-                            $('#btn_delete').prop('disabled', true);
-                        },
-                        success: function(res) {
-                            $('#btn_delete').prop('disabled', false);
-                            unblock();
-                            table.ajax.reload();
-                            if (res.status == true) {
-                                swal(
-                                    'Deleted!',
-                                    res.message,
-                                    'success'
-                                )
-                            } else {
-                                swal(
-                                    'Failed!',
-                                    res.message,
-                                    'error'
-                                )
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            $('#btn_delete').prop('disabled', false);
-                            unblock();
-                            er = xhr.responseJSON.errors
+    $('#table').on('click', '#btn_delete', function() {
+        let row = $(this).parents('tr')[0];
+        data = table.row(row).data()
+        console.log(data.id)
+
+        swal({
+            title: 'Delete Selected Data?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then(function(result) {
+            if (result) {
+                let url = "{{ route('cart.destroy', ':id') }}";
+                url = url.replace(':id', data.id);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    data: {
+                        // _method: 'DELETE',
+                    },
+                    beforeSend: function() {
+                        block();
+                    },
+                    success: function(res) {
+                        unblock();
+                        table.ajax.reload();
+                        if (res.status == true) {
+                            swal(
+                                'Deleted!',
+                                res.message,
+                                'success'
+                            )
+                        } else {
                             swal(
                                 'Failed!',
-                                'Server Error',
+                                res.message,
                                 'error'
                             )
                         }
-                    });
-                }
-            })
-        }
-    }
-
-    function selected() {
-        let id = $('input[name="id[]"]:checked').length;
-        if (id <= 0) {
-            swal({
-                title: 'Failed!',
-                text: "No Selected Data!",
-                icon: 'error',
-            })
-            return false
-        } else {
-            return true
-        }
-    }
+                    },
+                    error: function(xhr, status, error) {
+                        unblock();
+                        er = xhr.responseJSON.errors
+                        swal(
+                            'Failed!',
+                            'Server Error',
+                            'error'
+                        )
+                    }
+                });
+            }
+        })
+    });
 </script>
 @endpush

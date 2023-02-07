@@ -126,6 +126,7 @@ class CartController extends Controller
         $this->validate($request, [
             'qty'   => 'required|integer|gt:0|lte:' . $cart->menu->stock,
         ]);
+        $cart = Cart::where('user_id', '=', Auth::user()->id)->find($cart->id);
         $cart->update([
             'qty'  => $request->qty,
         ]);
@@ -142,22 +143,15 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, Cart $cart)
     {
         if ($request->ajax()) {
-            if ($request->id) {
-                $count = count($request->id);
-                $counter = 0;
-                foreach ($request->id as $id) {
-                    $cart = Cart::findOrFail($id);
-                    $cart->delete();
-                    if ($cart) {
-                        $counter = $counter + 1;
-                    }
-                }
-                return response()->json(['status' => true, 'message' => 'Success Delete ' . $count . '/' . $counter . ' Data', 'data' => '']);
+            $cart = Cart::where('user_id', '=', Auth::user()->id)->findOrFail($cart->id);
+            $cart->delete();
+            if ($cart) {
+                return response()->json(['status' => true, 'message' => 'Success Delete Data', 'data' => '']);
             } else {
-                return response()->json(['status' => false, 'message' => 'No Selected Data', 'data' => '']);
+                return response()->json(['status' => false, 'message' => 'Failed Delete Data', 'data' => '']);
             }
         } else {
             abort(404);
