@@ -26,9 +26,9 @@ class TableController extends Controller
     {
         if ($request->ajax()) {
             $data = Table::get();
-            // if ($request->email) {
-            //     $data = User::Table('email', 'like', "%{$request->email}%")->get();
-            // }
+            if ($request->number) {
+                $data = Table::where('number', 'like', "%{$request->number}%")->get();
+            }
             return DataTables::of($data)->toJson();
         }
         return view('table.data')->with(['comp' => $this->comp, 'title' => 'Data Table']);

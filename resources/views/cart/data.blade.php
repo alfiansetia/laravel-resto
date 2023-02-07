@@ -33,6 +33,12 @@
                             <input type="text" name="name" class="form-control form-control-lg" id="name_cart" placeholder="Input Name" required>
                         </div>
                     </div>
+                    <div class="form-group row mb-2">
+                        <label for="name_cart" class="col-sm-3 col-form-label"><span class="h4">Table :</span></label>
+                        <div class="col-sm-9">
+                            <select name="table" id="select_table" class="form-control form-control-lg" style="width: 100%;"></select>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <form action="" id="formSelected">
                             <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
@@ -84,13 +90,13 @@
                     <div class="form-group row mb-4">
                         <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Bill</label>
                         <div class="col-sm-12 col-md-8">
-                            <input type="number" id="bill" class="form-control">
+                            <input type="number" id="bill" class="form-control" min="0" value="0">
                         </div>
                     </div>
                     <div class="form-group row mb-4">
                         <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Return</label>
                         <div class="col-sm-12 col-md-8">
-                            <input type="number" id="return" class="form-control">
+                            <input type="number" id="return" class="form-control" disabled>
                         </div>
                     </div>
                 </div>
@@ -155,9 +161,6 @@
 
 @push('js')
 <script>
-    // function qty(value){
-    //     console.log(value)
-    // }
 
     function zero(dom) {
         if ($(dom).val() == '' || $(dom).val() < 0) {
@@ -177,7 +180,6 @@
         $('#total').val(total);
         $('#gtotal').val(gtotal);
         $('#grandtotal').text('Rp. ' + hrg(gtotal));
-        console.log(total)
     }
 
     function hrg(x) {
@@ -186,14 +188,14 @@
     }
 
     $(document).ready(function() {
-        $("#catmenu, #edit_catmenu").select2({
-            placeholder: "Select a Category",
+        $("#select_table").select2({
+            placeholder: "Select a Table",
             ajax: {
                 delay: 1000,
-                url: "{{ route('catmenu.index') }}",
+                url: "{{ route('table.index') }}",
                 data: function(params) {
                     return {
-                        name: params.term,
+                        number: params.term,
                         page: params.page
                     };
                 },
@@ -201,25 +203,16 @@
                     return {
                         results: $.map(data.data, function(item) {
                             return {
-                                text: item.name,
+                                text: item.number + ' [' + item.name + ']' + ' =>' + item.status + ' ',
                                 id: item.id,
-                                disabled: item.status == 'nonactive' ? true : false,
+                                disabled: item.status == 'free' ? false : true,
                             }
                         })
                     };
                 },
             },
-            sorter: function(results) {
-                var query = $('.select2-search__field').val().toLowerCase();
-                return results.sort(function(a, b) {
-                    return a.text.toLowerCase().indexOf(query) -
-                        b.text.toLowerCase().indexOf(query);
-                });
-            }
         });
-
         $('#name_cart').focus()
-
     });
 
     $('#btn_delete').click(function() {
