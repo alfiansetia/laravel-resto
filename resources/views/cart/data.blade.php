@@ -14,7 +14,6 @@
     <h1>{{ $title }} </h1>
     <div class="section-header-button">
         <button type="button" id="add_to_cart" class="btn btn-primary">Add to cart</a>
-            <button type="button" id="btn_delete" class="btn btn-danger ml-1">Delete</a>
     </div>
     <div class="section-header-breadcrumb">
         <div class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></div>
