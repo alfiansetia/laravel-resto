@@ -33,9 +33,24 @@
                         </div>
                     </div>
                     <div class="form-group row mb-2">
-                        <label for="name_cart" class="col-sm-3 col-form-label"><span class="h4">Table :</span></label>
+                        <label for="select_table" class="col-sm-3 col-form-label"><span class="h4">Table :</span></label>
                         <div class="col-sm-9">
                             <select name="table" id="select_table" class="form-control form-control-lg" style="width: 100%;"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label for="select_category" class="col-sm-3 col-form-label"><span class="h4">Cat :</span></label>
+                        <div class="col-sm-9">
+                            <select name="category" id="select_category" class="form-control form-control-lg" style="width: 100%;">
+                                <option value="dine in">dine in</option>
+                                <option value="take away">take away</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label for="desc_cart" class="col-sm-3 col-form-label"><span class="h4">Desc :</span></label>
+                        <div class="col-sm-9">
+                            <textarea name="desc" class="form-control" id="desc_cart" cols="30" rows="10"></textarea>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -98,6 +113,7 @@
                             <input type="text" id="return" class="form-control" disabled>
                         </div>
                     </div>
+                    <button type="button" id="save" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </div>
@@ -209,6 +225,8 @@
         });
         $('#name_cart').focus()
 
+        $('#select_category').select2();
+
         $('#bill').change(function() {
             table.ajax.reload()
         })
@@ -278,6 +296,77 @@
             $(this).val(1)
         }
     });
+
+    $('#save').click(function() {
+        let data = table.rows().data();
+        if ($('#name_cart').val() == '') {
+            // alert('Input Name');
+            $('#name_cart').addClass('is-invalid');
+            $('#name_cart').focus()
+        } else if ($('#select_table').val() == null) {
+            // alert('Input Table');
+            $('#select_table').focus()
+        } else {
+            $('#name_cart').removeClass('is-invalid');
+            $('#select_table').removeClass('is-invalid');
+            if (data.length > 0) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('order.store') }}",
+                    data: {
+                        name: $('#name_cart').val(),
+                        table: $('#select_table').val(),
+                        category : $('#select_category').val(),
+                        desc: $('#desc_cart').val(),
+                    },
+                    beforeSend: function() {
+                        block();
+                        $(this).prop('disabled', true);
+                    },
+                    success: function(res) {
+                        unblock();
+                        table.ajax.reload();
+                        $(this).prop('disabled', false);
+                        // if (res.status == true) {
+                        //     swal(
+                        //         'Success!',
+                        //         res.message,
+                        //         'success'
+                        //     )
+                        // } else {
+                        //     swal(
+                        //         'Failed!',
+                        //         res.message,
+                        //         'error'
+                        //     )
+                        // }
+                    },
+                    error: function(xhr, status, error) {
+                        unblock();
+                        $(this).prop('disabled', false);
+                        er = xhr.responseJSON.errors
+                        if (xhr.status == 500) {
+                            swal(
+                                'Failed!',
+                                'Server Error',
+                                'error'
+                            )
+                        }
+                    }
+                });
+            } else {
+                alert('select menu!')
+            }
+        }
+
+        // console.log(table.rows().data().length)
+
+    })
 
     var tblmenu = $("#tblmenu").DataTable({
         processing: true,
