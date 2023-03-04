@@ -54,45 +54,84 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <form action="" id="formSelected">
-                            <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
-                                <thead>
-                                    <tr>
-                                        <th class="dt-no-sorting" style="width: 30px;"><i class="fas fa-cog"></i></th>
-                                        <th>Menu</th>
-                                        <th>Price</th>
-                                        <th>Qty</th>
-                                        <th>Disc</th>
-                                        <th>Subotal</th>
-                                        <th>Desc</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </form>
+                        <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
+                            <thead>
+                                <tr>
+                                    <th class="dt-no-sorting" style="width: 30px;"><i class="fas fa-cog"></i></th>
+                                    <th>Menu</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>Disc</th>
+                                    <th>Subotal</th>
+                                    <th>Desc</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+            <!-- <div class="card">
+                <div class="card-header">
+                    <h4>Last 5 Transactions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tabletrx" style="width: 100%;cursor: pointer;">
+                            <thead>
+                                <tr>
+                                    <th class="dt-no-sorting" style="width: 30px;">No</th>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Table</th>
+                                    <th>Cat</th>
+                                    <th>Status</th>
+                                    <th>Act</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>Invoices</h4>
+                    <div class="card-header-action">
+                        <a href="#" class="btn btn-danger">View More <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive table-invoice">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+
             <div class="card">
                 <div class="card-body">
                     <h1 id="grandtotal"></h1>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <div class="form-group row mb-4">
                         <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Total</label>
                         <div class="col-sm-12 col-md-8">
                             <input type="text" id="total" class="form-control" disabled>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Disc</label>
-                        <div class="col-sm-12 col-md-8">
-                            <input type="number" id="disc" class="form-control" value="0" min="0" max="100" onchange="zero(this)">
                         </div>
                     </div>
                     <div class="form-group row mb-4">
@@ -117,12 +156,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="col-lg-8">
-            <div class="card">
-                <div class="card-body">
-                </div>
-            </div>
-        </div> -->
     </div>
 </div>
 @endsection
@@ -176,21 +209,12 @@
 
 @push('js')
 <script>
-    function zero(dom) {
-        if ($(dom).val() == '' || $(dom).val() < 0) {
-            $(dom).val(0)
-        } else if ($(dom).val() > 100)[
-            $(dom).val(100)
-        ]
-        table.ajax.reload()
-    }
-
     function total(data) {
         var total = 0;
         $.each(data, function(i, v) {
             total += (v.menu.price * v.qty) - (v.menu.price * v.qty * v.menu.disc / 100);
         });
-        gtotal = parseInt((total) - (total * parseInt($('#disc').val()) / 100))
+        gtotal = parseInt((total))
         $('#total').val(hrg(total));
         $('#gtotal').val(hrg(gtotal));
         $('#grandtotal').text('Rp. ' + hrg(gtotal));
@@ -321,7 +345,7 @@
                     data: {
                         name: $('#name_cart').val(),
                         table: $('#select_table').val(),
-                        category : $('#select_category').val(),
+                        category: $('#select_category').val(),
                         desc: $('#desc_cart').val(),
                     },
                     beforeSend: function() {
@@ -332,19 +356,19 @@
                         unblock();
                         table.ajax.reload();
                         $(this).prop('disabled', false);
-                        // if (res.status == true) {
-                        //     swal(
-                        //         'Success!',
-                        //         res.message,
-                        //         'success'
-                        //     )
-                        // } else {
-                        //     swal(
-                        //         'Failed!',
-                        //         res.message,
-                        //         'error'
-                        //     )
-                        // }
+                        if (res.status == true) {
+                            swal(
+                                'Success!',
+                                res.message,
+                                'success'
+                            )
+                        } else {
+                            swal(
+                                'Failed!',
+                                res.message,
+                                'error'
+                            )
+                        }
                     },
                     error: function(xhr, status, error) {
                         unblock();
@@ -367,6 +391,76 @@
         // console.log(table.rows().data().length)
 
     })
+
+    var tblmenu = $("#tabletrx").DataTable({
+        processing: true,
+        serverSide: true,
+        rowId: 'id',
+        ajax: {
+            url: "{{ route('order.index') }}",
+            error: function(xhr, error, code) {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
+        },
+        dom: 'lrt',
+        lengthChange: false,
+        paging: false,
+        searching: true,
+        columnDefs: [],
+        info: false,
+        columns: [{
+            title: "Name",
+            data: 'name',
+            render: function(data, type, row, meta) {
+                let text;
+                if (data != null) {
+                    if (row.status == 'active') {
+                        text = `<i class="fas fa-circle text-success" data-toggle="tooltip" title="Active"></i> ${data}`;
+                    } else {
+                        text = `<i class="fas fa-circle text-danger" data-toggle="tooltip" title="Nonactive"></i> ${data}`;
+                    }
+                }
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
+        }, {
+            title: "Category",
+            data: 'catmenu_id',
+        }, {
+            title: "Price",
+            data: 'price',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    return hrg(data)
+                } else {
+                    return data
+                }
+            }
+        }, {
+            title: "Disc",
+            data: 'disc',
+        }, {
+            title: "Stok",
+            data: 'stock',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    return hrg(data)
+                } else {
+                    return data
+                }
+            }
+        }, {
+            title: "Desc",
+            data: 'desc',
+        }]
+    });
 
     var tblmenu = $("#tblmenu").DataTable({
         processing: true,
