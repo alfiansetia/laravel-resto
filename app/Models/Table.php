@@ -15,4 +15,9 @@ class Table extends Model
         'status',
         'desc',
     ];
+
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
 }

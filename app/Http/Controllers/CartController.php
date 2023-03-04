@@ -26,10 +26,17 @@ class CartController extends Controller
 
     public function index(Request $request)
     {
-        $carts = Cart::where('user_id', '=', Auth::user()->id)->WhereRelation('menu', 'stock', '<', 1)->orWhereRelation('menu', 'status', '=', 'nonactive')->get();
+        $carts = Cart::where('user_id', '=', Auth::id())->get();
         if (count($carts) > 0) {
             foreach ($carts as $cart) {
-                $cart->delete();
+                if ($cart->menu->stock < 1 || $cart->menu->status == 'nonactive') {
+                    $cart->delete();
+                }
+                if ($cart->menu->stock > 1 && $cart->qty > $cart->menu->stock) {
+                    $cart->update([
+                        'qty' => $cart->menu->stock
+                    ]);
+                }
             }
         }
         if ($request->ajax()) {
@@ -79,7 +86,7 @@ class CartController extends Controller
             }
         } else {
             $cart = Cart::create([
-                'user_id'   => Auth::user()->id,
+                'user_id'   => Auth::id(),
                 'menu_id'   => $request->menu,
                 'qty'       => $request->qty,
                 'desc'      => $request->desc,
@@ -126,7 +133,7 @@ class CartController extends Controller
         $this->validate($request, [
             'qty'   => 'required|integer|gt:0|lte:' . $cart->menu->stock,
         ]);
-        $cart = Cart::where('user_id', '=', Auth::user()->id)->find($cart->id);
+        $cart = Cart::where('user_id', '=', Auth::id())->find($cart->id);
         $cart->update([
             'qty'  => $request->qty,
         ]);

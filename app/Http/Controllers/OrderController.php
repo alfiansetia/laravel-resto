@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Comp;
+use App\Models\Dtorder;
+use App\Models\Menu;
 use App\Models\Order;
+use App\Models\Table;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -24,7 +29,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Order::with('dtorder')->get();
+            $data = Order::with('dtorder', 'table', 'user')->get();
             if ($request->name) {
                 $data = Order::where('name', 'like', "%{$request->name}%")->get();
             }
@@ -51,8 +56,68 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        return response()->json($request);
+        $this->validate($request, [
+            'name'      => 'required|max:30',
+            'table'     => 'required|integer',
+            'category'  => 'required|in:dine in,take away',
+            'desc'      => 'max:50',
+        ]);
+        // $cart = Cart::where('user_id', Auth::id())->with('menu')->get();
+        $carts = Cart::with('menu')->where('user_id', '=', Auth::id())->get();
+        $status = false;
+        $message = '';
+        $data = [];
+        $fail = [];
+
+        foreach ($carts as $cart) {
+            if (($cart->menu->stock < $cart->qty) || $cart->menu->status == 'nonactive') {
+                // $fail = $fail + 1;
+                array_push($fail, $cart);
+            }
+        }
+
+        if (count($fail) > 0) {
+            return response()->json([
+                'status'    => false,
+                'message'   => count($fail) . ' Data tidak bisa diproses',
+                'data'      => $fail,
+            ]);
+        }
+        $order = Order::create([
+            'name'      => $request->name,
+            'table_id'  => $request->table,
+            'user_id'   => Auth::id(),
+            'category'  => $request->category,
+            'date'      => date("Y-m-d H:i:s"),
+            'status'    => 'paid',
+            'desc'      => $request->desc,
+        ]);
+        $table = Table::find($request->table);
+        $table->update([
+            'status' => 'booked',
+        ]);
+        foreach ($carts as $cart) {
+            Dtorder::create([
+                'order_id'  => $order->id,
+                'menu_id'   => $cart->menu_id,
+                'price'     => $cart->menu->price,
+                'disc'      => $cart->menu->disc,
+                'qty'       => $cart->qty,
+            ]);
+            $menu = Menu::find($cart->menu_id);
+            $menu->update([
+                'stock' => $menu->stock - $cart->qty,
+            ]);
+        }
+
+        foreach ($carts as $cart) {
+            $cart->delete();
+        }
+        return response()->json([
+            'status'    => true,
+            'message'   => 'Transaksi berhasil',
+            'data'      => [],
+        ]);
     }
 
     /**
