@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comp;
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Yajra\DataTables\Facades\DataTables;
 
 class MenuController extends Controller
@@ -46,15 +47,23 @@ class MenuController extends Controller
             'name'      => 'required|max:25|min:3|unique:menu,name',
             'catmenu'   => 'required|integer',
             'status'    => 'required|in:active,nonactive',
+            'img'       => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'price'     => 'integer',
             'disc'      => 'integer',
             'stock'     => 'integer',
             'desc'      => 'max:150',
         ]);
+        $img = null;
+        if ($files = $request->file('img')) {
+            $destinationPath = 'images/menu/'; // upload path
+            $img = date('YmdHis') . "." . $files->getClientOriginalExtension();
+            $files->move($destinationPath, $img);
+        }
         $menu = Menu::create([
             'name'      => $request->name,
-            'catmenu_id'=> $request->catmenu,
+            'catmenu_id' => $request->catmenu,
             'status'    => $request->status,
+            'img'       => $img,
             'price'     => $request->price,
             'disc'      => $request->disc,
             'stock'     => $request->stock,
@@ -96,19 +105,30 @@ class MenuController extends Controller
             'name'      => 'required|max:25|min:3|unique:menu,name,' . $menu->id,
             'catmenu'   => 'required|integer',
             'status'    => 'required|in:active,nonactive',
+            'img'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'price'     => 'integer',
             'disc'      => 'integer',
             'stock'     => 'integer',
             'desc'      => 'max:150',
         ]);
+        $img = $menu->img;
+        if ($files = $request->file('img')) {
+            //delete old file
+            File::delete('images/menu/' . $img);
+            //insert new file
+            $destinationPath = 'images/menu/'; // upload path
+            $img = date('YmdHis') . "." . $files->getClientOriginalExtension();
+            $files->move($destinationPath, $img);
+        }
         $menu->update([
-            'name'      => $request->name,
-            'catmenu_id'=> $request->catmenu,
-            'status'    => $request->status,
-            'price'     => $request->price,
-            'disc'      => $request->disc,
-            'stock'     => $request->stock,
-            'desc'      => $request->desc,
+            'name'          => $request->name,
+            'catmenu_id'    => $request->catmenu,
+            'status'        => $request->status,
+            'img'           => $img,
+            'price'         => $request->price,
+            'disc'          => $request->disc,
+            'stock'         => $request->stock,
+            'desc'          => $request->desc,
         ]);
         if ($menu) {
             return response()->json(['status' => true, 'message' => 'Success Update Data', 'data' => '']);
@@ -131,6 +151,9 @@ class MenuController extends Controller
                 $counter = 0;
                 foreach ($request->id as $id) {
                     $menu = Menu::findOrFail($id);
+                    if ($menu->img != null) {
+                        File::delete('images/menu/' . $menu->img);
+                    }
                     $menu->delete();
                     if ($menu) {
                         $counter = $counter + 1;
@@ -171,5 +194,4 @@ class MenuController extends Controller
             abort(404);
         }
     }
-
 }

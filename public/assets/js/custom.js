@@ -62,3 +62,8 @@ function checkall(clickchk, relChkbox) {
         multichk.prop('checked', $(this).prop('checked'));
     });
 }
+
+function hrg(x) {
+    let a = parseInt(x)
+    return a.toLocaleString('en-US')
+}

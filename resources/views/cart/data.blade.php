@@ -71,7 +71,7 @@
                     <div class="form-group row mb-4">
                         <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Total</label>
                         <div class="col-sm-12 col-md-8">
-                            <input type="number" id="total" class="form-control" disabled>
+                            <input type="text" id="total" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="form-group row mb-4">
@@ -83,7 +83,7 @@
                     <div class="form-group row mb-4">
                         <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Grand Total</label>
                         <div class="col-sm-12 col-md-8">
-                            <input type="number" id="gtotal" class="form-control" disabled>
+                            <input type="text" id="gtotal" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="form-group row mb-4">
@@ -95,7 +95,7 @@
                     <div class="form-group row mb-4">
                         <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Return</label>
                         <div class="col-sm-12 col-md-8">
-                            <input type="number" id="return" class="form-control" disabled>
+                            <input type="text" id="return" class="form-control" disabled>
                         </div>
                     </div>
                 </div>
@@ -175,15 +175,12 @@
             total += (v.menu.price * v.qty) - (v.menu.price * v.qty * v.menu.disc / 100);
         });
         gtotal = parseInt((total) - (total * parseInt($('#disc').val()) / 100))
-        $('#total').val(total);
-        $('#gtotal').val(gtotal);
+        $('#total').val(hrg(total));
+        $('#gtotal').val(hrg(gtotal));
         $('#grandtotal').text('Rp. ' + hrg(gtotal));
+        $('#return').val(hrg(parseInt($('#bill').val() - gtotal)));
     }
 
-    function hrg(x) {
-        let a = parseInt(x)
-        return a.toLocaleString('en-US')
-    }
 
     $(document).ready(function() {
         $("#select_table").select2({
@@ -211,6 +208,10 @@
             },
         });
         $('#name_cart').focus()
+
+        $('#bill').change(function() {
+            table.ajax.reload()
+        })
     });
 
     $('#btn_delete').click(function() {

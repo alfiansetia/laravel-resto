@@ -87,8 +87,13 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="stock"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stock Menu"></i>Stock :</label>
-                        <input type="number" name="stock" class="form-control" id="stok" placeholder="Please Enter Stock" value="0">
+                        <input type="number" name="stock" class="form-control" id="stock" placeholder="Please Enter Stock" value="0">
                         <span id="err_stock" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="img"><i class="fas fa-image mr-1" data-toggle="tooltip" title="Image Menu"></i>Image :</label>
+                        <input type="file" name="img" class="form-control" id="img" placeholder="Please Enter Image" required>
+                        <span id="err_img" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
@@ -152,6 +157,11 @@
                         <label class="control-label" for="edit_stock"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stock Menu"></i>Stock :</label>
                         <input type="number" name="stock" class="form-control" id="edit_stock" placeholder="Please Enter Stock" value="0">
                         <span id="err_edit_stock" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_img"><i class="fas fa-image mr-1" data-toggle="tooltip" title="Image Menu"></i>Image :</label>
+                        <input type="file" name="img" class="form-control" id="edit_img" placeholder="Please Enter Image">
+                        <span id="err_edit_img" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
@@ -302,6 +312,19 @@
         }, {
             title: "Name",
             data: 'name',
+            render: function(data, type, row, meta) {
+                let text = ''
+                if (row.img != null) {
+                    text = `<img src="{{ url('/images/menu/${row.img}') }}" width="30px" height="30px"> ${data}</td>`
+                } else {
+                    text = `<img src="{{ url('/images/menu/default.png') }}" width="30px" height="30px"> ${data}</td>`
+                }
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
         }, {
             title: "Category",
             data: 'catmenu_id',
@@ -319,6 +342,13 @@
         }, {
             title: "Price",
             data: 'price',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    return hrg(data)
+                } else {
+                    return data
+                }
+            }
         }, {
             title: "Disc",
             data: 'disc',
@@ -427,8 +457,12 @@
             });
             $.ajax({
                 type: 'POST',
+                mimeType: 'application/json',
+                dataType: 'json',
+                contentType: false,
+                processData: false,
                 url: "{{ route('menu.store') }}",
-                data: $(form).serialize(),
+                data: new FormData($(form)[0]),
                 beforeSend: function() {
                     block();
                     $('button[type="submit"]').prop('disabled', true);
@@ -608,8 +642,12 @@
             url = url.replace(':id', id);
             $.ajax({
                 type: 'POST',
+                mimeType: 'application/json',
+                dataType: 'json',
+                contentType: false,
+                processData: false,
                 url: url,
-                data: $(form).serialize(),
+                data: new FormData($(form)[0]),
                 beforeSend: function() {
                     block();
                     $('button[type="submit"]').prop('disabled', true);
