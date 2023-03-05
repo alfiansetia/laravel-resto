@@ -32,7 +32,7 @@ class CartController extends Controller
                 if ($cart->menu->stock < 1 || $cart->menu->status == 'nonactive') {
                     $cart->delete();
                 }
-                if ($cart->menu->stock > 1 && $cart->qty > $cart->menu->stock) {
+                if ($cart->menu->stock > 0 && $cart->qty > $cart->menu->stock) {
                     $cart->update([
                         'qty' => $cart->menu->stock
                     ]);

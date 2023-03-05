@@ -33,18 +33,18 @@
                         </div>
                     </div>
                     <div class="form-group row mb-2">
-                        <label for="select_table" class="col-sm-3 col-form-label"><span class="h4">Table :</span></label>
-                        <div class="col-sm-9">
-                            <select name="table" id="select_table" class="form-control form-control-lg" style="width: 100%;"></select>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-2">
                         <label for="select_category" class="col-sm-3 col-form-label"><span class="h4">Cat :</span></label>
                         <div class="col-sm-9">
                             <select name="category" id="select_category" class="form-control form-control-lg" style="width: 100%;">
                                 <option value="dine in">dine in</option>
                                 <option value="take away">take away</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label for="select_table" class="col-sm-3 col-form-label"><span class="h4">Table :</span></label>
+                        <div class="col-sm-9">
+                            <select name="table" id="select_table" class="form-control form-control-lg" style="width: 100%;"></select>
                         </div>
                     </div>
                     <div class="form-group row mb-2">
@@ -72,55 +72,8 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="card">
-                <div class="card-header">
-                    <h4>Last 5 Transactions</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover" id="tabletrx" style="width: 100%;cursor: pointer;">
-                            <thead>
-                                <tr>
-                                    <th class="dt-no-sorting" style="width: 30px;">No</th>
-                                    <th>Date</th>
-                                    <th>Name</th>
-                                    <th>Table</th>
-                                    <th>Cat</th>
-                                    <th>Status</th>
-                                    <th>Act</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div> -->
-
-            <div class="card">
-                <div class="card-header">
-                    <h4>Invoices</h4>
-                    <div class="card-header-action">
-                        <a href="#" class="btn btn-danger">View More <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive table-invoice">
-                        <table class="table table-striped">
-                            <tr>
-                                <th>Date</th>
-                                <th>Customer</th>
-                                <th>Category</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="col-lg-4">
-
             <div class="card">
                 <div class="card-body">
                     <h1 id="grandtotal"></h1>
@@ -152,7 +105,32 @@
                             <input type="text" id="return" class="form-control" disabled>
                         </div>
                     </div>
-                    <button type="button" id="save" class="btn btn-primary">Save</button>
+                    <button type="button" id="save" class="btn btn-primary btn-block"><i class="fas fa-save mr-1"></i>Save</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Last 5 Order</h4>
+                    <div class="card-header-action">
+                        <a href="{{ route('order.index') }}" class="btn btn-danger">View More <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive table-invoice">
+                        <table class="table table-striped" id="tabletrx">
+                            <tr>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -323,14 +301,22 @@
 
     $('#save').click(function() {
         let data = table.rows().data();
+        var total = 0;
+        $.each(data, function(i, v) {
+            total += (v.menu.price * v.qty) - (v.menu.price * v.qty * v.menu.disc / 100);
+        });
         if ($('#name_cart').val() == '') {
             // alert('Input Name');
             $('#name_cart').addClass('is-invalid');
             $('#name_cart').focus()
-        } else if ($('#select_table').val() == null) {
-            // alert('Input Table');
+        } else if ($('#select_category').val() == 'dine in' && $('#select_table').val() == null) {
+            alert('Select Table');
             $('#select_table').focus()
+        } else if ($('#bill').val() < total) {
+            $('#bill').addClass('is-invalid');
+            $('#bill').focus()
         } else {
+            $('#bill').removeClass('is-invalid');
             $('#name_cart').removeClass('is-invalid');
             $('#select_table').removeClass('is-invalid');
             if (data.length > 0) {
@@ -346,6 +332,7 @@
                         name: $('#name_cart').val(),
                         table: $('#select_table').val(),
                         category: $('#select_category').val(),
+                        bill: $('#bill').val(),
                         desc: $('#desc_cart').val(),
                     },
                     beforeSend: function() {
@@ -357,6 +344,9 @@
                         table.ajax.reload();
                         $(this).prop('disabled', false);
                         if (res.status == true) {
+                            $('#name_cart').val('')
+                            $('#select_table').val('').change()
+                            tbltrx.ajax.reload();
                             swal(
                                 'Success!',
                                 res.message,
@@ -380,6 +370,13 @@
                                 'Server Error',
                                 'error'
                             )
+                        } else if (xhr.status == 422) {
+                            erlen = Object.keys(er).length
+                            for (i = 0; i < erlen; i++) {
+                                obname = Object.keys(er)[i];
+                                alert(obname + ' ' + er[obname][0])
+                            }
+
                         }
                     }
                 });
@@ -392,12 +389,12 @@
 
     })
 
-    var tblmenu = $("#tabletrx").DataTable({
+    var tbltrx = $("#tabletrx").DataTable({
         processing: true,
         serverSide: true,
         rowId: 'id',
         ajax: {
-            url: "{{ route('order.index') }}",
+            url: "{{ route('order.lastfive') }}",
             error: function(xhr, error, code) {
                 swal(
                     'Failed!',
@@ -412,53 +409,24 @@
         searching: true,
         columnDefs: [],
         info: false,
+        order: [
+            [0, 'desc']
+        ],
         columns: [{
-            title: "Name",
+            title: "Date",
+            data: 'date',
+        }, {
+            title: "Customer",
             data: 'name',
-            render: function(data, type, row, meta) {
-                let text;
-                if (data != null) {
-                    if (row.status == 'active') {
-                        text = `<i class="fas fa-circle text-success" data-toggle="tooltip" title="Active"></i> ${data}`;
-                    } else {
-                        text = `<i class="fas fa-circle text-danger" data-toggle="tooltip" title="Nonactive"></i> ${data}`;
-                    }
-                }
-                if (type == 'display') {
-                    return text
-                } else {
-                    return data
-                }
-            }
         }, {
             title: "Category",
-            data: 'catmenu_id',
+            data: 'category',
         }, {
-            title: "Price",
-            data: 'price',
-            render: function(data, type, row, meta) {
-                if (type == 'display') {
-                    return hrg(data)
-                } else {
-                    return data
-                }
-            }
+            title: "Status",
+            data: 'status',
         }, {
-            title: "Disc",
-            data: 'disc',
-        }, {
-            title: "Stok",
-            data: 'stock',
-            render: function(data, type, row, meta) {
-                if (type == 'display') {
-                    return hrg(data)
-                } else {
-                    return data
-                }
-            }
-        }, {
-            title: "Desc",
-            data: 'desc',
+            title: "Action",
+            data: 'id',
         }]
     });
 
@@ -503,6 +471,17 @@
         }, {
             title: "Category",
             data: 'catmenu_id',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    if (data != null) {
+                        return row.catmenu.name
+                    } else {
+                        return data
+                    }
+                } else {
+                    return data
+                }
+            }
         }, {
             title: "Price",
             data: 'price',
@@ -513,9 +492,6 @@
                     return data
                 }
             }
-        }, {
-            title: "Disc",
-            data: 'disc',
         }, {
             title: "Stok",
             data: 'stock',

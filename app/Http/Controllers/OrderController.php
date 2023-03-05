@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -56,68 +57,85 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name'      => 'required|max:30',
-            'table'     => 'required|integer',
-            'category'  => 'required|in:dine in,take away',
-            'desc'      => 'max:50',
-        ]);
-        // $cart = Cart::where('user_id', Auth::id())->with('menu')->get();
-        $carts = Cart::with('menu')->where('user_id', '=', Auth::id())->get();
-        $status = false;
-        $message = '';
-        $data = [];
+        $carts = Cart::with('menu')->where('user_id', Auth::id())->get();
         $fail = [];
+        $total = 0;
 
         foreach ($carts as $cart) {
             if (($cart->menu->stock < $cart->qty) || $cart->menu->status == 'nonactive') {
-                // $fail = $fail + 1;
                 array_push($fail, $cart);
             }
+            $total = $total + (($cart->qty * $cart->menu->price) - ($cart->menu->price * $cart->menu->disc / 100));
         }
 
         if (count($fail) > 0) {
             return response()->json([
                 'status'    => false,
-                'message'   => count($fail) . ' Data tidak bisa diproses',
+                'message'   => count($fail) . ' Menu tidak bisa diproses (kurang/habis)',
                 'data'      => $fail,
             ]);
         }
-        $order = Order::create([
-            'name'      => $request->name,
-            'table_id'  => $request->table,
-            'user_id'   => Auth::id(),
-            'category'  => $request->category,
-            'date'      => date("Y-m-d H:i:s"),
-            'status'    => 'paid',
-            'desc'      => $request->desc,
+        $this->validate($request, [
+            'name'      => 'required|max:30',
+            'category'  => 'required|in:dine in,take away',
+            'table'     => 'required_if:category,==,dine in|integer|nullable',
+            'bill'      => 'required|integer|gte:' . $total,
+            'desc'      => 'max:50',
         ]);
-        $table = Table::find($request->table);
-        $table->update([
-            'status' => 'booked',
-        ]);
-        foreach ($carts as $cart) {
-            Dtorder::create([
-                'order_id'  => $order->id,
-                'menu_id'   => $cart->menu_id,
-                'price'     => $cart->menu->price,
-                'disc'      => $cart->menu->disc,
-                'qty'       => $cart->qty,
+        
+        DB::beginTransaction();
+        try {
+            $order = Order::create([
+                'name'      => $request->name,
+                'table_id'  => $request->table,
+                'user_id'   => Auth::id(),
+                'category'  => $request->category,
+                'date'      => date("Y-m-d H:i:s"),
+                'total'     => $total,
+                'bill'      => $request->bill,
+                'status'    => 'paid',
+                'desc'      => $request->desc,
             ]);
-            $menu = Menu::find($cart->menu_id);
-            $menu->update([
-                'stock' => $menu->stock - $cart->qty,
-            ]);
-        }
+            if ($request->category == 'dine in' && $request->has('table')) {
+                $table = Table::find($request->table);
+                $table->update([
+                    'status' => 'booked',
+                ]);
+            }
 
-        foreach ($carts as $cart) {
-            $cart->delete();
+            foreach ($carts as $cart) {
+                Dtorder::create([
+                    'order_id'  => $order->id,
+                    'menu_id'   => $cart->menu_id,
+                    'price'     => $cart->menu->price,
+                    'disc'      => $cart->menu->disc,
+                    'qty'       => $cart->qty,
+                ]);
+                $menu = Menu::find($cart->menu_id);
+                $menu->update([
+                    'stock' => $menu->stock - $cart->qty,
+                ]);
+                $cart->delete();
+            }
+
+            // foreach ($carts as $cart) {
+            //     $cart->delete();
+            // }
+            DB::commit();
+
+            return response()->json([
+                'status'    => true,
+                'message'   => 'Transaksi berhasil',
+                'data'      => [],
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Transaksi Gagal',
+                'data'      => [],
+            ]);
         }
-        return response()->json([
-            'status'    => true,
-            'message'   => 'Transaksi berhasil',
-            'data'      => [],
-        ]);
     }
 
     /**
@@ -163,5 +181,15 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         //
+    }
+
+    public function lastfive(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Order::with('dtorder', 'table', 'user')->where('user_id', Auth::id())->latest()->take(5)->get();
+            return DataTables::of($data)->toJson();
+        } else {
+            abort(404);
+        }
     }
 }

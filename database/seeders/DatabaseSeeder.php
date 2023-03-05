@@ -18,6 +18,9 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             CompSeeder::class,
+            TableSeeder::class,
+            CatmenuSeeder::class,
+            MenuSeeder::class,
         ]);
 
         // \App\Models\User::factory(10)->create();

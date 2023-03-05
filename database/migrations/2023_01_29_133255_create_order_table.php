@@ -21,6 +21,8 @@ return new class extends Migration
             $table->dateTime('date', $precision = 0)->useCurrent();
             $table->enum('category', ['take away', 'dine in'])->default('dine in');
             $table->enum('status', ['paid', 'unpaid'])->default('unpaid');
+            $table->integer('total')->default(0);
+            $table->integer('bill')->default(0);
             $table->string('desc')->nullable();
             $table->timestamps();
             $table->foreign('table_id')->references('id')->on('table')->nullOnDelete()->cascadeOnUpdate();

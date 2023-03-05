@@ -58,6 +58,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::delete('/menu', [MenuController::class, 'destroy'])->name('menu.destroy');
     Route::resource('menu', MenuController::class)->except('create', 'show', 'destroy');
 
+    Route::get('/order/lastfive', [OrderController::class, 'lastfive'])->name('order.lastfive');
     Route::post('/order/change', [OrderController::class, 'change'])->name('order.change');
     Route::delete('/order', [OrderController::class, 'destroy'])->name('order.destroy');
     Route::resource('order', OrderController::class)->except('create', 'show', 'destroy');

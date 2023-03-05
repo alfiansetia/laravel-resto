@@ -16,6 +16,8 @@ class Order extends Model
         'date',
         'category',
         'status',
+        'total',
+        'bill',
         'desc',
     ];
 
