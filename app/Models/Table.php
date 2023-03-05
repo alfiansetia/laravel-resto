@@ -11,7 +11,6 @@ class Table extends Model
     use HasFactory;
     protected $fillable = [
         'number',
-        'name',
         'status',
         'desc',
     ];

@@ -19,7 +19,6 @@ class TableSeeder extends Seeder
         // for ($i = 1; $i < 100; $i++) {
         //     Table::create([
         //         'number'    => $i,
-        //         'name'      => $i,
         //         'status'    => $status[array_rand($status)],
         //         'desc'      => '',
         //     ]);
@@ -27,7 +26,6 @@ class TableSeeder extends Seeder
         for ($i = 1; $i <= 100; $i++) {
             Table::create([
                 'number'    => $i,
-                'name'      => $i,
                 'status'    => 'free',
                 'desc'      => '',
             ]);

@@ -45,13 +45,11 @@ class TableController extends Controller
     {
         $this->validate($request, [
             'number'    => 'required|integer|min:1|max:1000|unique:table,number',
-            'name'      => 'required|max:25|min:3',
             'status'    => 'required|in:free,booked,nonactive',
             'desc'      => 'max:150',
         ]);
         $table = Table::create([
             'number'    => $request->number,
-            'name'      => $request->name,
             'status'    => $request->status,
             'desc'      => $request->desc,
         ]);
@@ -90,13 +88,11 @@ class TableController extends Controller
     {
         $this->validate($request, [
             'number'    => 'required|integer|min:1|max:1000|unique:table,number,' . $table->id,
-            'name'      => 'required|max:25|min:3',
             'status'    => 'required|in:free,booked,nonactive',
             'desc'      => 'max:150',
         ]);
         $table->update([
             'number'    => $request->number,
-            'name'      => $request->name,
             'status'    => $request->status,
             'desc'      => $request->desc,
         ]);

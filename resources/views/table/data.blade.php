@@ -31,7 +31,6 @@
                                     <tr>
                                         <th class="dt-no-sorting" style="width: 30px;">Id</th>
                                         <th>Number</th>
-                                        <th>Name</th>
                                         <th>Status</th>
                                         <th>Desc</th>
                                     </tr>
@@ -64,11 +63,6 @@
                         <label class="control-label" for="number"><i class="fas fa-table mr-1" data-toggle="tooltip" title="Number Table"></i>Number :</label>
                         <input type="number" name="number" class="form-control" id="number" placeholder="Please Enter Number" max="1000" required>
                         <span id="err_number" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Table"></i>Name :</label>
-                        <input type="text" name="name" class="form-control" id="name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
-                        <span id="err_name" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
@@ -111,11 +105,6 @@
                         <label class="control-label" for="edit_number"><i class="fas fa-table mr-1" data-toggle="tooltip" title="Number Table"></i>Number :</label>
                         <input type="number" name="number" class="form-control" id="edit_number" placeholder="Please Enter Number" max="1000" required>
                         <span id="err_edit_number" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Table"></i>Name :</label>
-                        <input type="text" name="name" class="form-control" id="edit_name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
-                        <span id="err_edit_name" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
@@ -234,9 +223,6 @@
         }, {
             title: "Number",
             data: 'number',
-        }, {
-            title: "Name",
-            data: 'name',
         }, {
             title: "Status",
             data: 'status',
@@ -418,7 +404,6 @@
                 $('#edit_reset').val(result.data.id);
                 $('#edit_id').val(result.data.id);
                 $('#edit_number').val(result.data.number);
-                $('#edit_name').val(result.data.name);
                 $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
                 $('#edit_reset').prop('disabled', false);
@@ -459,7 +444,6 @@
                 $('#edit_reset').val(result.data.id);
                 $('#edit_id').val(result.data.id);
                 $('#edit_number').val(result.data.number);
-                $('#edit_name').val(result.data.name);
                 $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
 

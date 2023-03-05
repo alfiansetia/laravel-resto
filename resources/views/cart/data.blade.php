@@ -236,7 +236,7 @@
                     return {
                         results: $.map(data.data, function(item) {
                             return {
-                                text: item.number + ' [' + item.name + ']' + ' =>' + item.status + ' ',
+                                text: item.number + ' => [' + item.status + '] ' + (item.desc == '' ? '' : '(' + item.desc + ')'),
                                 id: item.id,
                                 disabled: item.status == 'free' ? false : true,
                             }
