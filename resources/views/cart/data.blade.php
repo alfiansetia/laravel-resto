@@ -12,9 +12,6 @@
 @section('content')
 <div class="section-header">
     <h1>{{ $title }} </h1>
-    <!-- <div class="section-header-button">
-        <button type="button" id="add_to_cart" class="btn btn-primary">Add to cart</a>
-    </div> -->
     <div class="section-header-breadcrumb">
         <div class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></div>
         <div class="breadcrumb-item active">{{ $title }}</div>
@@ -23,39 +20,6 @@
 
 <div class="section-body">
     <div class="row">
-        <!-- <div class="col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group row">
-                        <label for="name_cart" class="col-sm-3 col-form-label">Name :</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="name" class="form-control" id="name_cart" placeholder="Input Name" required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="select_category" class="col-sm-3 col-form-label">Cat :</label>
-                        <div class="col-sm-9">
-                            <select name="category" id="select_category" class="form-control" style="width: 100%;">
-                                <option value="dine in">dine in</option>
-                                <option value="take away">take away</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="select_table" class="col-sm-3 col-form-label">Table :</label>
-                        <div class="col-sm-9">
-                            <select name="table" id="select_table" class="form-control" style="width: 100%;"></select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="desc_cart" class="col-sm-3 col-form-label">Desc :</label>
-                        <div class="col-sm-9">
-                            <textarea name="desc" class="form-control" id="desc_cart" cols="30" rows="10"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
@@ -140,7 +104,14 @@
                     <div class="form-group row mb-4">
                         <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Bill</label>
                         <div class="col-sm-12 col-md-8">
-                            <input type="number" id="bill" class="form-control" min="0" value="0">
+                            <div class="input-group">
+                                <input type="number" id="bill" class="form-control" min="0" value="0">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" data-toggle="tooltip" title="Lunas">
+                                        <input type="checkbox" id="lunas">
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row mb-4">
@@ -153,10 +124,8 @@
                 </div>
             </div>
         </div>
-
     </div>
     <div class="row">
-
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-header">
@@ -238,6 +207,12 @@
             total += (v.menu.price * v.qty) - (v.menu.price * v.qty * v.menu.disc / 100);
         });
         gtotal = parseInt((total))
+        if ($('#lunas').prop('checked') == true) {
+            $('#bill').prop('disabled', true)
+            $('#bill').val(total)
+        } else {
+            $('#bill').prop('disabled', false)
+        }
         $('#total').val(hrg(total));
         $('#gtotal').val(hrg(gtotal));
         $('#grandtotal').text('Rp. ' + hrg(gtotal));
@@ -274,13 +249,22 @@
 
         $('#select_category').select2();
 
-        $('#bill').change(function() {
-            table.ajax.reload()
-        })
     });
 
-    $('#btn_delete').click(function() {
-        deleteData()
+    $('#bill').change(function() {
+        table.ajax.reload()
+    })
+    $('#lunas').change(function() {
+        table.ajax.reload()
+    })
+    
+    $('#select_category').change(function() {
+        if ($(this).val() == 'dine in') {
+            $("#select_table").prop('disabled', false);
+        } else {
+            $("#select_table").val('').change();
+            $("#select_table").prop('disabled', true);
+        }
     })
 
     $('#table').on('change', '#qty', function() {
@@ -351,11 +335,15 @@
             total += (v.menu.price * v.qty) - (v.menu.price * v.qty * v.menu.disc / 100);
         });
         if ($('#name_cart').val() == '') {
-            // alert('Input Name');
             $('#name_cart').addClass('is-invalid');
             $('#name_cart').focus()
         } else if ($('#select_category').val() == 'dine in' && $('#select_table').val() == null) {
-            alert('Select Table');
+            $('#name_cart').removeClass('is-invalid');
+            swal(
+                'Failed!',
+                'Select Table!',
+                'error'
+            )
             $('#select_table').focus()
         } else if ($('#bill').val() < total) {
             $('#bill').addClass('is-invalid');
@@ -365,74 +353,86 @@
             $('#name_cart').removeClass('is-invalid');
             $('#select_table').removeClass('is-invalid');
             if (data.length > 0) {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    type: 'POST',
-                    url: "{{ route('order.store') }}",
-                    data: {
-                        name: $('#name_cart').val(),
-                        table: $('#select_table').val(),
-                        category: $('#select_category').val(),
-                        bill: $('#bill').val(),
-                        desc: $('#desc_cart').val(),
-                    },
-                    beforeSend: function() {
-                        block();
-                        $(this).prop('disabled', true);
-                    },
-                    success: function(res) {
-                        unblock();
-                        table.ajax.reload();
-                        $(this).prop('disabled', false);
-                        if (res.status == true) {
-                            $('#bill').val(0)
-                            $('#name_cart').val('')
-                            $('#select_table').val('').change()
-                            tbltrx.ajax.reload();
-                            swal(
-                                'Success!',
-                                res.message,
-                                'success'
-                            )
-                        } else {
-                            swal(
-                                'Failed!',
-                                res.message,
-                                'error'
-                            )
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        unblock();
-                        $(this).prop('disabled', false);
-                        er = xhr.responseJSON.errors
-                        if (xhr.status == 500) {
-                            swal(
-                                'Failed!',
-                                'Server Error',
-                                'error'
-                            )
-                        } else if (xhr.status == 422) {
-                            erlen = Object.keys(er).length
-                            for (i = 0; i < erlen; i++) {
-                                obname = Object.keys(er)[i];
-                                alert(obname + ' ' + er[obname][0])
+                swal({
+                    title: 'Save Order?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true,
+                }).then(function(result) {
+                    if (result) {
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             }
+                        });
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ route('order.store') }}",
+                            data: {
+                                name: $('#name_cart').val(),
+                                table: $('#select_table').val(),
+                                category: $('#select_category').val(),
+                                bill: $('#bill').val(),
+                                desc: $('#desc_cart').val(),
+                            },
+                            beforeSend: function() {
+                                block();
+                                $('#save').prop('disabled', true);
+                            },
+                            success: function(res) {
+                                unblock();
+                                table.ajax.reload();
+                                $('#save').prop('disabled', false);
+                                if (res.status == true) {
+                                    $('#bill').val(0)
+                                    $('#name_cart').val('')
+                                    $('#select_table').val('').change()
+                                    $('#select_category').val('dine in').change()
+                                    tbltrx.ajax.reload();
+                                    swal(
+                                        'Success!',
+                                        res.message,
+                                        'success'
+                                    )
+                                } else {
+                                    swal(
+                                        'Failed!',
+                                        res.message,
+                                        'error'
+                                    )
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                unblock();
+                                $('#save').prop('disabled', false);
+                                er = xhr.responseJSON.errors
+                                if (xhr.status == 500) {
+                                    swal(
+                                        'Failed!',
+                                        'Server Error',
+                                        'error'
+                                    )
+                                } else if (xhr.status == 422) {
+                                    erlen = Object.keys(er).length
+                                    for (i = 0; i < erlen; i++) {
+                                        obname = Object.keys(er)[i];
+                                        alert(obname + ' ' + er[obname][0])
+                                    }
 
-                        }
+                                }
+                            }
+                        });
                     }
-                });
+                })
             } else {
-                alert('select menu!')
+                swal(
+                    'Failed!',
+                    'Select Menu!',
+                    'error'
+                )
             }
         }
-
-        // console.log(table.rows().data().length)
-
     })
 
     var tbltrx = $("#tabletrx").DataTable({
@@ -564,7 +564,6 @@
         tblmenu.search($('#search_menu').val()).draw();
     })
 
-
     $("#add_to_cart").click(function() {
         tblmenu.ajax.reload();
         $('#modalAdd').modal('show');
@@ -672,395 +671,83 @@
         drawCallback: function(settings) {
             let data = this.api().ajax.json().data
             total(data)
-            $('#totalitem').text(data.length + ' Item')
+            let qty = 0;
+            $.each(data, function(i, v) {
+                qty += v.qty;
+            });
+            $('#totalitem').text(data.length + ' Item, ' + qty + ' Qty')
         },
     });
     multiCheck(table);
     var id;
 
-    $('#form').submit(function(event) {
-        event.preventDefault();
-    }).validate({
-        errorElement: 'span',
-        errorPlacement: function(error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function(element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function(element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-            $(element).addClass('is-valid');
-        },
-        submitHandler: function(form) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('menu.store') }}",
-                data: $(form).serialize(),
-                beforeSend: function() {
-                    block();
-                    $('button[type="submit"]').prop('disabled', true);
-                    $('#form .error.invalid-feedback').each(function(i) {
-                        $(this).hide();
-                    });
-                    $('#form input.is-invalid').each(function(i) {
-                        $(this).removeClass('is-invalid');
-                    });
-                },
-                success: function(res) {
-                    unblock();
-                    table.ajax.reload();
-                    $('button[type="submit"]').prop('disabled', false);
-                    $('#reset').click();
-                    if (res.status == true) {
-                        swal(
-                            'Success!',
-                            res.message,
-                            'success'
-                        )
-                    } else {
-                        swal(
-                            'Failed!',
-                            res.message,
-                            'error'
-                        )
-                    }
-                },
-                error: function(xhr, status, error) {
-                    unblock();
-                    $('button[type="submit"]').prop('disabled', false);
-                    er = xhr.responseJSON.errors
-                    if (xhr.status == 500) {
-                        swal(
-                            'Failed!',
-                            'Server Error',
-                            'error'
-                        )
-                    } else {
-                        erlen = Object.keys(er).length
-                        for (i = 0; i < erlen; i++) {
-                            obname = Object.keys(er)[i];
-                            $('#' + obname).addClass('is-invalid');
-                            $('#err_' + obname).text(er[obname][0]);
-                            $('#err_' + obname).show();
-                        }
-                    }
-                }
-            });
-        }
-    });
-
-    $('#reset').click(function() {
-        $('#form .error.invalid-feedback').each(function(i) {
-            $(this).hide();
-        });
-        $('#form input.is-invalid').each(function(i) {
-            $(this).removeClass('is-invalid');
-        });
-    })
-
-    $('#edit_reset').click(function() {
-        id = $(this).val();
-        let url = "{{ route('menu.edit', ':id') }}";
-        url = url.replace(':id', id);
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(result) {
-                unblock();
-                $('#edit_reset').val(result.data.id);
-                $('#edit_id').val(result.data.id);
-                $('#edit_name').val(result.data.name);
-                if (result.data.catmenu_id != null) {
-                    let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
-                    $('#edit_catmenu').append(option).change();
-                } else {
-                    $('#edit_catmenu').val('').change();
-                }
-                $('#edit_price').val(result.data.price);
-                $('#edit_stok').val(result.data.stock);
-                $('#edit_status').val(result.data.status).change();
-                $('#edit_desc').val(result.data.desc);
-
-                $('#edit_reset').prop('disabled', false);
-            },
-            beforeSend: function() {
-                block();
-                $('#edit_reset').prop('disabled', true);
-            },
-            error: function(xhr, status, error) {
-                unblock();
-                $('#edit_reset').prop('disabled', false);
-                er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
-            }
-        });
-    })
-
     $('#tblmenu tbody').on('click', 'tr', function() {
         let data = tblmenu.row(this).data()
         if (data.stock > 0 && data.status == 'active') {
-            if (confirm('Add ' + data.name + ' to cart?')) {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    type: 'POST',
-                    url: "{{ route('cart.store') }}",
-                    data: {
-                        menu: data.id,
-                        qty: 1,
-                    },
-                    beforeSend: function() {
-                        block();
-                    },
-                    success: function(res) {
-                        unblock();
-                        table.ajax.reload();
-                        if (res.status == true) {
-                            swal(
-                                'Success!',
-                                res.message,
-                                'success'
-                            )
-                        } else {
+            swal({
+                title: 'Add Menu?',
+                text: data.name,
+                icon: 'warning',
+                buttons: true,
+                dangerMode: true,
+            }).then(function(result) {
+                if (result) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('cart.store') }}",
+                        data: {
+                            menu: data.id,
+                            qty: 1,
+                        },
+                        beforeSend: function() {
+                            block();
+                        },
+                        success: function(res) {
+                            unblock();
+                            table.ajax.reload();
+                            if (res.status == true) {
+                                swal(
+                                    'Success!',
+                                    res.message,
+                                    'success'
+                                )
+                            } else {
+                                swal(
+                                    'Failed!',
+                                    res.message,
+                                    'error'
+                                )
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            unblock();
                             swal(
                                 'Failed!',
-                                res.message,
+                                'Server Error',
                                 'error'
                             )
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        unblock();
-                        swal(
-                            'Failed!',
-                            'Server Error',
-                            'error'
-                        )
-                    }
-                });
-            }
-        } else {
-            alert('Stock 0 / Nonactive')
-        }
-
-    });
-
-    // $('#table tbody').on('click', 'tr td:not(:first-child)', function() {
-    //     $('#formEdit .error.invalid-feedback').each(function(i) {
-    //         $(this).hide();
-    //     });
-    //     $('#formEdit input.is-invalid').each(function(i) {
-    //         $(this).removeClass('is-invalid');
-    //     });
-    //     row = $(this).parents('tr')[0];
-    //     id = table.row(row).data().id
-    //     let url = "{{ route('menu.edit', ':id') }}";
-    //     url = url.replace(':id', id);
-    //     $.ajax({
-    //         url: url,
-    //         method: 'GET',
-    //         success: function(result) {
-    //             unblock();
-    //             $('#edit_reset').val(result.data.id);
-    //             $('#edit_id').val(result.data.id);
-    //             $('#edit_name').val(result.data.name);
-    //             if (result.data.catmenu_id != null) {
-    //                 let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
-    //                 $('#edit_catmenu').append(option).change();
-    //             } else {
-    //                 $('#edit_catmenu').val('').change();
-    //             }
-    //             $('#edit_price').val(result.data.price);
-    //             $('#edit_stok').val(result.data.stock);
-    //             $('#edit_status').val(result.data.status).change();
-    //             $('#edit_desc').val(result.data.desc);
-
-    //             $('#modalEdit').modal('show');
-    //             $('#modalEdit').on('shown.bs.modal', function() {
-    //                 $('#edit_name').focus();
-    //             })
-    //         },
-    //         beforeSend: function() {
-    //             block();
-    //         },
-    //         error: function(xhr, status, error) {
-    //             unblock();
-    //             er = xhr.responseJSON.errors
-    //             swal(
-    //                 'Failed!',
-    //                 'Server Error',
-    //                 'error'
-    //             )
-    //         }
-    //     });
-    // });
-
-    $('#formEdit').submit(function(event) {
-        event.preventDefault();
-    }).validate({
-        errorElement: 'span',
-        errorPlacement: function(error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function(element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function(element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-            $(element).addClass('is-valid');
-        },
-        submitHandler: function(form) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                }
-            });
-            let url = "{{ route('menu.update', ':id') }}";
-            url = url.replace(':id', id);
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: $(form).serialize(),
-                beforeSend: function() {
-                    block();
-                    $('button[type="submit"]').prop('disabled', true);
-                    $('#formEdit .error.invalid-feedback').each(function(i) {
-                        $(this).hide();
                     });
-                    $('#formEdit input.is-invalid').each(function(i) {
-                        $(this).removeClass('is-invalid');
-                    });
-                },
-                success: function(res) {
-                    unblock();
-                    table.ajax.reload();
-                    $('button[type="submit"]').prop('disabled', false);
-                    $('#reset').click();
-                    if (res.status == true) {
-                        swal(
-                            'Success!',
-                            res.message,
-                            'success'
-                        )
-                    } else {
-                        swal(
-                            'Failed!',
-                            res.message,
-                            'error'
-                        )
-                    }
-                },
-                error: function(xhr, status, error) {
-                    unblock();
-                    $('button[type="submit"]').prop('disabled', false);
-                    er = xhr.responseJSON.errors
-                    if (xhr.status == 500) {
-                        swal(
-                            'Failed!',
-                            'Server Error',
-                            'error'
-                        )
-                    } else {
-                        erlen = Object.keys(er).length
-                        for (i = 0; i < erlen; i++) {
-                            obname = Object.keys(er)[i];
-                            $('#' + obname).addClass('is-invalid');
-                            $('#err_edit_' + obname).text(er[obname][0]);
-                            $('#err_edit_' + obname).show();
-                        }
-                    }
                 }
-            });
-        }
-    });
-
-    function changeData() {
-        if (selected()) {
-            $('#modalChange').modal('show');
-            $('#modalChange').on('shown.bs.modal', function() {
-                $('#change_status').focus();
             })
+        } else {
+            swal(
+                'Failed!',
+                'Stock 0 / Nonactive',
+                'error'
+            )
         }
-    }
 
-    $("#submitChange").click(function() {
-        let btn = $(this);
-        let status = $('#change_status').val();
-        let form = $("#formSelected");
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('menu.change') }}",
-            data: $(form).serialize() + '&status=' + status,
-            beforeSend: function() {
-                btn.prop('disabled', true);
-                block();
-            },
-            success: function(res) {
-                btn.prop('disabled', false);
-                unblock();
-                table.ajax.reload();
-                if (res.status == true) {
-                    swal(
-                        'Changed!',
-                        res.message,
-                        'success'
-                    )
-                } else {
-                    swal(
-                        'Failed!',
-                        res.message,
-                        'error'
-                    )
-                }
-            },
-            error: function(xhr, status, error) {
-                btn.prop('disabled', false);
-                unblock();
-                er = xhr.responseJSON.errors
-                if (xhr.status == 500) {
-                    swal(
-                        'Failed!',
-                        'Server Error',
-                        'error'
-                    )
-                } else {
-                    erlen = Object.keys(er).length
-                    for (i = 0; i < erlen; i++) {
-                        obname = Object.keys(er)[i];
-                        $('#' + obname).addClass('is-invalid');
-                        $('#err_change_' + obname).text(er[obname][0]);
-                        $('#err_change_' + obname).show();
-                    }
-                }
-            }
-        });
-    })
+    });
 
     $('#table').on('click', '#btn_delete', function() {
         let row = $(this).parents('tr')[0];
         data = table.row(row).data()
-        console.log(data.id)
-
         swal({
             title: 'Delete Selected Data?',
             text: "You won't be able to revert this!",
