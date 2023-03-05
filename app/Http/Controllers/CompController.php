@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 
 class CompController extends Controller
 {
+
+    protected $comp;
+
+    public function __construct()
+    {
+        $this->comp = Comp::first();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +22,7 @@ class CompController extends Controller
      */
     public function index()
     {
-        //
+        return view('company.data')->with(['comp' => $this->comp, 'title' => 'Setting Company']);
     }
 
     /**

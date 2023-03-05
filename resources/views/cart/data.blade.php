@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="select_category" class="col-sm-3 col-form-label">Cat :</label>
+                        <label for="select_category" class="col-sm-3 col-form-label">Type :</label>
                         <div class="col-sm-9">
                             <select name="category" id="select_category" class="form-control" style="width: 100%;">
                                 <option value="dine in">dine in</option>
@@ -257,7 +257,7 @@
     $('#lunas').change(function() {
         table.ajax.reload()
     })
-    
+
     $('#select_category').change(function() {
         if ($(this).val() == 'dine in') {
             $("#select_table").prop('disabled', false);
@@ -461,6 +461,9 @@
             [0, 'desc']
         ],
         columns: [{
+            title: "ID",
+            data: 'date',
+        }, {
             title: "Date",
             data: 'date',
         }, {
@@ -469,9 +472,6 @@
         }, {
             title: "Category",
             data: 'category',
-        }, {
-            title: "Status",
-            data: 'status',
         }, {
             title: "Action",
             data: 'id',

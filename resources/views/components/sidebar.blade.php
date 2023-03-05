@@ -43,11 +43,12 @@
                     <li><a class="nav-link" href="features-tickets.html">Tickets</a></li>
                 </ul>
             </li>
-            <li class="nav-item dropdown {{ $title == 'User Profile' || $title == 'Change Password' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $title == 'User Profile' || $title == 'Change Password' || $title == 'Setting Company' ? 'active' : '' }}">
                 <a href="javascript:void(0);" class="nav-link has-dropdown"><i class="fas fa-user-cog"></i> <span>Setting</span></a>
                 <ul class="dropdown-menu">
                     <li class="{{ $title == 'User Profile' ? 'active' : '' }}"><a class="nav-link" href="{{ route('user.profile') }}">Profile</a></li>
                     <li class="{{ $title == 'Change Password' ? 'active' : '' }}"><a class="nav-link" href="{{ route('user.password') }}">Password</a></li>
+                    <li class="{{ $title == 'Setting Company' ? 'active' : '' }}"><a class="nav-link" href="{{ route('company.index') }}">Company</a></li>
                 </ul>
             </li>
         </ul>

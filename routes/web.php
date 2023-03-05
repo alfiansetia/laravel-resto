@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatmenuController;
+use App\Http\Controllers\CompController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
@@ -65,4 +66,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::post('/cart/change', [CartController::class, 'change'])->name('cart.change');
     Route::resource('cart', CartController::class)->except('create', 'show');
+
+    Route::get('/company', [CompController::class, 'index'])->name('company.index');
+    Route::post('/company', [CompController::class, 'update'])->name('company.update');
 });
