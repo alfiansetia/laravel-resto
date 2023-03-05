@@ -69,4 +69,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/company', [CompController::class, 'index'])->name('company.index');
     Route::post('/company', [CompController::class, 'store'])->name('company.update');
+
+    Route::get('/tes', [OrderController::class, 'tes'])->name('tes');
 });

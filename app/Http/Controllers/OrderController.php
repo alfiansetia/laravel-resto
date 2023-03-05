@@ -82,10 +82,12 @@ class OrderController extends Controller
             'bill'      => 'required|integer|gte:' . $total,
             'desc'      => 'max:50',
         ]);
-        
+        $last = Order::latest()->first() ?? new Order();
+        $invnumber = 'INV' . date('ymd') . str_pad($last->id + 1, 5, "0", STR_PAD_LEFT);
         DB::beginTransaction();
         try {
             $order = Order::create([
+                'number'    => $invnumber,
                 'name'      => $request->name,
                 'table_id'  => $request->table,
                 'user_id'   => Auth::id(),
@@ -191,5 +193,11 @@ class OrderController extends Controller
         } else {
             abort(404);
         }
+    }
+
+    public function tes()
+    {
+        $data = 'INV' . date('ymd') . str_pad(1 + 1, 5, "0", STR_PAD_LEFT);
+        return response()->json($data);
     }
 }

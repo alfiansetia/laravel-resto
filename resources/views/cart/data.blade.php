@@ -462,7 +462,7 @@
         ],
         columns: [{
             title: "ID",
-            data: 'date',
+            data: 'number',
         }, {
             title: "Date",
             data: 'date',
