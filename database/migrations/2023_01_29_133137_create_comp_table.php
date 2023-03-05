@@ -18,11 +18,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('slogan');
             $table->string('address');
-            $table->string('telp');
-            $table->string('wa')->nullable;
-            $table->string('ig')->nullable;
-            $table->string('fb')->nullable;
-            $table->string('desc')->nullable;
+            $table->string('logo')->nullable();
+            $table->string('fav')->nullable();
+            $table->string('telp')->nullable();
+            $table->string('wa')->nullable();
+            $table->string('ig')->nullable();
+            $table->string('fb')->nullable();
             $table->timestamps();
         });
     }

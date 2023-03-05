@@ -15,11 +15,12 @@ class Comp extends Model
         'name',
         'slogan',
         'address',
+        'logo',
+        'fav',
         'telp',
         'wa',
         'fb',
         'ig',
         'logo',
-        'desc',
     ];
 }

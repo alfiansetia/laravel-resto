@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title }} &mdash; {{ $comp->name }}</title>
-
+    <link rel="icon" type="image/x-icon" href="{{ url('images/company/') }}/{{ $comp->fav == '' ? 'favicondefault.ico' : $comp->fav }}" />
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('library/@fortawesome/fontawesome-free/css/all.css') }}">
@@ -31,7 +31,7 @@
             <div class="main-content">
 
                 @stack('modal')
-                
+
                 <section class="section">
                     @yield('content')
                 </section>

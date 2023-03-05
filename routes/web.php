@@ -68,5 +68,5 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('cart', CartController::class)->except('create', 'show');
 
     Route::get('/company', [CompController::class, 'index'])->name('company.index');
-    Route::post('/company', [CompController::class, 'update'])->name('company.update');
+    Route::post('/company', [CompController::class, 'store'])->name('company.update');
 });

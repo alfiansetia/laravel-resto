@@ -24,7 +24,6 @@ class CompSeeder extends Seeder
             'wa'        => '6282324129752',
             'ig'        => 'aniresto',
             'fb'        => 'aniresto',
-            'desc'      => 'OK',
         ]);
     }
 }
