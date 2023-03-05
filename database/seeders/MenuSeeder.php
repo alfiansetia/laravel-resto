@@ -25,6 +25,14 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::create([
+            'name'          => 'Ayam Bakar',
+            'catmenu_id'    => 1,
+            'price'         => 16000,
+            'stock'         => 10,
+            'desc'          => '',
+        ]);
+
+        Menu::create([
             'name'          => 'Es Teh',
             'catmenu_id'    => 2,
             'price'         => 10000,
@@ -32,7 +40,21 @@ class MenuSeeder extends Seeder
             'desc'          => '',
         ]);
         Menu::create([
+            'name'          => 'Es Jeruk',
+            'catmenu_id'    => 2,
+            'price'         => 10000,
+            'stock'         => 10,
+            'desc'          => '',
+        ]);
+        Menu::create([
             'name'          => 'Tempe',
+            'catmenu_id'    => 3,
+            'price'         => 2000,
+            'stock'         => 10,
+            'desc'          => '',
+        ]);
+        Menu::create([
+            'name'          => 'Tahu',
             'catmenu_id'    => 3,
             'price'         => 2000,
             'stock'         => 10,

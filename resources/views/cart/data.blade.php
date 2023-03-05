@@ -12,9 +12,9 @@
 @section('content')
 <div class="section-header">
     <h1>{{ $title }} </h1>
-    <div class="section-header-button">
+    <!-- <div class="section-header-button">
         <button type="button" id="add_to_cart" class="btn btn-primary">Add to cart</a>
-    </div>
+    </div> -->
     <div class="section-header-breadcrumb">
         <div class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></div>
         <div class="breadcrumb-item active">{{ $title }}</div>
@@ -23,36 +23,80 @@
 
 <div class="section-body">
     <div class="row">
-        <div class="col-lg-8">
+        <!-- <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
-                    <div class="form-group row mb-2">
-                        <label for="name_cart" class="col-sm-3 col-form-label"><span class="h4">Name :</span></label>
+                    <div class="form-group row">
+                        <label for="name_cart" class="col-sm-3 col-form-label">Name :</label>
                         <div class="col-sm-9">
-                            <input type="text" name="name" class="form-control form-control-lg" id="name_cart" placeholder="Input Name" required>
+                            <input type="text" name="name" class="form-control" id="name_cart" placeholder="Input Name" required>
                         </div>
                     </div>
-                    <div class="form-group row mb-2">
-                        <label for="select_category" class="col-sm-3 col-form-label"><span class="h4">Cat :</span></label>
+                    <div class="form-group row">
+                        <label for="select_category" class="col-sm-3 col-form-label">Cat :</label>
                         <div class="col-sm-9">
-                            <select name="category" id="select_category" class="form-control form-control-lg" style="width: 100%;">
+                            <select name="category" id="select_category" class="form-control" style="width: 100%;">
                                 <option value="dine in">dine in</option>
                                 <option value="take away">take away</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row mb-2">
-                        <label for="select_table" class="col-sm-3 col-form-label"><span class="h4">Table :</span></label>
+                    <div class="form-group row">
+                        <label for="select_table" class="col-sm-3 col-form-label">Table :</label>
                         <div class="col-sm-9">
-                            <select name="table" id="select_table" class="form-control form-control-lg" style="width: 100%;"></select>
+                            <select name="table" id="select_table" class="form-control" style="width: 100%;"></select>
                         </div>
                     </div>
-                    <div class="form-group row mb-2">
-                        <label for="desc_cart" class="col-sm-3 col-form-label"><span class="h4">Desc :</span></label>
+                    <div class="form-group row">
+                        <label for="desc_cart" class="col-sm-3 col-form-label">Desc :</label>
                         <div class="col-sm-9">
                             <textarea name="desc" class="form-control" id="desc_cart" cols="30" rows="10"></textarea>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label for="name_cart" class="col-sm-3 col-form-label">Name :</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="name" class="form-control" id="name_cart" placeholder="Input Name" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="select_category" class="col-sm-3 col-form-label">Cat :</label>
+                        <div class="col-sm-9">
+                            <select name="category" id="select_category" class="form-control" style="width: 100%;">
+                                <option value="dine in">dine in</option>
+                                <option value="take away">take away</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="select_table" class="col-sm-3 col-form-label">Table :</label>
+                        <div class="col-sm-9">
+                            <select name="table" id="select_table" class="form-control" style="width: 100%;"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="desc_cart" class="col-sm-3 col-form-label">Desc :</label>
+                        <div class="col-sm-9">
+                            <textarea name="desc" class="form-control" id="desc_cart" cols="30" rows="10"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pb-0 pt-1">
+                    <h4>List Cart <div id="totalitem" class="badge badge-info">0 Item</div>
+                    </h4>
+                    <div class="card-header-action">
+                        <button type="button" id="add_to_cart" class="btn btn-primary">Add Menu <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
                             <thead>
@@ -110,6 +154,8 @@
             </div>
         </div>
 
+    </div>
+    <div class="row">
 
         <div class="col-lg-8">
             <div class="card">
@@ -121,7 +167,7 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive table-invoice">
-                        <table class="table table-striped" id="tabletrx">
+                        <table class="table table-hover" id="tabletrx">
                             <tr>
                                 <th>Date</th>
                                 <th>Customer</th>
@@ -135,6 +181,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection
 
@@ -163,8 +210,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
-                <button type="reset" id="reset" class="btn btn-warning"><i class="fas fa-undo mr-1" data-toggle="tooltip" title="Reset"></i>Reset</button>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane mr-1" data-toggle="tooltip" title="Save"></i>Save</button>
             </div>
         </div>
     </div>
@@ -344,6 +389,7 @@
                         table.ajax.reload();
                         $(this).prop('disabled', false);
                         if (res.status == true) {
+                            $('#bill').val(0)
                             $('#name_cart').val('')
                             $('#select_table').val('').change()
                             tbltrx.ajax.reload();
@@ -404,6 +450,8 @@
             }
         },
         dom: 'lrt',
+        scrollY: '200px',
+        scrollCollapse: true,
         lengthChange: false,
         paging: false,
         searching: true,
@@ -536,6 +584,8 @@
                 )
             }
         },
+        scrollY: '250px',
+        scrollCollapse: true,
         lengthChange: false,
         paging: false,
         searching: false,
@@ -622,6 +672,7 @@
         drawCallback: function(settings) {
             let data = this.api().ajax.json().data
             total(data)
+            $('#totalitem').text(data.length + ' Item')
         },
     });
     multiCheck(table);
