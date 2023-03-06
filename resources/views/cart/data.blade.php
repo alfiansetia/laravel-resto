@@ -493,6 +493,8 @@
             }
         },
         dom: 'lrt',
+        scrollY: '300px',
+        scrollCollapse: true,
         lengthChange: false,
         paging: false,
         searching: true,
