@@ -30,10 +30,11 @@
                                 <thead>
                                     <tr>
                                         <th class="dt-no-sorting" style="width: 30px;">Id</th>
-                                        <th>Name</th>
+                                        <th>Number</th>
+                                        <th>Date</th>
+                                        <th>Customer</th>
                                         <th>Table</th>
                                         <th>Kasir</th>
-                                        <th>Date</th>
                                         <th>Category</th>
                                         <th>Status</th>
                                         <th>Desc</th>
@@ -270,9 +271,15 @@
                 return `<div class="custom-checkbox custom-control"><input type="checkbox" id="check${data}" data-checkboxes="mygroup" name="id[]" value="${data}" class="custom-control-input child-chk select-customers-info"><label for="check${data}" class="custom-control-label">&nbsp;</label></div>`
             }
         }, {
-            title: "Name",
+            title: "Number",
+            data: 'number',
+        }, {
+            title: "Date",
+            data: 'date',
+        }, {
+            title: "Customer",
             data: 'name',
-        },{
+        }, {
             title: "Table",
             data: 'table_id',
             render: function(data, type, row, meta) {
@@ -301,9 +308,6 @@
                     return data
                 }
             }
-        }, {
-            title: "Date",
-            data: 'date',
         }, {
             title: "Category",
             data: 'category',

@@ -172,10 +172,20 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-lg table-hover" id="tblmenu" style="width: 100%;">
-                    <thead></thead>
-                    <tbody> </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-lg table-hover" id="tblmenu" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>a</th>
+                                <th>a</th>
+                                <th>a</th>
+                                <th>a</th>
+                                <th>a</th>
+                            </tr>
+                        </thead>
+                        <tbody> </tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
@@ -218,7 +228,6 @@
         $('#grandtotal').text('Rp. ' + hrg(gtotal));
         $('#return').val(hrg(parseInt($('#bill').val() - gtotal)));
     }
-
 
     $(document).ready(function() {
         $("#select_table").select2({
@@ -493,8 +502,6 @@
             }
         },
         dom: 'lrt',
-        scrollY: '300px',
-        scrollCollapse: true,
         lengthChange: false,
         paging: false,
         searching: true,
