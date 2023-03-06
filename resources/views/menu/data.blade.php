@@ -162,6 +162,7 @@
                         <label class="control-label" for="edit_img"><i class="fas fa-image mr-1" data-toggle="tooltip" title="Image Menu"></i>Image :</label>
                         <input type="file" name="img" class="form-control" id="edit_img" placeholder="Please Enter Image">
                         <span id="err_edit_img" class="error invalid-feedback" style="display: hide;"></span>
+                        <img id="img_prev" src="" alt="Menu" width="100px" height="100px">
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
@@ -543,6 +544,11 @@
                 } else {
                     $('#edit_catmenu').val('').change();
                 }
+                if (result.data.img != null) {
+                    $('#img_prev').attr('src', `{{ url('images/menu/') }}/${result.data.img}`);
+                } else {
+                    $('#img_prev').attr('src', `{{ url('images/menu/default.png') }}`);
+                }
                 $('#edit_price').val(result.data.price);
                 $('#edit_stock').val(result.data.stock);
                 $('#edit_status').val(result.data.status).change();
@@ -591,6 +597,11 @@
                     $('#edit_catmenu').append(option).change();
                 } else {
                     $('#edit_catmenu').val('').change();
+                }
+                if (result.data.img != null) {
+                    $('#img_prev').attr('src', `{{ url('images/menu/') }}/${result.data.img}`);
+                } else {
+                    $('#img_prev').attr('src', `{{ url('images/menu/default.png') }}`);
                 }
                 $('#edit_price').val(result.data.price);
                 $('#edit_stock').val(result.data.stock);
