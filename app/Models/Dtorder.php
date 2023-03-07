@@ -22,4 +22,9 @@ class Dtorder extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class);
+    }
 }

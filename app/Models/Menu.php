@@ -30,4 +30,9 @@ class Menu extends Model
     {
         return $this->hasOne(Cart::class);
     }
+
+    public function dtorder()
+    {
+        return $this->hasOne(Dtorder::class);
+    }
 }

@@ -195,6 +195,21 @@ class OrderController extends Controller
         }
     }
 
+    public function print(Request $request, $number)
+    {
+        $order = Order::whereNumber($number)->with('dtorder.menu')->first();
+        if ($order) {
+            $user = Auth::user();
+            if ($request->has('type') && $request->type == 'small') {
+                return view('order.printsmall', compact(['order', 'user']))->with(['comp' => $this->comp]);
+            } else {
+                return view('order.print', compact(['order', 'user']));
+            }
+        } else {
+            abort(404);
+        }
+    }
+
     public function tes()
     {
         $data = 'INV' . date('ymd') . str_pad(1 + 1, 5, "0", STR_PAD_LEFT);
