@@ -210,7 +210,7 @@
             @if($disc > 0)
             <tr>
                 <td class="sum-up">Disc</td>
-                <td class="">{{ number_format($disc,0,',','.') }}</td>
+                <td class="">-{{ number_format($disc,0,',','.') }}</td>
             </tr>
             @endif
             <tr>
@@ -231,14 +231,30 @@
         <p>
             Cashier : <span>{{ $user->name }}</span>
         </p>
+        <p style="align-items: center;">
+            <center>
+                <img src="data:image/png;base64,{{ DNS2D::getBarcodePNG($order->number, 'QRCODE', 5,5) }}" alt="barcode" />
+                <!-- <div style="align-items: center;">{!! DNS2D::getBarcodeHTML($order->number, 'QRCODE') !!}</div> -->
+                <br>{{ $order->number }}
+            </center>
+        </p>
+        <br>
         <p style="text-align:center">
             Thank you for your visit!
         </p>
+        <p style="text-align: center;">www.kacangan.net</p>
+        <br>
+        <br>_
+
     </section>
     <footer style="text-align:center">
-        <p>Technology Partner Dotworld Technologies</p>
-        <p>www.dotworld.in</p>
+        <!-- <p>Technology Partner Dotworld Technologies</p> -->
+        <div style="break-after:page"></div>
     </footer>
 </body>
+
+<script>
+    window.print();
+</script>
 
 </html>

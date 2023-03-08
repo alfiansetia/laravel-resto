@@ -20,7 +20,7 @@ class CompSeeder extends Seeder
             'name'      => 'Ani Resto',
             'slogan'    => 'Murah Enak Berkualitas',
             'address'   => 'Jl Mbah pojok No 36',
-            'telp'      => '6282324129752',
+            'telp'      => '082324129752',
             'wa'        => '6282324129752',
             'ig'        => 'aniresto',
             'fb'        => 'aniresto',

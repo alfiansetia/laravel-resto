@@ -17,7 +17,7 @@ class MenuSeeder extends Seeder
     {
         //
         Menu::create([
-            'name'          => 'Ayam Goreng',
+            'name'          => 'Ayam Goreng Iga Mekkah',
             'catmenu_id'    => 1,
             'price'         => 16000,
             'stock'         => 10,
@@ -25,7 +25,7 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::create([
-            'name'          => 'Ayam Bakar',
+            'name'          => 'Ayam Bakar Syafaat Ummat',
             'catmenu_id'    => 1,
             'price'         => 16000,
             'stock'         => 10,
@@ -33,28 +33,28 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::create([
-            'name'          => 'Es Teh',
+            'name'          => 'Es Teh Jannah',
             'catmenu_id'    => 2,
             'price'         => 10000,
             'stock'         => 10,
             'desc'          => '',
         ]);
         Menu::create([
-            'name'          => 'Es Jeruk',
+            'name'          => 'Es Jeruk Kebajikan',
             'catmenu_id'    => 2,
             'price'         => 10000,
             'stock'         => 10,
             'desc'          => '',
         ]);
         Menu::create([
-            'name'          => 'Tempe',
+            'name'          => 'Tempe Geprek',
             'catmenu_id'    => 3,
             'price'         => 2000,
             'stock'         => 10,
             'desc'          => '',
         ]);
         Menu::create([
-            'name'          => 'Tahu',
+            'name'          => 'Tahu Krispi Gurun',
             'catmenu_id'    => 3,
             'price'         => 2000,
             'stock'         => 10,
