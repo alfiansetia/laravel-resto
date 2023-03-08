@@ -90,19 +90,19 @@
             <div class="card">
                 <div class="card-body">
                     <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Total</label>
+                        <label for="total" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Total</label>
                         <div class="col-sm-12 col-md-8">
                             <input type="text" id="total" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Grand Total</label>
+                        <label for="gtotal" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Grand Total</label>
                         <div class="col-sm-12 col-md-8">
                             <input type="text" id="gtotal" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Bill</label>
+                        <label for="bill" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Bill</label>
                         <div class="col-sm-12 col-md-8">
                             <div class="input-group">
                                 <input type="number" id="bill" class="form-control" min="0" value="0">
@@ -115,7 +115,7 @@
                         </div>
                     </div>
                     <div class="form-group row mb-4">
-                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Return</label>
+                        <label for="return" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Return</label>
                         <div class="col-sm-12 col-md-8">
                             <input type="text" id="return" class="form-control" disabled>
                         </div>
@@ -150,7 +150,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 @endsection
 
@@ -484,6 +483,18 @@
         }, {
             title: "Action",
             data: 'id',
+            orderable: false,
+            render: function(data, type, row, meta) {
+                let text = `<div class="btn-group mb-3" role="group" aria-label="Basic example">
+                      <button type="button" id="btn_print" class="btn btn-primary" data-toggle="tooltip" title="Print"><i class="fas fa-print"></i></button>
+                      <button type="button" id="btn_pdf" class="btn btn-danger" data-toggle="tooltip" title="Download PDF"><i class="fas fa-file-pdf"></i></button>
+                    </div>`;
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
         }]
     });
 
@@ -810,6 +821,17 @@
                 });
             }
         })
+    });
+
+    $('#tabletrx').on('click', '#btn_print', function() {
+        let row = $(this).parents('tr')[0];
+        data = tbltrx.row(row).data()
+        win = window.open(`{{ url('order/${data.number}/print?type=small') }}`, 'blank');
+        // win.print();
+        // win.close();
+        // win.focus();
+        // setInterval(win.print(), 5)
+        // win.close();
     });
 </script>
 @endpush

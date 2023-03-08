@@ -231,6 +231,7 @@
         <p>
             Cashier : <span>{{ $user->name }}</span>
         </p>
+        <br>
         <p style="align-items: center;">
             <center>
                 <img src="data:image/png;base64,{{ DNS2D::getBarcodePNG($order->number, 'QRCODE', 5,5) }}" alt="barcode" />
@@ -243,7 +244,6 @@
             Thank you for your visit!
         </p>
         <p style="text-align: center;">www.kacangan.net</p>
-        <br>
         <br>_
 
     </section>
