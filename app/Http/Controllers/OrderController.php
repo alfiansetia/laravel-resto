@@ -8,11 +8,12 @@ use App\Models\Dtorder;
 use App\Models\Menu;
 use App\Models\Order;
 use App\Models\Table;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
-use PDF;
 
 class OrderController extends Controller
 {
@@ -206,7 +207,7 @@ class OrderController extends Controller
                 return view('sample', compact(['order', 'user']))->with(['comp' => $this->comp]);
             } elseif ($request->has('type') && $request->type == 'pdf') {
                 $comp = $this->comp;
-                $pdf = PDF::loadview('sample', ['order' => $order, 'user' => $user, 'comp' => $this->comp]);
+                $pdf = Pdf::loadview('sample', ['order' => $order, 'user' => $user, 'comp' => $this->comp]);
                 return $pdf->download('file.pdf');
                 // return $pdf->stream('file.pdf');
             } else {
@@ -219,13 +220,26 @@ class OrderController extends Controller
 
     public function tes()
     {
-        $pdf = PDF::loadView('sample', [
-            'title' => 'CodeAndDeploy.com Laravel Pdf Tutorial',
-            'description' => 'This is an example Laravel pdf tutorial.',
-            'footer' => 'by <a href="https://codeanddeploy.com">codeanddeploy.com</a>'
-        ]);
 
-        return $pdf->download('sample.pdf');
+        try {
+            // $file = asset('images/menu/default.svg');
+            $file = asset('images/menu/default.png');
+            $image = base64_encode($file);
+
+            $image = "data:image/png;base64," . base64_encode($file);
+            // dd($image);
+            return view('a', compact('image'));
+            // echo '<img src="data:image/png;base64,' . $image . '" alt="image" >';
+        } catch (FileNotFoundException $e) {
+            echo "catch";
+        }
+        // $pdf = Pdf::loadView('sample', [
+        //     'title' => 'CodeAndDeploy.com Laravel Pdf Tutorial',
+        //     'description' => 'This is an example Laravel pdf tutorial.',
+        //     'footer' => 'by <a href="https://codeanddeploy.com">codeanddeploy.com</a>'
+        // ]);
+
+        // return $pdf->download('sample.pdf');
         // $data = 'INV' . date('ymd') . str_pad(1 + 1, 5, "0", STR_PAD_LEFT);
         // return response()->json($data);
     }

@@ -145,8 +145,7 @@
 <body>
     <header>
     </header>
-    <img src="{{'data:image/png;base64,' . base64_encode(file_get_contents(asset('images/company/logodefault.svg')))}}" alt="image" >
-    <img id="logo" width="100px" height="100px" class="media" src="{{ asset('images/company/logodefault.svg') }}" alt="Logo">
+    <!-- <img id="logo" width="100px" height="100px" class="media" src="{{ asset('images/company/logodefault.svg') }}" alt="Logo"> -->
     <p style="text-align: center;">
         <b>
             <span style="font-size: x-large;">{{ $comp->name }}</span>
