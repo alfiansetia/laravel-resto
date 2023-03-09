@@ -827,11 +827,6 @@
         let row = $(this).parents('tr')[0];
         data = tbltrx.row(row).data()
         win = window.open(`{{ url('order/${data.number}/print?type=small') }}`, 'blank');
-        // win.print();
-        // win.close();
-        // win.focus();
-        // setInterval(win.print(), 5)
-        // win.close();
     });
 </script>
 @endpush

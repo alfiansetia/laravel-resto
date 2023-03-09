@@ -38,6 +38,7 @@
                                         <th>Category</th>
                                         <th>Status</th>
                                         <th>Desc</th>
+                                        <th class="dt-no-sorting">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -267,7 +268,22 @@
         }, {
             title: "Desc",
             data: 'desc',
-        }, ],
+        }, {
+            title: "Action",
+            data: 'id',
+            orderable: false,
+            render: function(data, type, row, meta) {
+                let text = `<div class="btn-group mb-3" role="group" aria-label="Basic example">
+                      <button type="button" id="btn_print" class="btn btn-primary" data-toggle="tooltip" title="Print"><i class="fas fa-print"></i></button>
+                      <button type="button" id="btn_pdf" class="btn btn-danger" data-toggle="tooltip" title="Download PDF"><i class="fas fa-file-pdf"></i></button>
+                    </div>`;
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
+        }],
         buttons: [, {
             text: '<i class="fa fa-plus"></i>Add',
             className: 'btn btn-sm btn-primary bs-tooltip',
@@ -328,7 +344,7 @@
     multiCheck(table);
     var id;
 
-    $('#table tbody').on('click', 'tr td:not(:first-child)', function() {
+    $('#table tbody').on('click', 'tr td:not(:first-child,:last-child)', function() {
         $('#formEdit .error.invalid-feedback').each(function(i) {
             $(this).hide();
         });
@@ -376,6 +392,18 @@
                 )
             }
         });
+    });
+
+    $('#table').on('click', '#btn_print', function() {
+        let row = $(this).parents('tr')[0];
+        data = table.row(row).data()
+        win = window.open(`{{ url('order/${data.number}/print?type=small') }}`, 'blank');
+    });
+
+    $('#table').on('click', '#btn_pdf', function() {
+        let row = $(this).parents('tr')[0];
+        data = table.row(row).data()
+        win = window.open(`{{ url('order/${data.number}/print?type=pdf') }}`, 'blank');
     });
 
     function changeData() {

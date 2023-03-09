@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use PDF;
 
 class OrderController extends Controller
 {
@@ -197,11 +198,17 @@ class OrderController extends Controller
 
     public function print(Request $request, $number)
     {
+        // ini_set('max_execution_time', 300);
         $order = Order::whereNumber($number)->with('dtorder.menu')->first();
         if ($order) {
             $user = Auth::user();
             if ($request->has('type') && $request->type == 'small') {
-                return view('order.printsmall', compact(['order', 'user']))->with(['comp' => $this->comp]);
+                return view('sample', compact(['order', 'user']))->with(['comp' => $this->comp]);
+            } elseif ($request->has('type') && $request->type == 'pdf') {
+                $comp = $this->comp;
+                $pdf = PDF::loadview('sample', ['order' => $order, 'user' => $user, 'comp' => $this->comp]);
+                return $pdf->download('file.pdf');
+                // return $pdf->stream('file.pdf');
             } else {
                 return view('order.print', compact(['order', 'user']));
             }
@@ -212,7 +219,14 @@ class OrderController extends Controller
 
     public function tes()
     {
-        $data = 'INV' . date('ymd') . str_pad(1 + 1, 5, "0", STR_PAD_LEFT);
-        return response()->json($data);
+        $pdf = PDF::loadView('sample', [
+            'title' => 'CodeAndDeploy.com Laravel Pdf Tutorial',
+            'description' => 'This is an example Laravel pdf tutorial.',
+            'footer' => 'by <a href="https://codeanddeploy.com">codeanddeploy.com</a>'
+        ]);
+
+        return $pdf->download('sample.pdf');
+        // $data = 'INV' . date('ymd') . str_pad(1 + 1, 5, "0", STR_PAD_LEFT);
+        // return response()->json($data);
     }
 }
