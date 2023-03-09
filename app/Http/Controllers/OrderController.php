@@ -9,13 +9,9 @@ use App\Models\Menu;
 use App\Models\Order;
 use App\Models\Table;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Svg\Tag\Path;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -124,12 +120,7 @@ class OrderController extends Controller
                 ]);
                 $cart->delete();
             }
-
-            // foreach ($carts as $cart) {
-            //     $cart->delete();
-            // }
             DB::commit();
-
             return response()->json([
                 'status'    => true,
                 'message'   => 'Transaksi berhasil',
