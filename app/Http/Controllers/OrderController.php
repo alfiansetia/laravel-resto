@@ -209,7 +209,8 @@ class OrderController extends Controller
                 $pdf = Pdf::loadview('order.printsmall', ['order' => $order, 'user' => $user, 'comp' => $comp, 'image' => $image]);
                 return $pdf->download($order->number . '_' . date('ymdHis') . '.pdf');
             } else {
-                return view('order.print', compact(['order', 'user']));
+                // return view('order.print', compact(['order', 'user']));
+                abort(404);
             }
         } else {
             abort(404);
