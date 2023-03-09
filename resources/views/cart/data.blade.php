@@ -828,5 +828,11 @@
         data = tbltrx.row(row).data()
         win = window.open(`{{ url('order/${data.number}/print?type=small') }}`, 'blank');
     });
+
+    $('#tabletrx').on('click', '#btn_pdf', function() {
+        let row = $(this).parents('tr')[0];
+        data = tbltrx.row(row).data()
+        win = window.open(`{{ url('order/${data.number}/print?type=pdf') }}`, 'blank');
+    });
 </script>
 @endpush
