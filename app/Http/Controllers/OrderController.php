@@ -13,6 +13,9 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Svg\Tag\Path;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -199,17 +202,21 @@ class OrderController extends Controller
 
     public function print(Request $request, $number)
     {
-        // ini_set('max_execution_time', 300);
         $order = Order::whereNumber($number)->with('dtorder.menu')->first();
         if ($order) {
+            $comp = $this->comp;
             $user = Auth::user();
+            $img = $comp->logo;
+            if ($comp->logo == '') {
+                $img = 'logodefault.png';
+            }
+            $file = public_path("images/company/$img");
+            $image = base64_encode(file_get_contents($file));
             if ($request->has('type') && $request->type == 'small') {
-                return view('sample', compact(['order', 'user']))->with(['comp' => $this->comp]);
+                return view('order.printsmall', compact(['order', 'user', 'image']))->with(['comp' => $this->comp]);
             } elseif ($request->has('type') && $request->type == 'pdf') {
-                $comp = $this->comp;
-                $pdf = Pdf::loadview('sample', ['order' => $order, 'user' => $user, 'comp' => $this->comp]);
-                return $pdf->download('file.pdf');
-                // return $pdf->stream('file.pdf');
+                $pdf = Pdf::loadview('order.printsmall', ['order' => $order, 'user' => $user, 'comp' => $comp, 'image' => $image]);
+                return $pdf->download($order->number . '_' . date('ymdHis') . '.pdf');
             } else {
                 return view('order.print', compact(['order', 'user']));
             }
@@ -220,25 +227,6 @@ class OrderController extends Controller
 
     public function tes()
     {
-
-        try {
-            // $file = asset('images/menu/default.svg');
-            $file = asset('images/menu/default.png');
-            $image = base64_encode($file);
-
-            $image = "data:image/png;base64," . base64_encode($file);
-            // dd($image);
-            return view('a', compact('image'));
-            // echo '<img src="data:image/png;base64,' . $image . '" alt="image" >';
-        } catch (FileNotFoundException $e) {
-            echo "catch";
-        }
-        // $pdf = Pdf::loadView('sample', [
-        //     'title' => 'CodeAndDeploy.com Laravel Pdf Tutorial',
-        //     'description' => 'This is an example Laravel pdf tutorial.',
-        //     'footer' => 'by <a href="https://codeanddeploy.com">codeanddeploy.com</a>'
-        // ]);
-
         // return $pdf->download('sample.pdf');
         // $data = 'INV' . date('ymd') . str_pad(1 + 1, 5, "0", STR_PAD_LEFT);
         // return response()->json($data);

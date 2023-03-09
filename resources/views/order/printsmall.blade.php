@@ -30,16 +30,7 @@
             vertical-align: middle;
         }
 
-        #logo {
-            width: 60%;
-            text-align: center;
-            -webkit-align-content: center;
-            align-content: center;
-            padding: 5px;
-            margin: 2px;
-            display: block;
-            margin: 0 auto;
-        }
+        
 
         header {
             width: 100%;
@@ -101,8 +92,6 @@
 
         .total {
             font-size: 13px;
-            /* border-top: 1px dashed black !important; */
-            /* border-bottom: 1px dashed black !important; */
         }
 
         .total.text,
@@ -144,9 +133,10 @@
 
 <body>
     <header>
-        <!-- <div id="logo" class="media" data-src="{{ url('images/company/logodefault.svg') }}" src="{{ url('images/company/logodefault.svg') }}"></div> -->
     </header>
-    <img id="logo" width="100px" height="100px" class="media" src="{{ url('images/company/logodefault.svg') }}" alt="Logo">
+    <center>
+        <img id="logo" width="100px" height="100px" class="media" src="data:image/png;base64,{{ $image }}" alt="Logo">
+    </center>
     <p style="text-align: center;">
         <b>
             <span style="font-size: x-large;">{{ $comp->name }}</span>

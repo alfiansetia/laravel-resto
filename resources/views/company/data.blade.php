@@ -72,7 +72,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-text text-muted">The image must have a maximum size of 2MB</div>
-                                <img src="{{ url('images/company/') }}/{{ $comp->logo == '' ? 'logodefault.svg' : $comp->logo }}" alt="Logo" width="100px" height="100px">
+                                <img src="{{ url('images/company/') }}/{{ $comp->logo == '' ? 'logodefault.png' : $comp->logo }}" alt="Logo" width="100px" height="100px">
                             </div>
                         </div>
                         <div class="form-group row">
