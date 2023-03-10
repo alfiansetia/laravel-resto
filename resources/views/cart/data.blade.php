@@ -44,12 +44,6 @@
                             <select name="table" id="select_table" class="form-control" style="width: 100%;"></select>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="desc_cart" class="col-sm-3 col-form-label">Desc :</label>
-                        <div class="col-sm-9">
-                            <textarea name="desc" class="form-control" id="desc_cart" cols="30" rows="10"></textarea>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="card">
@@ -71,7 +65,6 @@
                                     <th>Qty</th>
                                     <th>Disc</th>
                                     <th>Subotal</th>
-                                    <th>Desc</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -382,7 +375,6 @@
                                 table: $('#select_table').val(),
                                 category: $('#select_category').val(),
                                 bill: $('#bill').val(),
-                                desc: $('#desc_cart').val(),
                             },
                             beforeSend: function() {
                                 block();
@@ -684,9 +676,6 @@
                     return data
                 }
             }
-        }, {
-            title: "Desc",
-            data: 'desc',
         }, ],
         drawCallback: function(settings) {
             let data = this.api().ajax.json().data

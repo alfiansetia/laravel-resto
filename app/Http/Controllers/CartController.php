@@ -70,7 +70,6 @@ class CartController extends Controller
         $this->validate($request, [
             'menu'    => 'required|integer',
             'qty'     => 'required|integer',
-            'desc'    => 'max:150',
         ]);
         // $cart = Cart::where('user_id', '=', Auth::user()->id)->whereRelation('menu', 'paid', '=', 0);
         $cart = Cart::where('user_id', '=', Auth::user()->id)->where('menu_id', '=', $request->menu)->first();
@@ -81,7 +80,6 @@ class CartController extends Controller
             } else {
                 $cart->update([
                     'qty'       => $cart->qty + $request->qty,
-                    'desc'      => $request->desc,
                 ]);
             }
         } else {
@@ -89,7 +87,6 @@ class CartController extends Controller
                 'user_id'   => Auth::id(),
                 'menu_id'   => $request->menu,
                 'qty'       => $request->qty,
-                'desc'      => $request->desc,
             ]);
         }
         if ($cart) {

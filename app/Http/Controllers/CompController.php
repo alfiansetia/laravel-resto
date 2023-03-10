@@ -44,50 +44,57 @@ class CompController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name'      => 'required|max:30',
-            'slogan'    => 'required|max:200',
-            'telp'      => 'required|max:15',
-            'logo'      => 'image|mimes:jpeg,png,jpg|max:2048',
-            'fav'       => 'image|mimes:png,jpg|max:1024',
-            'wa'        => 'required|max:15',
-            'fb'        => 'max:30|nullable',
-            'ig'        => 'max:30|nullable',
-            'address'   => 'required|max:200',
-        ]);
         $comp = $this->comp;
-
-        $logo = $comp->logo;
-        $fav = $comp->fav;
-        if ($files = $request->file('logo')) {
-            //delete old file
-            File::delete('images/company/' . $logo);
-            //insert new file
-            $destinationPath = 'images/company/'; // upload path
-            $logo = 'logo.' . $files->getClientOriginalExtension();
-            $files->move($destinationPath, $logo);
+        if ($request->has('type') && $request->type == 'general') {
+            $this->validate($request, [
+                'name'      => 'required|max:30',
+                'slogan'    => 'required|max:200',
+                'telp'      => 'required|max:15',
+                'address'   => 'required|max:200',
+            ]);
+            $comp->update([
+                'name'      => $request->name,
+                'slogan'    => $request->slogan,
+                'telp'      => $request->telp,
+                'address'   => $request->address,
+            ]);
+        } elseif ($request->has('type') && $request->type == 'image') {
+            $this->validate($request, [
+                'logo'      => 'image|mimes:jpeg,png,jpg|max:2048',
+                'fav'       => 'image|mimes:png,jpg|max:1024',
+            ]);
+            $logo = $comp->logo;
+            $fav = $comp->fav;
+            if ($files = $request->file('logo')) {
+                File::delete('images/company/' . $logo);
+                $destinationPath = 'images/company/'; // upload path
+                $logo = 'logo.' . $files->getClientOriginalExtension();
+                $files->move($destinationPath, $logo);
+            }
+            if ($files = $request->file('fav')) {
+                File::delete('images/company/' . $fav);
+                $destinationPath = 'images/company/'; // upload path
+                $fav = 'favicon.' . $files->getClientOriginalExtension();
+                $files->move($destinationPath, $fav);
+            }
+            $comp->update([
+                'logo'      => $logo,
+                'fav'       => $fav,
+            ]);
+        } elseif ($request->has('type') && $request->type == 'social') {
+            $this->validate($request, [
+                'wa'        => 'required|max:15',
+                'fb'        => 'max:30|nullable',
+                'ig'        => 'max:30|nullable',
+            ]);
+            $comp->update([
+                'wa'        => $request->wa,
+                'fb'        => $request->fb,
+                'ig'        => $request->ig,
+            ]);
+        } else {
+            abort(404);
         }
-
-        if ($files = $request->file('fav')) {
-            //delete old file
-            File::delete('images/company/' . $fav);
-            //insert new file
-            $destinationPath = 'images/company/'; // upload path
-            $fav = 'favicon.' . $files->getClientOriginalExtension();
-            $files->move($destinationPath, $fav);
-        }
-
-        $comp->update([
-            'name'      => $request->name,
-            'slogan'    => $request->slogan,
-            'telp'      => $request->telp,
-            'logo'      => $logo,
-            'fav'       => $fav,
-            'wa'        => $request->wa,
-            'fb'        => $request->fb,
-            'ig'        => $request->ig,
-            'address'   => $request->address,
-        ]);
         if ($comp) {
             return redirect()->route('company.index')->with(['success' => 'Data Berhasil Diupdate!']);
         } else {

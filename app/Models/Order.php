@@ -19,7 +19,6 @@ class Order extends Model
         'status',
         'total',
         'bill',
-        'desc',
     ];
 
     use HasFactory;

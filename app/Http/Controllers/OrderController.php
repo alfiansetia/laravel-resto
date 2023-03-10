@@ -81,7 +81,6 @@ class OrderController extends Controller
             'category'  => 'required|in:dine in,take away',
             'table'     => 'required_if:category,==,dine in|integer|nullable',
             'bill'      => 'required|integer|gte:' . $total,
-            'desc'      => 'max:50',
         ]);
         $last = Order::latest()->first() ?? new Order();
         $invnumber = 'INV' . date('ymd') . str_pad($last->id + 1, 5, "0", STR_PAD_LEFT);
@@ -97,7 +96,6 @@ class OrderController extends Controller
                 'total'     => $total,
                 'bill'      => $request->bill,
                 'status'    => 'paid',
-                'desc'      => $request->desc,
             ]);
             if ($request->category == 'dine in' && $request->has('table')) {
                 $table = Table::find($request->table);

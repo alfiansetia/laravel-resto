@@ -24,7 +24,6 @@ return new class extends Migration
             $table->enum('status', ['paid', 'unpaid'])->default('unpaid');
             $table->integer('total')->default(0);
             $table->integer('bill')->default(0);
-            $table->string('desc')->nullable();
             $table->timestamps();
             $table->foreign('table_id')->references('id')->on('table')->nullOnDelete()->cascadeOnUpdate();
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete()->cascadeOnUpdate();

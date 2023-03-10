@@ -13,7 +13,6 @@ class Cart extends Model
         'user_id',
         'menu_id',
         'qty',
-        'desc',
     ];
     use HasFactory;
 

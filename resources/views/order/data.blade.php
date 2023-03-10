@@ -30,14 +30,12 @@
                                 <thead>
                                     <tr>
                                         <th class="dt-no-sorting" style="width: 30px;">Id</th>
+                                        <th>Kasir</th>
                                         <th>Number</th>
                                         <th>Date</th>
                                         <th>Customer</th>
-                                        <th>Table</th>
-                                        <th>Kasir</th>
                                         <th>Category</th>
                                         <th>Status</th>
-                                        <th>Desc</th>
                                         <th class="dt-no-sorting">Action</th>
                                     </tr>
                                 </thead>
@@ -210,29 +208,6 @@
                 return `<div class="custom-checkbox custom-control"><input type="checkbox" id="check${data}" data-checkboxes="mygroup" name="id[]" value="${data}" class="custom-control-input child-chk select-customers-info"><label for="check${data}" class="custom-control-label">&nbsp;</label></div>`
             }
         }, {
-            title: "Number",
-            data: 'number',
-        }, {
-            title: "Date",
-            data: 'date',
-        }, {
-            title: "Customer",
-            data: 'name',
-        }, {
-            title: "Table",
-            data: 'table_id',
-            render: function(data, type, row, meta) {
-                let text = ''
-                if (data != null) {
-                    text = row.table.number
-                }
-                if (type == 'display') {
-                    return text
-                } else {
-                    return data
-                }
-            }
-        }, {
             title: "Kasir",
             data: 'user_id',
             visible: false,
@@ -247,6 +222,15 @@
                     return data
                 }
             }
+        }, {
+            title: "Number",
+            data: 'number',
+        }, {
+            title: "Date",
+            data: 'date',
+        }, {
+            title: "Customer",
+            data: 'name',
         }, {
             title: "Category",
             data: 'category',
@@ -265,9 +249,6 @@
                     return data
                 }
             }
-        }, {
-            title: "Desc",
-            data: 'desc',
         }, {
             title: "Action",
             data: 'id',

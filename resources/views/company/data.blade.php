@@ -17,12 +17,13 @@
 </div>
 <div class="section-body">
     <div class="row mt-sm-4">
-        <div class="col-lg-12">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
                     <h4>General Settings</h4>
                 </div>
-                <form action="{{ route('company.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('company.store') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="type" value="general">
                     @csrf
                     <div class="card-body">
                         <div class="form-group row">
@@ -53,14 +54,31 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="wa" class="form-control-label col-sm-3 text-md-right">WA</label>
+                            <label for="address" class="form-control-label col-sm-3 text-md-right">Address</label>
                             <div class="col-sm-6 col-md-9">
-                                <input type="tel" name="wa" class="form-control @error('wa') is-invalid @enderror" id="wa" value="{{ $comp->wa }}" placeholder="Please Input WA" maxlength="15" required>
-                                @error('wa')
+                                <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address" placeholder="Please Input Address" maxlength="200" required>{{ $comp->address }}</textarea>
+                                @error('address')
                                 <span class="error invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
+                    </div>
+                    <div class="card-footer bg-whitesmoke text-md-right">
+                        <button class="btn btn-warning" type="reset">Reset</button>
+                        <button class="btn btn-primary" id="save">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Image Settings</h4>
+                </div>
+                <form action="{{ route('company.store') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="type" value="image">
+                    @csrf
+                    <div class="card-body">
                         <div class="form-group row">
                             <label for="logo" class="form-control-label col-sm-3 text-md-right">Logo</label>
                             <div class="col-sm-6 col-md-9">
@@ -89,6 +107,32 @@
                                 <img src="{{ url('images/company/') }}/{{ $comp->fav == '' ? 'favicondefault.ico' : $comp->fav }}" alt="Favicon" width="30px" height="30px">
                             </div>
                         </div>
+                    </div>
+                    <div class="card-footer bg-whitesmoke text-md-right">
+                        <button class="btn btn-warning" type="reset">Reset</button>
+                        <button class="btn btn-primary" id="save">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Social Settings</h4>
+                </div>
+                <form action="{{ route('company.store') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="type" value="social">
+                    @csrf
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="wa" class="form-control-label col-sm-3 text-md-right">WA</label>
+                            <div class="col-sm-6 col-md-9">
+                                <input type="tel" name="wa" class="form-control @error('wa') is-invalid @enderror" id="wa" value="{{ $comp->wa }}" placeholder="Please Input WA" maxlength="15" required>
+                                @error('wa')
+                                <span class="error invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label for="ig" class="form-control-label col-sm-3 text-md-right">IG</label>
                             <div class="col-sm-6 col-md-9">
@@ -103,15 +147,6 @@
                             <div class="col-sm-6 col-md-9">
                                 <input type="text" name="fb" class="form-control @error('fb') is-invalid @enderror" id="fb" value="{{ $comp->fb }}" placeholder="Please Input FB" maxlength="25" required>
                                 @error('fb')
-                                <span class="error invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="address" class="form-control-label col-sm-3 text-md-right">Address</label>
-                            <div class="col-sm-6 col-md-9">
-                                <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address" placeholder="Please Input Address" maxlength="200" required>{{ $comp->address }}</textarea>
-                                @error('address')
                                 <span class="error invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
