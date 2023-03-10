@@ -86,11 +86,6 @@
                         <span id="err_disc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="stock"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stock Menu"></i>Stock :</label>
-                        <input type="number" name="stock" class="form-control" id="stock" placeholder="Please Enter Stock" value="0">
-                        <span id="err_stock" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label" for="img"><i class="fas fa-image mr-1" data-toggle="tooltip" title="Image Menu"></i>Image :</label>
                         <input type="file" name="img" class="form-control" id="img" placeholder="Please Enter Image" required>
                         <span id="err_img" class="error invalid-feedback" style="display: hide;"></span>
@@ -152,11 +147,6 @@
                         <label class="control-label" for="edit_disc"><i class="fas fa-percent mr-1" data-toggle="tooltip" title="Disc Menu"></i>Disc :</label>
                         <input type="number" name="disc" class="form-control" id="edit_disc" placeholder="Please Enter Disc" value="0">
                         <span id="err_edit_disc" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_stock"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stock Menu"></i>Stock :</label>
-                        <input type="number" name="stock" class="form-control" id="edit_stock" placeholder="Please Enter Stock" value="0">
-                        <span id="err_edit_stock" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_img"><i class="fas fa-image mr-1" data-toggle="tooltip" title="Image Menu"></i>Image :</label>
@@ -250,20 +240,13 @@
                     return {
                         results: $.map(data.data, function(item) {
                             return {
-                                text: item.name,
+                                text: item.name + ' [' + item.status + '] ' + item.desc,
                                 id: item.id,
                                 disabled: item.status == 'nonactive' ? true : false,
                             }
                         })
                     };
                 },
-            },
-            sorter: function(results) {
-                var query = $('.select2-search__field').val().toLowerCase();
-                return results.sort(function(a, b) {
-                    return a.text.toLowerCase().indexOf(query) -
-                        b.text.toLowerCase().indexOf(query);
-                });
             }
         });
     });
@@ -316,9 +299,9 @@
             render: function(data, type, row, meta) {
                 let text = ''
                 if (row.img != null) {
-                    text = `<img src="{{ url('/images/menu/${row.img}') }}" width="30px" height="30px"> ${data}</td>`
+                    text = `<img src="{{ url('/images/menu/${row.img}') }}" width="60px" height="60px"> ${data}</td>`
                 } else {
-                    text = `<img src="{{ url('/images/menu/default.png') }}" width="30px" height="30px"> ${data}</td>`
+                    text = `<img src="{{ url('/images/menu/default.png') }}" width="60px" height="60px"> ${data}</td>`
                 }
                 if (type == 'display') {
                     return text
@@ -550,7 +533,6 @@
                     $('#img_prev').attr('src', `{{ url('images/menu/default.png') }}`);
                 }
                 $('#edit_price').val(result.data.price);
-                $('#edit_stock').val(result.data.stock);
                 $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
 
@@ -604,7 +586,6 @@
                     $('#img_prev').attr('src', `{{ url('images/menu/default.png') }}`);
                 }
                 $('#edit_price').val(result.data.price);
-                $('#edit_stock').val(result.data.stock);
                 $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
 

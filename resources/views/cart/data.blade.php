@@ -616,7 +616,11 @@
             render: function(data, type, row, meta) {
                 let text = ''
                 if (data != null) {
-                    text = row.menu.name
+                    if (row.menu.catmenu_id != null) {
+                        text = '[' + row.menu.catmenu.name + '] <b>' + row.menu.name + '</b>'
+                    } else {
+                        text = row.menu.name
+                    }
                 }
                 if (type == 'display') {
                     return text

@@ -191,7 +191,7 @@ class OrderController extends Controller
 
     public function print(Request $request, $number)
     {
-        $order = Order::whereNumber($number)->with('dtorder.menu')->first();
+        $order = Order::whereNumber($number)->with('dtorder.menu.catmenu')->first();
         if ($order) {
             $comp = $this->comp;
             $user = Auth::user();

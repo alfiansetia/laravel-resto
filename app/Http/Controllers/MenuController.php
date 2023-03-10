@@ -50,7 +50,6 @@ class MenuController extends Controller
             'img'       => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'price'     => 'integer',
             'disc'      => 'integer',
-            'stock'     => 'integer',
             'desc'      => 'max:150',
         ]);
         $img = null;
@@ -66,7 +65,6 @@ class MenuController extends Controller
             'img'       => $img,
             'price'     => $request->price,
             'disc'      => $request->disc,
-            'stock'     => $request->stock,
             'desc'      => $request->desc,
         ]);
         if ($menu) {
@@ -108,7 +106,6 @@ class MenuController extends Controller
             'img'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'price'     => 'integer',
             'disc'      => 'integer',
-            'stock'     => 'integer',
             'desc'      => 'max:150',
         ]);
         $img = $menu->img;
@@ -127,7 +124,6 @@ class MenuController extends Controller
             'img'           => $img,
             'price'         => $request->price,
             'disc'          => $request->disc,
-            'stock'         => $request->stock,
             'desc'          => $request->desc,
         ]);
         if ($menu) {

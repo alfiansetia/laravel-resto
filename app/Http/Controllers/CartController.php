@@ -26,7 +26,7 @@ class CartController extends Controller
 
     public function index(Request $request)
     {
-        $carts = Cart::where('user_id', '=', Auth::id())->get();
+        $carts = Cart::with('menu.catmenu')->where('user_id', '=', Auth::id())->get();
         if (count($carts) > 0) {
             foreach ($carts as $cart) {
                 if ($cart->menu->stock < 1 || $cart->menu->status == 'nonactive') {
@@ -40,9 +40,9 @@ class CartController extends Controller
             }
         }
         if ($request->ajax()) {
-            $data = Cart::with('user', 'menu')->get();
+            $data = Cart::with('user', 'menu.catmenu')->get();
             if ($request->name) {
-                $data = Cart::where('name', 'like', "%{$request->name}%")->get();
+                $data = Cart::with('menu.catmenu')->where('name', 'like', "%{$request->name}%")->get();
             }
             return DataTables::of($data)->toJson();
         }

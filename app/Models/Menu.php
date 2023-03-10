@@ -26,7 +26,7 @@ class Menu extends Model
         return $this->belongsTo(Catmenu::class);
     }
 
-    public function menu()
+    public function cart()
     {
         return $this->hasOne(Cart::class);
     }
