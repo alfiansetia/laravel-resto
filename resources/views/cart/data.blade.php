@@ -113,6 +113,8 @@
                             <input type="text" id="return" class="form-control" disabled>
                         </div>
                     </div>
+                </div>
+                <div class="card-footer bg-whitesmoke">
                     <button type="button" id="save" class="btn btn-primary btn-block"><i class="fas fa-save mr-1"></i>Save</button>
                 </div>
             </div>
