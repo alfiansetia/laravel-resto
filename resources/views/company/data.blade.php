@@ -2,6 +2,7 @@
 
 @push('csslib')
 <link rel="stylesheet" href="{{ asset('library/bootstrap-social/bootstrap-social.css') }}">
+<link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
 @endpush
 
 @push('css')
@@ -36,15 +37,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="slogan" class="form-control-label col-sm-3 text-md-right">Slogan</label>
-                            <div class="col-sm-6 col-md-9">
-                                <textarea class="form-control @error('slogan') is-invalid @enderror" name="slogan" id="slogan" placeholder="Please Input Slogan" maxlength="200" required>{{ $comp->slogan }}</textarea>
-                                @error('slogan')
-                                <span class="error invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label for="telp" class="form-control-label col-sm-3 text-md-right">Telp</label>
                             <div class="col-sm-6 col-md-9">
                                 <input type="tel" name="telp" class="form-control @error('telp') is-invalid @enderror" id="telp" value="{{ $comp->telp }}" placeholder="Please Input Telp" maxlength="15" required>
@@ -58,6 +50,50 @@
                             <div class="col-sm-6 col-md-9">
                                 <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address" placeholder="Please Input Address" maxlength="200" required>{{ $comp->address }}</textarea>
                                 @error('address')
+                                <span class="error invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-whitesmoke text-md-right">
+                        <button class="btn btn-warning" type="reset">Reset</button>
+                        <button class="btn btn-primary" id="save">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Social Settings</h4>
+                </div>
+                <form action="{{ route('company.store') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="type" value="social">
+                    @csrf
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="wa" class="form-control-label col-sm-3 text-md-right">WA</label>
+                            <div class="col-sm-6 col-md-9">
+                                <input type="tel" name="wa" class="form-control @error('wa') is-invalid @enderror" id="wa" value="{{ $comp->wa }}" placeholder="Please Input WA" maxlength="15" required>
+                                @error('wa')
+                                <span class="error invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ig" class="form-control-label col-sm-3 text-md-right">IG</label>
+                            <div class="col-sm-6 col-md-9">
+                                <input type="text" name="ig" class="form-control @error('ig') is-invalid @enderror" id="ig" value="{{ $comp->ig }}" placeholder="Please Input IG" maxlength="25" required>
+                                @error('ig')
+                                <span class="error invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="fb" class="form-control-label col-sm-3 text-md-right">FB</label>
+                            <div class="col-sm-6 col-md-9">
+                                <input type="text" name="fb" class="form-control @error('fb') is-invalid @enderror" id="fb" value="{{ $comp->fb }}" placeholder="Please Input FB" maxlength="25" required>
+                                @error('fb')
                                 <span class="error invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -118,37 +154,28 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h4>Social Settings</h4>
+                    <h4>Other Settings</h4>
                 </div>
                 <form action="{{ route('company.store') }}" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="type" value="social">
+                    <input type="hidden" name="type" value="other">
                     @csrf
                     <div class="card-body">
                         <div class="form-group row">
-                            <label for="wa" class="form-control-label col-sm-3 text-md-right">WA</label>
+                            <label for="footer_struk" class="form-control-label col-sm-3 text-md-right">Footer Struk</label>
                             <div class="col-sm-6 col-md-9">
-                                <input type="tel" name="wa" class="form-control @error('wa') is-invalid @enderror" id="wa" value="{{ $comp->wa }}" placeholder="Please Input WA" maxlength="15" required>
-                                @error('wa')
+                                <textarea class="form-control @error('footer_struk') is-invalid @enderror" name="footer_struk" id="footer_struk" placeholder="Please Input Footer Struk" maxlength="100" required>{{ $comp->footer_struk }}</textarea>
+                                @error('footer_struk')
                                 <span class="error invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="ig" class="form-control-label col-sm-3 text-md-right">IG</label>
+                            <label for="select_tax" class="form-control-label col-sm-3 text-md-right">Type</label>
                             <div class="col-sm-6 col-md-9">
-                                <input type="text" name="ig" class="form-control @error('ig') is-invalid @enderror" id="ig" value="{{ $comp->ig }}" placeholder="Please Input IG" maxlength="25" required>
-                                @error('ig')
-                                <span class="error invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="fb" class="form-control-label col-sm-3 text-md-right">FB</label>
-                            <div class="col-sm-6 col-md-9">
-                                <input type="text" name="fb" class="form-control @error('fb') is-invalid @enderror" id="fb" value="{{ $comp->fb }}" placeholder="Please Input FB" maxlength="25" required>
-                                @error('fb')
-                                <span class="error invalid-feedback">{{ $message }}</span>
-                                @enderror
+                                <select name="tax" id="select_tax" class="form-control" style="width: 100%;" required>
+                                    <option value="yes" {{ $comp->tax == 'yes' ? 'selected' : '' }}>yes</option>
+                                    <option value="no" {{ $comp->tax == 'no' ? 'selected' : '' }}>no</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -165,6 +192,7 @@
 @endsection
 
 @push('jslib')
+<script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
 @endpush
 
@@ -172,6 +200,8 @@
 <script>
     $(document).ready(function() {
         bsCustomFileInput.init();
+
+        $('#select_tax').select2()
 
         $('form').submit(function() {
             $('button').prop('disabled', true);

@@ -48,13 +48,11 @@ class CompController extends Controller
         if ($request->has('type') && $request->type == 'general') {
             $this->validate($request, [
                 'name'      => 'required|max:30',
-                'slogan'    => 'required|max:200',
                 'telp'      => 'required|max:15',
                 'address'   => 'required|max:200',
             ]);
             $comp->update([
                 'name'      => $request->name,
-                'slogan'    => $request->slogan,
                 'telp'      => $request->telp,
                 'address'   => $request->address,
             ]);
@@ -91,6 +89,15 @@ class CompController extends Controller
                 'wa'        => $request->wa,
                 'fb'        => $request->fb,
                 'ig'        => $request->ig,
+            ]);
+        } elseif ($request->has('type') && $request->type == 'other') {
+            $this->validate($request, [
+                'footer_struk'  => 'required|max:100',
+                'tax'           => 'required|in:yes,no',
+            ]);
+            $comp->update([
+                'footer_struk'  => $request->footer_struk,
+                'tax'           => $request->tax,
             ]);
         } else {
             abort(404);

@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('comp', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slogan');
             $table->string('address');
             $table->string('logo')->nullable();
             $table->string('fav')->nullable();
@@ -24,6 +23,8 @@ return new class extends Migration
             $table->string('wa')->nullable();
             $table->string('ig')->nullable();
             $table->string('fb')->nullable();
+            $table->string('footer_struk')->nullable();
+            $table->enum('tax', ['yes', 'no'])->default('yes');
             $table->timestamps();
         });
     }

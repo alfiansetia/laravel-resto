@@ -17,13 +17,14 @@ class CompSeeder extends Seeder
     {
         //
         Comp::create([
-            'name'      => 'Ani Resto',
-            'slogan'    => 'Murah Enak Berkualitas',
-            'address'   => 'Jl Mbah pojok No 36',
-            'telp'      => '082324129752',
-            'wa'        => '6282324129752',
-            'ig'        => 'aniresto',
-            'fb'        => 'aniresto',
+            'name'              => 'Ani Resto',
+            'address'           => 'Jl Mbah pojok No 36',
+            'telp'              => '082324129752',
+            'wa'                => '6282324129752',
+            'ig'                => 'aniresto',
+            'fb'                => 'aniresto',
+            'footer_struk'      => 'Murah Enak Berkualitas',
+            'tax'               => 'yes',
         ]);
     }
 }

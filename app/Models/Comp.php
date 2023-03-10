@@ -13,7 +13,6 @@ class Comp extends Model
 
     protected $fillable = [
         'name',
-        'slogan',
         'address',
         'logo',
         'fav',
@@ -22,5 +21,7 @@ class Comp extends Model
         'fb',
         'ig',
         'logo',
+        'footer_struk',
+        'tax',
     ];
 }

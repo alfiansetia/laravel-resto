@@ -30,7 +30,7 @@
             vertical-align: middle;
         }
 
-        
+
 
         header {
             width: 100%;
@@ -225,7 +225,7 @@
         </p>
         <br>
         <p style="text-align:center">
-            Thank you for your visit!
+            {{ $comp->footer_struk }}
         </p>
         <p style="text-align: center;">www.kacangan.net</p>
         <br>_
