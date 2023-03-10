@@ -77,12 +77,12 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="price"><i class="fas fa-money-bill mr-1" data-toggle="tooltip" title="Price Menu"></i>Price :</label>
-                        <input type="number" name="price" class="form-control" id="price" placeholder="Please Enter Price" value="0">
+                        <input type="number" name="price" class="form-control" id="price" placeholder="Please Enter Price" value="0" min="0">
                         <span id="err_price" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="disc"><i class="fas fa-percent mr-1" data-toggle="tooltip" title="Disc Menu"></i>Disc :</label>
-                        <input type="number" name="disc" class="form-control" id="disc" placeholder="Please Enter Disc" value="0">
+                        <input type="number" name="disc" class="form-control" id="disc" placeholder="Please Enter Disc" value="0" min="0">
                         <span id="err_disc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
@@ -140,12 +140,12 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_price"><i class="fas fa-money-bill mr-1" data-toggle="tooltip" title="Price Menu"></i>Price :</label>
-                        <input type="number" name="price" class="form-control" id="edit_price" placeholder="Please Enter Price" value="0">
+                        <input type="number" name="price" class="form-control" id="edit_price" placeholder="Please Enter Price" value="0" min="0">
                         <span id="err_edit_price" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_disc"><i class="fas fa-percent mr-1" data-toggle="tooltip" title="Disc Menu"></i>Disc :</label>
-                        <input type="number" name="disc" class="form-control" id="edit_disc" placeholder="Please Enter Disc" value="0">
+                        <input type="number" name="disc" class="form-control" id="edit_disc" placeholder="Please Enter Disc" value="0" min="0">
                         <span id="err_edit_disc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
