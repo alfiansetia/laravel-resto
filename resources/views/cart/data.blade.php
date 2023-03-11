@@ -146,6 +146,12 @@
         </div>
     </div>
 </div>
+
+<td>
+    <a href="javascript:void(0)" data-minus="5" class="badge badge-primary p-2 minus"> - </a>
+    <a href="javascript:void(0)" data-plus="5" class="badge badge-primary p-2 plus"> + </a>
+</td>
+
 @endsection
 
 @push('modal')
@@ -270,6 +276,10 @@
         }
     })
 
+    function add_value(data) {
+
+    }
+
     $('#table').on('change', '#qty', function() {
         let row = $(this).parents('tr')[0];
         data = table.row(row).data()
@@ -328,6 +338,23 @@
                 'error'
             )
             $(this).val(1)
+        }
+    });
+
+    $('#table').on('click', '#qty_plus', function() {
+        let row = $(this).parents('tr')[0];
+        data = table.row(row).data()
+        qty = $(this).closest("td").find("#qty")
+        if (qty.val() > 0) {
+            qty.val(parseInt(qty.val()) + 1).change();
+        }
+    });
+    $('#table').on('click', '#qty_minus', function() {
+        let row = $(this).parents('tr')[0];
+        data = table.row(row).data()
+        qty = $(this).closest("td").find("#qty")
+        if (qty.val() > 0) {
+            qty.val(parseInt(qty.val()) - 1).change();
         }
     });
 
@@ -649,7 +676,15 @@
             data: 'qty',
             render: function(data, type, row, meta) {
                 if (type == 'display') {
-                    return `<input type="number" id="qty" class="form-control form-control-sm" value="${data}" min="1">`
+                    return `<div class="input-group">
+                        <div class="input-group-prepend">
+                          <button type="button" id="qty_minus" class="btn btn-primary btn-sm"><i class="fas fa-minus"></i></button>
+                        </div>
+                        <input type="number" id="qty" class="form-control form-control-sm" value="${data}" min="1" placeholder="Qty" style="width:40px;">
+                        <div class="input-group-append">
+                          <button type="button" id="qty_plus" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
+                        </div>
+                      </div>`
                 } else {
                     return data
                 }
@@ -660,7 +695,7 @@
             render: function(data, type, row, meta) {
                 let text = ''
                 if (data != null) {
-                    text = row.menu.disc
+                    text = row.menu.disc + '%'
                 }
                 if (type == 'display') {
                     return text

@@ -19,13 +19,13 @@
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
 </head>
 
-<body>
+<body class="layout-3">
     <div id="app">
-        <div class="main-wrapper">
+        <div class="main-wrapper container">
             <div class="navbar-bg"></div>
-            @include('components.nav')
+            @include('components.topnav')
 
-            @include('components.sidebar')
+            <!-- @include('components.sidebar') -->
 
             <!-- Main Content -->
             <div class="main-content">
