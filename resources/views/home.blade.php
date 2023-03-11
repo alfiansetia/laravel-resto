@@ -8,7 +8,7 @@
 <div class="section-body">
     <h2 class="section-title">This is Example Page</h2>
     <p class="section-lead">This page is just an example for you to create your own page.</p>
-    <div class="card">
+    <div class="card card-primary">
         <div class="card-header">
             <h4>{{ $title }}</h4>
         </div>

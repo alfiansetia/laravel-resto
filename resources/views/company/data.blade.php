@@ -12,7 +12,7 @@
 <div class="section-body">
     <div class="row mt-sm-4">
         <div class="col-md-4">
-            <div class="card">
+            <div class="card card-primary">
                 <div class="card-header">
                     <h4>Jump To</h4>
                 </div>
@@ -37,7 +37,7 @@
         <div class="col-md-8">
             <div class="tab-content no-padding" id="myTab2Content">
                 <div class="tab-pane fade {{ $title == 'General Setting' ? 'show active' : '' }}" id="general4" role="tabpanel" aria-labelledby="general-tab4">
-                    <div class="card">
+                    <div class="card card-primary">
                         <div class="card-header">
                             <h4>General Settings</h4>
                         </div>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade {{ $title == 'Social Setting' ? 'show active' : '' }}" id="social4" role="tabpanel" aria-labelledby="social-tab4">
-                    <div class="card">
+                    <div class="card card-warning">
                         <div class="card-header">
                             <h4>Social Settings</h4>
                         </div>
@@ -125,7 +125,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade {{ $title == 'Image Setting' ? 'show active' : '' }}" id="image4" role="tabpanel" aria-labelledby="image-tab4">
-                    <div class="card">
+                    <div class="card card-danger">
                         <div class="card-header">
                             <h4>Image Settings</h4>
                         </div>
@@ -170,7 +170,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade {{ $title == 'Other Setting' ? 'show active' : '' }}" id="other4" role="tabpanel" aria-labelledby="other-tab4">
-                    <div class="card">
+                    <div class="card card-success">
                         <div class="card-header">
                             <h4>Other Settings</h4>
                         </div>

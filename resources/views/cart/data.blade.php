@@ -41,7 +41,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card card-success">
                 <div class="card-header pb-0 pt-1">
                     <h4>List Cart <div id="totalitem" class="badge badge-info">0 Item</div>
                     </h4>
@@ -70,12 +70,12 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="card">
+            <div class="card card-warning">
                 <div class="card-body">
                     <h1 id="grandtotal"></h1>
                 </div>
             </div>
-            <div class="card">
+            <div class="card card-primary">
                 <div class="card-body">
                     <div class="form-group row mb-4">
                         <label for="total" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Total</label>
@@ -117,7 +117,7 @@
     </div>
     <div class="row">
         <div class="col-lg-8">
-            <div class="card">
+            <div class="card card-danger">
                 <div class="card-header">
                     <h4>Last 5 Order</h4>
                     <div class="card-header-action">
