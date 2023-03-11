@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('catmenu', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('status', ['active', 'nonactive'])->default('active');
             $table->string('desc')->nullable();
             $table->timestamps();
         });

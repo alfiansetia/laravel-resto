@@ -17,18 +17,15 @@ class CatmenuSeeder extends Seeder
     {
         //
         Catmenu::create([
-            'name'      => 'makanan',
-            'status'    => 'active',
+            'name'      => 'Makanan',
             'desc'      => '',
         ]);
         Catmenu::create([
-            'name'      => 'minuman',
-            'status'    => 'active',
+            'name'      => 'Minuman',
             'desc'      => '',
         ]);
         Catmenu::create([
-            'name'      => 'other',
-            'status'    => 'active',
+            'name'      => 'Other',
             'desc'      => '',
         ]);
     }

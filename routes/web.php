@@ -54,7 +54,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::delete('/table', [TableController::class, 'destroy'])->name('table.destroy');
     Route::resource('table', TableController::class)->except('create', 'show', 'destroy');
 
-    Route::post('/catmenu/change', [CatmenuController::class, 'change'])->name('catmenu.change');
     Route::delete('/catmenu', [CatmenuController::class, 'destroy'])->name('catmenu.destroy');
     Route::resource('catmenu', CatmenuController::class)->except('create', 'show', 'destroy');
 

@@ -13,7 +13,7 @@
 <div class="section-body">
     <div class="row">
         <div class="col-lg-8">
-            <div class="card">
+            <div class="card card-primary">
                 <div class="card-header">
                     <h4>{{ $title }}</h4>
                 </div>

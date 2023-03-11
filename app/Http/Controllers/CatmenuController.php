@@ -43,12 +43,10 @@ class CatmenuController extends Controller
     {
         $this->validate($request, [
             'name'      => 'required|max:25|min:3|unique:catmenu,name',
-            'status'    => 'required|in:active,nonactive',
             'desc'      => 'max:150',
         ]);
         $table = Catmenu::create([
             'name'      => $request->name,
-            'status'    => $request->status,
             'desc'      => $request->desc,
         ]);
         if ($table) {
@@ -84,12 +82,10 @@ class CatmenuController extends Controller
     {
         $this->validate($request, [
             'name'      => 'required|max:25|min:3|unique:catmenu,name,' . $catmenu->id,
-            'status'    => 'required|in:active,nonactive',
             'desc'      => 'max:150',
         ]);
         $catmenu->update([
             'name'      => $request->name,
-            'status'    => $request->status,
             'desc'      => $request->desc,
         ]);
         if ($catmenu) {
@@ -119,33 +115,6 @@ class CatmenuController extends Controller
                     }
                 }
                 return response()->json(['status' => true, 'message' => 'Success Delete ' . $count . '/' . $counter . ' Data', 'data' => '']);
-            } else {
-                return response()->json(['status' => false, 'message' => 'No Selected Data', 'data' => '']);
-            }
-        } else {
-            abort(404);
-        }
-    }
-
-    public function change(Request $request)
-    {
-        if ($request->ajax()) {
-            $this->validate($request, [
-                'status'    => 'required|in:active,nonactive',
-            ]);
-            if ($request->id) {
-                $count = count($request->id);
-                $counter = 0;
-                foreach ($request->id as $id) {
-                    $catmenu = Catmenu::findOrFail($id);
-                    $catmenu->update([
-                        'status'    => $request->status,
-                    ]);
-                    if ($catmenu) {
-                        $counter = $counter + 1;
-                    }
-                }
-                return response()->json(['status' => true, 'message' => 'Success Change Status ' . $count . '/' . $counter . ' Data', 'data' => '']);
             } else {
                 return response()->json(['status' => false, 'message' => 'No Selected Data', 'data' => '']);
             }

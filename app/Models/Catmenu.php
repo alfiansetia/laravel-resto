@@ -12,7 +12,6 @@ class Catmenu extends Model
 
     protected $fillable = [
         'name',
-        'status',
         'desc',
     ];
 

@@ -26,7 +26,6 @@
                                     <tr>
                                         <th class="dt-no-sorting" style="width: 30px;">Id</th>
                                         <th>Name</th>
-                                        <th>Status</th>
                                         <th>Desc</th>
                                     </tr>
                                 </thead>
@@ -58,14 +57,6 @@
                         <label class="control-label" for="name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Table"></i>Name :</label>
                         <input type="text" name="name" class="form-control" id="name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
                         <span id="err_name" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
-                        <select name="status" id="status" class="form-control select2" style="width: 100%;" required>
-                            <option value="active">active</option>
-                            <option value="nonactive">nonactive</option>
-                        </select>
-                        <span id="err_status" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
@@ -101,14 +92,6 @@
                         <span id="err_edit_name" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="edit_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
-                        <select name="status" id="edit_status" class="form-control select2" style="width: 100%;" required>
-                            <option value="active">active</option>
-                            <option value="nonactive">nonactive</option>
-                        </select>
-                        <span id="err_edit_status" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label" for="edit_desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
                         <textarea name="desc" class="form-control" id="edit_desc" placeholder="Please Enter desc" maxlength="150"></textarea>
                         <span id="err_edit_desc" class="error invalid-feedback" style="display: hide;"></span>
@@ -124,32 +107,6 @@
     </div>
 </div>
 
-<div class="modal animated fade fadeInDown" id="modalChange" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-edit mr-1" data-toggle="tooltip" title="Change Data"></i>Change Data</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" data-toggle="tooltip" title="Close">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="control-label" for="change_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
-                    <select name="status" id="change_status" class="form-control select2" style="width: 100%;" required>
-                        <option value="active">active</option>
-                        <option value="nonactive">nonactive</option>
-                    </select>
-                    <span id="err_change_status" class="error invalid-feedback" style="display: hide;"></span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
-                <button type="button" id="submitChange" class="btn btn-primary"><i class="fas fa-paper-plane mr-1" data-toggle="tooltip" title="Save"></i>Save</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endpush
 
 
@@ -216,21 +173,6 @@
             title: "Name",
             data: 'name',
         }, {
-            title: "Status",
-            data: 'status',
-            render: function(data, type, row, meta) {
-                if (data == 'active') {
-                    text = `<span class="badge badge-success">${data}</span>`;
-                } else {
-                    text = `<span class="badge badge-danger">${data}</span>`;
-                }
-                if (type == 'display') {
-                    return text
-                } else {
-                    return data
-                }
-            }
-        }, {
             title: "Desc",
             data: 'desc',
         }, ],
@@ -257,12 +199,6 @@
             extend: 'collection',
             autoClose: true,
             buttons: [{
-                text: 'Change',
-                className: 'btn btn-info',
-                action: function(e, dt, node, config) {
-                    changeData();
-                }
-            }, {
                 text: 'Remove',
                 className: 'btn btn-danger',
                 action: function(e, dt, node, config) {
@@ -393,7 +329,6 @@
                 $('#edit_reset').val(result.data.id);
                 $('#edit_id').val(result.data.id);
                 $('#edit_name').val(result.data.name);
-                $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
                 $('#edit_reset').prop('disabled', false);
             },
@@ -433,9 +368,7 @@
                 $('#edit_reset').val(result.data.id);
                 $('#edit_id').val(result.data.id);
                 $('#edit_name').val(result.data.name);
-                $('#edit_status').val(result.data.status).change();
                 $('#edit_desc').val(result.data.desc);
-
                 $('#modalEdit').modal('show');
                 $('#modalEdit').on('shown.bs.modal', function() {
                     $('#edit_name').focus();
@@ -536,73 +469,6 @@
             });
         }
     });
-
-    function changeData() {
-        if (selected()) {
-            $('#modalChange').modal('show');
-            $('#modalChange').on('shown.bs.modal', function() {
-                $('#change_status').focus();
-            })
-        }
-    }
-
-    $("#submitChange").click(function() {
-        let btn = $(this);
-        let status = $('#change_status').val();
-        let form = $("#formSelected");
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('catmenu.change') }}",
-            data: $(form).serialize() + '&status=' + status,
-            beforeSend: function() {
-                btn.prop('disabled', true);
-                block();
-            },
-            success: function(res) {
-                btn.prop('disabled', false);
-                unblock();
-                table.ajax.reload();
-                if (res.status == true) {
-                    swal(
-                        'Changed!',
-                        res.message,
-                        'success'
-                    )
-                } else {
-                    swal(
-                        'Failed!',
-                        res.message,
-                        'error'
-                    )
-                }
-            },
-            error: function(xhr, status, error) {
-                btn.prop('disabled', false);
-                unblock();
-                er = xhr.responseJSON.errors
-                if (xhr.status == 500) {
-                    swal(
-                        'Failed!',
-                        'Server Error',
-                        'error'
-                    )
-                } else {
-                    erlen = Object.keys(er).length
-                    for (i = 0; i < erlen; i++) {
-                        obname = Object.keys(er)[i];
-                        $('#' + obname).addClass('is-invalid');
-                        $('#err_change_' + obname).text(er[obname][0]);
-                        $('#err_change_' + obname).show();
-                    }
-                }
-            }
-        });
-    })
 
     function deleteData() {
         if (selected()) {
