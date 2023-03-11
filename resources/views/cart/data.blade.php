@@ -10,19 +10,14 @@
 @endpush
 
 @section('content')
-<div class="section-header">
-    <h1>{{ $title }} </h1>
-    <div class="section-header-breadcrumb">
-        <div class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></div>
-        <div class="breadcrumb-item active">{{ $title }}</div>
-    </div>
-</div>
-
 <div class="section-body">
     <div class="row">
         <div class="col-lg-8">
             <div class="card">
-                <div class="card-body">
+                <div class="card-header">
+                    <h4>{{ $title }}</h4>
+                </div>
+                <div class="card-body pt-0">
                     <div class="form-group row">
                         <label for="name_cart" class="col-sm-3 col-form-label">Name :</label>
                         <div class="col-sm-9">

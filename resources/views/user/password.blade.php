@@ -7,14 +7,6 @@
 @endpush
 
 @section('content')
-<div class="section-header">
-    <h1>{{ $title }} </h1>
-    <div class="section-header-breadcrumb">
-        <div class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></div>
-        <div class="breadcrumb-item"><a href="{{ route('user.profile') }}">Profile</a></div>
-        <div class="breadcrumb-item active">{{ $title }}</div>
-    </div>
-</div>
 <div class="section-body">
     <h2 class="section-title">Hi, {{ auth()->user()->name }}!</h2>
     <p class="section-lead">

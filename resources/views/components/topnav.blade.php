@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg main-navbar">
-    <a href="index.html" class="navbar-brand sidebar-gone-hide">Stisla</a>
+    <a href="{{ route('home') }}" class="navbar-brand sidebar-gone-hide">{{ $comp->name }}</a>
     <div class="navbar-nav">
         <a href="#" class="nav-link sidebar-gone-show" data-toggle="sidebar"><i class="fas fa-bars"></i></a>
     </div>
@@ -17,136 +17,8 @@
         <ul class="navbar-nav">
             <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
         </ul>
-        <div class="search-element">
-            <input class="form-control" type="search" placeholder="Search" aria-label="Search" data-width="250">
-            <button class="btn" type="submit"><i class="fas fa-search"></i></button>
-            <div class="search-backdrop"></div>
-            <div class="search-result">
-                <div class="search-header">
-                    Histories
-                </div>
-                <div class="search-item">
-                    <a href="#">How to hack NASA using CSS</a>
-                    <a href="#" class="search-close"><i class="fas fa-times"></i></a>
-                </div>
-                <div class="search-item">
-                    <a href="#">Kodinger.com</a>
-                    <a href="#" class="search-close"><i class="fas fa-times"></i></a>
-                </div>
-                <div class="search-item">
-                    <a href="#">#Stisla</a>
-                    <a href="#" class="search-close"><i class="fas fa-times"></i></a>
-                </div>
-                <div class="search-header">
-                    Result
-                </div>
-                <div class="search-item">
-                    <a href="#">
-                        <img class="mr-3 rounded" width="30" src="../assets/img/products/product-3-50.png" alt="product">
-                        oPhone S9 Limited Edition
-                    </a>
-                </div>
-                <div class="search-item">
-                    <a href="#">
-                        <img class="mr-3 rounded" width="30" src="../assets/img/products/product-2-50.png" alt="product">
-                        Drone X2 New Gen-7
-                    </a>
-                </div>
-                <div class="search-item">
-                    <a href="#">
-                        <img class="mr-3 rounded" width="30" src="../assets/img/products/product-1-50.png" alt="product">
-                        Headphone Blitz
-                    </a>
-                </div>
-                <div class="search-header">
-                    Projects
-                </div>
-                <div class="search-item">
-                    <a href="#">
-                        <div class="search-icon bg-danger text-white mr-3">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        Stisla Admin Template
-                    </a>
-                </div>
-                <div class="search-item">
-                    <a href="#">
-                        <div class="search-icon bg-primary text-white mr-3">
-                            <i class="fas fa-laptop"></i>
-                        </div>
-                        Create a new Homepage Design
-                    </a>
-                </div>
-            </div>
-        </div>
     </form>
     <ul class="navbar-nav navbar-right">
-        <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link nav-link-lg message-toggle beep"><i class="far fa-envelope"></i></a>
-            <div class="dropdown-menu dropdown-list dropdown-menu-right">
-                <div class="dropdown-header">Messages
-                    <div class="float-right">
-                        <a href="#">Mark All As Read</a>
-                    </div>
-                </div>
-                <div class="dropdown-list-content dropdown-list-message">
-                    <a href="#" class="dropdown-item dropdown-item-unread">
-                        <div class="dropdown-item-avatar">
-                            <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle">
-                            <div class="is-online"></div>
-                        </div>
-                        <div class="dropdown-item-desc">
-                            <b>Kusnaedi</b>
-                            <p>Hello, Bro!</p>
-                            <div class="time">10 Hours Ago</div>
-                        </div>
-                    </a>
-                    <a href="#" class="dropdown-item dropdown-item-unread">
-                        <div class="dropdown-item-avatar">
-                            <img alt="image" src="../assets/img/avatar/avatar-2.png" class="rounded-circle">
-                        </div>
-                        <div class="dropdown-item-desc">
-                            <b>Dedik Sugiharto</b>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                            <div class="time">12 Hours Ago</div>
-                        </div>
-                    </a>
-                    <a href="#" class="dropdown-item dropdown-item-unread">
-                        <div class="dropdown-item-avatar">
-                            <img alt="image" src="../assets/img/avatar/avatar-3.png" class="rounded-circle">
-                            <div class="is-online"></div>
-                        </div>
-                        <div class="dropdown-item-desc">
-                            <b>Agung Ardiansyah</b>
-                            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                            <div class="time">12 Hours Ago</div>
-                        </div>
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <div class="dropdown-item-avatar">
-                            <img alt="image" src="../assets/img/avatar/avatar-4.png" class="rounded-circle">
-                        </div>
-                        <div class="dropdown-item-desc">
-                            <b>Ardian Rahardiansyah</b>
-                            <p>Duis aute irure dolor in reprehenderit in voluptate velit ess</p>
-                            <div class="time">16 Hours Ago</div>
-                        </div>
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <div class="dropdown-item-avatar">
-                            <img alt="image" src="../assets/img/avatar/avatar-5.png" class="rounded-circle">
-                        </div>
-                        <div class="dropdown-item-desc">
-                            <b>Alfa Zulkarnain</b>
-                            <p>Exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
-                            <div class="time">Yesterday</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="dropdown-footer text-center">
-                    <a href="#">View All <i class="fas fa-chevron-right"></i></a>
-                </div>
-            </div>
-        </li>
         <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg beep"><i class="far fa-bell"></i></a>
             <div class="dropdown-menu dropdown-list dropdown-menu-right">
                 <div class="dropdown-header">Notifications
@@ -207,22 +79,19 @@
             </div>
         </li>
         <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
-                <div class="d-sm-none d-lg-inline-block">Hi, Ujang Maman</div>
+                <img alt="image" src="{{ asset('assets/img/avatar/avatar-1.png') }}" class="rounded-circle mr-1">
+                <div class="d-sm-none d-lg-inline-block">Hi, {{ auth()->user()->name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-title">Logged in 5 min ago</div>
-                <a href="features-profile.html" class="dropdown-item has-icon">
+                <a href="{{ route('user.profile') }}" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
-                <a href="features-activities.html" class="dropdown-item has-icon">
-                    <i class="fas fa-bolt"></i> Activities
-                </a>
-                <a href="features-settings.html" class="dropdown-item has-icon">
+                <a href="{{ route('company.index') }}" class="dropdown-item has-icon">
                     <i class="fas fa-cog"></i> Settings
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item has-icon text-danger">
+                <a href="javascript:void(0);" onclick="logout_();" class="dropdown-item has-icon text-danger">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </div>
@@ -233,15 +102,26 @@
 <nav class="navbar navbar-secondary navbar-expand-lg">
     <div class="container">
         <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
+            <li class="nav-item {{ $title == 'Dashboard' ? 'active' : '' }}">
+                <a href="{{ route('home') }}" class="nav-link"><i class="fas fa-fire"></i><span>Dashboard</span></a>
+            </li>
+            <li class="nav-item dropdown {{ $title == 'Data Table' || $title == 'Data Category' || $title == 'Data Menu' || $title == 'Data User' ? 'active' : '' }}">
+                <a href="javascript:void(0);" data-toggle="dropdown" class="nav-link has-dropdown"><i class="fas fa-database"></i><span>Master Data</span></a>
                 <ul class="dropdown-menu">
-                    <li class="nav-item"><a href="index-0.html" class="nav-link">General Dashboard</a></li>
-                    <li class="nav-item"><a href="index.html" class="nav-link">Ecommerce Dashboard</a></li>
+                    <li class="nav-item {{ $title == 'Data Table' ? 'active' : '' }}"><a class="nav-link" href="{{ route('table.index') }}">Table</a></li>
+                    <li class="nav-item {{ $title == 'Data Category' ? 'active' : '' }}"><a class="nav-link" href="{{ route('catmenu.index') }}">Category</a></li>
+                    <li class="nav-item {{ $title == 'Data Menu' ? 'active' : '' }}"><a class="nav-link" href="{{ route('menu.index') }}">Menu</a></li>
+                    <li class="nav-item {{ $title == 'Data User' ? 'active' : '' }}"><a class="nav-link" href="{{ route('user.index') }}">User</a></li>
                 </ul>
             </li>
-            <li class="nav-item active">
-                <a href="#" class="nav-link"><i class="far fa-heart"></i><span>Top Navigation</span></a>
+            <li class="nav-item {{ $title == 'New Order' ? 'active' : '' }}">
+                <a href="{{ route('cart.index') }}" class="nav-link"><i class="fas fa-cart-plus"></i><span>New Order</span></a>
+            </li>
+            <li class="nav-item dropdown {{ $title == 'Data Order' ? 'active' : '' }}">
+                <a href="javascript:void(0);" data-toggle="dropdown" class="nav-link has-dropdown"><i class="fas fa-exchange-alt"></i><span>Transaction</span></a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item {{ $title == 'Data Order' ? 'active' : '' }}"><a class="nav-link" href="{{ route('order.index') }}">Order</a></li>
+                </ul>
             </li>
             <li class="nav-item dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i class="far fa-clone"></i><span>Multiple Dropdown</span></a>

@@ -48,8 +48,8 @@ class MenuController extends Controller
             'catmenu'   => 'required|integer',
             'status'    => 'required|in:active,nonactive',
             'img'       => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'price'     => 'integer|lte:0',
-            'disc'      => 'integer|lte:0',
+            'price'     => 'integer|gte:0',
+            'disc'      => 'integer|gte:0',
             'desc'      => 'max:150',
         ]);
         $img = null;
@@ -104,8 +104,8 @@ class MenuController extends Controller
             'catmenu'   => 'required|integer',
             'status'    => 'required|in:active,nonactive',
             'img'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'price'     => 'integer|lte:0',
-            'disc'      => 'integer|lte:0',
+            'price'     => 'integer|gte:0',
+            'disc'      => 'integer|gte:0',
             'desc'      => 'max:150',
         ]);
         $img = $menu->img;

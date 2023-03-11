@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class CompController extends Controller
 {
@@ -21,9 +22,17 @@ class CompController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('company.data')->with(['comp' => $this->comp, 'title' => 'Setting Company']);
+        $title = 'General Setting';
+        if ($request->has('type') && $request->type == 'image') {
+            $title = 'Image Setting';
+        } elseif ($request->has('type') && $request->type == 'social') {
+            $title = 'Social Setting';
+        } elseif ($request->has('type') && $request->type == 'other') {
+            $title = 'Other Setting';
+        }
+        return view('company.data')->with(['comp' => $this->comp, 'title' => $title]);
     }
 
     /**
@@ -45,22 +54,31 @@ class CompController extends Controller
     public function store(Request $request)
     {
         $comp = $this->comp;
+        $title = 'General Setting';
         if ($request->has('type') && $request->type == 'general') {
-            $this->validate($request, [
+            $title = 'General Setting';
+            $validator = Validator::make($request->all(), [
                 'name'      => 'required|max:30',
                 'telp'      => 'required|max:15',
                 'address'   => 'required|max:200',
             ]);
+            if ($validator->fails()) {
+                return redirect(route('company.index') . '?type=' . $request->type)->withErrors($validator);
+            }
             $comp->update([
                 'name'      => $request->name,
                 'telp'      => $request->telp,
                 'address'   => $request->address,
             ]);
         } elseif ($request->has('type') && $request->type == 'image') {
-            $this->validate($request, [
+            $title = 'Image Setting';
+            $validator = Validator::make($request->all(), [
                 'logo'      => 'image|mimes:jpeg,png,jpg|max:2048',
                 'fav'       => 'image|mimes:png,jpg|max:1024',
             ]);
+            if ($validator->fails()) {
+                return redirect(route('company.index') . '?type=' . $request->type)->withErrors($validator);
+            }
             $logo = $comp->logo;
             $fav = $comp->fav;
             if ($files = $request->file('logo')) {
@@ -80,21 +98,29 @@ class CompController extends Controller
                 'fav'       => $fav,
             ]);
         } elseif ($request->has('type') && $request->type == 'social') {
-            $this->validate($request, [
+            $title = 'Social Setting';
+            $validator = Validator::make($request->all(), [
                 'wa'        => 'required|max:15',
-                'fb'        => 'max:30|nullable',
-                'ig'        => 'max:30|nullable',
+                'fb'        => 'max:15|nullable',
+                'ig'        => 'max:15|nullable',
             ]);
+            if ($validator->fails()) {
+                return redirect(route('company.index') . '?type=' . $request->type)->withErrors($validator);
+            }
             $comp->update([
                 'wa'        => $request->wa,
                 'fb'        => $request->fb,
                 'ig'        => $request->ig,
             ]);
         } elseif ($request->has('type') && $request->type == 'other') {
-            $this->validate($request, [
+            $title = 'Other Setting';
+            $validator = Validator::make($request->all(), [
                 'footer_struk'  => 'required|max:100',
                 'tax'           => 'required|in:yes,no',
             ]);
+            if ($validator->fails()) {
+                return redirect(route('company.index') . '?type=' . $request->type)->withErrors($validator);
+            }
             $comp->update([
                 'footer_struk'  => $request->footer_struk,
                 'tax'           => $request->tax,
@@ -103,9 +129,9 @@ class CompController extends Controller
             abort(404);
         }
         if ($comp) {
-            return redirect()->route('company.index')->with(['success' => 'Data Berhasil Diupdate!']);
+            return redirect(route('company.index') . '?type=' . $request->type)->with(['success' => 'Data Berhasil Diupdate!', 'title' => $title]);
         } else {
-            return redirect()->route('company.index')->with(['error' => 'Data Gagal Diupdate!']);
+            return redirect(route('company.index') . '?type=' . $request->type)->route('company.index')->with(['error' => 'Data Gagal Diupdate!', 'title' => $title]);
         }
     }
 
