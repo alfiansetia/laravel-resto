@@ -151,9 +151,14 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function edit(Order $order)
+    public function edit(Request $request, Order $order)
     {
-        //
+        if ($request->ajax()) {
+            $order = Order::with('dtorder.menu.catmenu', 'table', 'user')->find($order->id);
+            return response()->json(['status' => true, 'message' => '', 'data' => $order]);
+        } else {
+            abort(404);
+        }
     }
 
     /**

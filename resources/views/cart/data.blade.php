@@ -125,8 +125,8 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive table-invoice">
-                        <table class="table table-hover" id="tabletrx">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tabletrx" style="width: 100%;">
                             <tr>
                                 <th>Date</th>
                                 <th>Customer</th>
@@ -265,6 +265,10 @@
             $("#select_table").prop('disabled', true);
         }
     })
+    setTimeout(function() {
+        table.columns.adjust();
+        tbltrx.columns.adjust();
+    }, 500);
 
     function add_value(data) {
 
@@ -471,6 +475,8 @@
         dom: 'lrt',
         scrollY: '200px',
         scrollCollapse: true,
+        scrollX: true,
+        scroller: true,
         lengthChange: false,
         paging: false,
         searching: true,
@@ -616,6 +622,8 @@
         },
         scrollY: '250px',
         scrollCollapse: true,
+        scrollX: true,
+        scroller: true,
         lengthChange: false,
         paging: false,
         searching: false,

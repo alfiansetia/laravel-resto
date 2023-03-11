@@ -51,61 +51,74 @@
     <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titleEdit"><i class="fas fa-edit mr-1" data-toggle="tooltip" title="Edit Data"></i>Edit Data</h5>
+                <h5 class="modal-title" id="titleEdit"><i class="fas fa-info mr-1" data-toggle="tooltip" title="Edit Data"></i>Detail Order <span class="badge badge-success" id="order_number">12345</span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="formEdit" class="fofrm-vertical" action="" method="POST" enctype="multipart/form-data">
-                    {{ method_field('PUT') }}
-                    <div class="form-group">
-                        <label class="control-label" for="edit_name"><i class="fas fa-tag mr-1" data-toggle="tooltip" title="Name Menu"></i>Name :</label>
-                        <input type="text" name="name" class="form-control" id="edit_name" placeholder="Please Enter Name" minlength="3" maxlength="25" required>
-                        <span id="err_edit_name" class="error invalid-feedback" style="display: hide;"></span>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <table class="table table-sm table-hover table-responsive">
+                            <tr>
+                                <td style="text-align: left;">Kasir</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="order_user">Aku</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Date</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="order_date">sads</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Name</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="order_name">Aku</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Table</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="order_table">#1</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Total</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="order_total">Rp 10.000</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Bayar</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="order_bill">Rp 10.000</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Status</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="order_status">paid</td>
+                            </tr>
+                        </table>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_catmenu"><i class="fas fa-tags mr-1" data-toggle="tooltip" title="Category Menu"></i>Category :</label>
-                        <select name="catmenu" id="edit_catmenu" class="form-control select2" style="width: 100%;" required>
-                            <!-- <option value="">Please Select Category</option> -->
-                        </select>
-                        <span id="err_edit_catmenu" class="error invalid-feedback" style="display: hide;"></span>
+                    <div class="col-lg-8">
+                        <div class="table-responsive">
+                            <table id="tabletrx" class="table table-sm table-hover table-striped" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Menu</th>
+                                        <th>Price</th>
+                                        <th>Qty</th>
+                                        <th>Disc</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_price"><i class="fas fa-money-bill mr-1" data-toggle="tooltip" title="Price Menu"></i>Price :</label>
-                        <input type="number" name="price" class="form-control" id="edit_price" placeholder="Please Enter Price" value="0">
-                        <span id="err_edit_price" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_disc"><i class="fas fa-percent mr-1" data-toggle="tooltip" title="Disc Menu"></i>Disc :</label>
-                        <input type="number" name="disc" class="form-control" id="edit_disc" placeholder="Please Enter Disc" value="0">
-                        <span id="err_edit_disc" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_stok"><i class="fas fa-cubes mr-1" data-toggle="tooltip" title="Stok Menu"></i>Stok :</label>
-                        <input type="number" name="stok" class="form-control" id="edit_stok" placeholder="Please Enter Stok" value="0">
-                        <span id="err_edit_stok" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
-                        <select name="status" id="edit_status" class="form-control select2" style="width: 100%;" required>
-                            <option value="active">active</option>
-                            <option value="nonactive">nonactive</option>
-                        </select>
-                        <span id="err_edit_status" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
-                        <textarea name="desc" class="form-control" id="edit_desc" placeholder="Please Enter desc" maxlength="150"></textarea>
-                        <span id="err_edit_desc" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
-                <button type="button" id="edit_reset" class="btn btn-warning"><i class="fas fa-undo mr-1" data-toggle="tooltip" title="Reset"></i>Reset</button>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane mr-1" data-toggle="tooltip" title="Save"></i>Save</button>
             </div>
-            </form>
         </div>
     </div>
 </div>
@@ -320,40 +333,103 @@
     multiCheck(table);
     var id;
 
+    var tbltrx = $("#tabletrx").DataTable({
+        rowId: 'id',
+        data: [],
+        dom: 'lrt',
+        lengthChange: false,
+        paging: false,
+        searching: true,
+        columnDefs: [],
+        info: false,
+        order: [
+            [0, 'desc']
+        ],
+        columns: [{
+            title: "Menu",
+            data: 'menu_id',
+            render: function(data, type, row, meta) {
+                let text = ''
+                if (data != null) {
+                    if (row.menu.catmenu_id != null) {
+                        text = '[' + row.menu.catmenu.name + '] <b>' + row.menu.name + '</b>'
+                    } else {
+                        text = row.menu.name
+                    }
+                }
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
+        }, {
+            title: "Price",
+            data: 'price',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    return hrg(data)
+                } else {
+                    return data
+                }
+            }
+        }, {
+            title: "Qty",
+            data: 'qty',
+        }, {
+            title: "Disc",
+            data: 'disc',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    return data + '%'
+                } else {
+                    return data
+                }
+            }
+        }, {
+            title: "Subtotal",
+            data: 'id',
+            render: function(data, type, row, meta) {
+                let text
+                if (data != null) {
+                    text = (row.price * row.qty) - (row.price * row.qty * row.disc / 100)
+                }
+                if (type == 'display') {
+                    return hrg(text)
+                } else {
+                    return data
+                }
+            }
+        }]
+    });
+
     $('#table tbody').on('click', 'tr td:not(:first-child,:last-child)', function() {
-        $('#formEdit .error.invalid-feedback').each(function(i) {
-            $(this).hide();
-        });
-        $('#formEdit input.is-invalid').each(function(i) {
-            $(this).removeClass('is-invalid');
-        });
         row = $(this).parents('tr')[0];
         id = table.row(row).data().id
-        let url = "{{ route('menu.edit', ':id') }}";
+        let url = "{{ route('order.edit', ':id') }}";
         url = url.replace(':id', id);
         $.ajax({
             url: url,
             method: 'GET',
             success: function(result) {
                 unblock();
-                $('#edit_reset').val(result.data.id);
-                $('#edit_id').val(result.data.id);
-                $('#edit_name').val(result.data.name);
-                if (result.data.catmenu_id != null) {
-                    let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
-                    $('#edit_catmenu').append(option).change();
+                $('#order_number').text(result.data.number)
+                $('#order_date').text(result.data.date)
+                $('#order_name').text(result.data.name)
+                if (result.data.category == 'dine in' && result.data.table_id != '') {
+                    $('#order_table').text('#' + result.data.table.number)
                 } else {
-                    $('#edit_catmenu').val('').change();
+                    $('#order_table').text(result.data.category)
                 }
-                $('#edit_price').val(result.data.price);
-                $('#edit_stok').val(result.data.stock);
-                $('#edit_status').val(result.data.status).change();
-                $('#edit_desc').val(result.data.desc);
-
+                if (result.data.user_id != '') {
+                    $('#order_user').text(result.data.user.name)
+                } else {
+                    $('#order_user').text('-')
+                }
+                $('#order_total').text('Rp ' + hrg(result.data.total))
+                $('#order_bill').text('Rp ' + hrg(result.data.bill))
+                tbltrx.clear().rows.add(result.data.dtorder).draw();
                 $('#modalEdit').modal('show');
-                $('#modalEdit').on('shown.bs.modal', function() {
-                    $('#edit_name').focus();
-                })
             },
             beforeSend: function() {
                 block();
