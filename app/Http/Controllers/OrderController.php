@@ -89,7 +89,7 @@ class OrderController extends Controller
             $order = Order::create([
                 'number'    => $invnumber,
                 'name'      => $request->name,
-                'table_id'  => $request->table,
+                'table_id'  => $request->category == 'dine in' && $request->has('table') ? $request->table : null,
                 'user_id'   => Auth::id(),
                 'category'  => $request->category,
                 'date'      => date("Y-m-d H:i:s"),

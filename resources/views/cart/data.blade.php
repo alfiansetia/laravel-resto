@@ -621,6 +621,9 @@
         searching: false,
         columnDefs: [],
         info: false,
+        order: [
+            [1, 'desc']
+        ],
         columns: [{
             title: '<i class="fas fa-cog"></i>',
             data: 'id',
