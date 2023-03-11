@@ -219,6 +219,7 @@ class OrderController extends Controller
     {
         // return $pdf->download('sample.pdf');
         // $data = 'INV' . date('ymd') . str_pad(1 + 1, 5, "0", STR_PAD_LEFT);
-        // return response()->json($data);
+        $data = date('d-m-Y H:i:s');
+        return response()->json($data);
     }
 }

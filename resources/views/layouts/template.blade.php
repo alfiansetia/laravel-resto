@@ -24,9 +24,6 @@
         <div class="main-wrapper container">
             <div class="navbar-bg"></div>
             @include('components.topnav')
-            <!-- @include('components.nav') -->
-
-            <!-- @include('components.sidebar') -->
 
             <!-- Main Content -->
             <div class="main-content">
