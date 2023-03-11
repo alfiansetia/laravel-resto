@@ -324,7 +324,7 @@
         } else {
             swal(
                 'Failed!',
-                'Qty must greater than 0',
+                'Qty harus lebih dari 0',
                 'error'
             )
             $(this).val(1)
