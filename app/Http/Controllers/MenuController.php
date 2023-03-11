@@ -59,13 +59,13 @@ class MenuController extends Controller
             $files->move($destinationPath, $img);
         }
         $menu = Menu::create([
-            'name'      => $request->name,
-            'catmenu_id' => $request->catmenu,
-            'status'    => $request->status,
-            'img'       => $img,
-            'price'     => $request->price,
-            'disc'      => $request->disc,
-            'desc'      => $request->desc,
+            'name'          => $request->name,
+            'catmenu_id'    => $request->catmenu,
+            'status'        => $request->status,
+            'img'           => $img,
+            'price'         => $request->price,
+            'disc'          => $request->disc,
+            'desc'          => $request->desc,
         ]);
         if ($menu) {
             return response()->json(['status' => true, 'message' => 'Success Insert Data', 'data' => '']);

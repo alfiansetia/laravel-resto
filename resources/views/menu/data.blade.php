@@ -235,7 +235,7 @@
                     return {
                         results: $.map(data.data, function(item) {
                             return {
-                                text: item.name + ' [' + item.status + '] ' + item.desc,
+                                text: item.name,
                                 id: item.id,
                                 disabled: item.status == 'nonactive' ? true : false,
                             }
