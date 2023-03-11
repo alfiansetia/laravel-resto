@@ -142,11 +142,6 @@
     </div>
 </div>
 
-<td>
-    <a href="javascript:void(0)" data-minus="5" class="badge badge-primary p-2 minus"> - </a>
-    <a href="javascript:void(0)" data-plus="5" class="badge badge-primary p-2 plus"> + </a>
-</td>
-
 @endsection
 
 @push('modal')

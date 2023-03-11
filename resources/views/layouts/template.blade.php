@@ -36,7 +36,7 @@
             </div>
             <footer class="main-footer">
                 <div class="footer-left">
-                    Copyright &copy; {{ date('Y') }}
+                    Copyright &copy; {{ env('APP_NAME')}} {{ date('Y') }}
                     <div class="bullet"></div> Design By <a href="https://kacangan.net/">Alfi</a>
                 </div>
                 <div class="footer-right">
@@ -48,7 +48,6 @@
 
     <form action="{{ route('logout') }}" method="post" id="form_logout">
         @csrf
-
     </form>
 
     <!-- General JS Scripts -->
