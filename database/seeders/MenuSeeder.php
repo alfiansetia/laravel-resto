@@ -60,5 +60,14 @@ class MenuSeeder extends Seeder
             'stock'         => 10,
             'desc'          => '',
         ]);
+        for ($i = 0; $i < 100; $i++) {
+            Menu::create([
+                'name'          => 'Sample Menu ke ' . $i,
+                'catmenu_id'    => 3,
+                'price'         => 2000,
+                'stock'         => 10,
+                'desc'          => '',
+            ]);
+        }
     }
 }
