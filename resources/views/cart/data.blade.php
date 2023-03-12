@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="{{ asset('library/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('library/datatables.net-select-bs4/css/select.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
+
+<link rel="stylesheet" href="{{ asset('plugins/pagination/pagination.css') }}">
 @endpush
 
 @push('css')
@@ -150,7 +152,7 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive-1 w-100">
-                        <div id="data" class="row">
+                        <div id="data" class="row data-container">
                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
                                 <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="5" fdprocessedid="ma35zh">
                                     <img src="https://app.codekop.com/poscafe/assets/image/produk/produk_1636155890.jpeg" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
@@ -230,13 +232,9 @@
                                 </button>
                             </div>
                         </div>
-                        <center>
-                            <div id="loading"></div>
-                        </center>
                         <br>
                         <div class="wrapper">
-                            <ul id="pagination" class="pagination">
-                            </ul>
+                            <div id="pagination" class="pagination d-inline"></div>
                         </div>
                     </div>
                 </div>
@@ -300,71 +298,49 @@
 <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
 
-<script src="{{ asset('plugins/twbspagination/jquery.twbsPagination.min.js') }}"></script>
+<script src="{{ asset('plugins/pagination/pagination.min.js') }}"></script>
 
 @endpush
 
 @push('js')
 <script>
     $(document).ready(function() {
-        var $pagination = $('#pagination');
-        var defaultOpts = {
-            totalPages: 20,
-            visiblePages: 6,
-            next: 'Next',
-            prev: 'Prev',
-            first: '',
-            last: '',
-        };
-        // $pagination.on('page', function(event, page) {
-        //     load_data(page)
-        // });
-        // console.log($pagination)
-        // $pagination.twbsPagination({
-        //     onPageClick: function(event, page) {
-        //         console.log(page)
-        //         load_data(page)
-        //     }
-        // })
-        // load_data(1, true);
+        dataContainer = $('#data')
 
-        function load_data(page) {
-            $.ajax({
-                url: "{{ route('menu.index') }}",
-                success: function(result) {
-                    total = result.recordsTotal;
-                    perpage = result.recordsTotal < 8 ? result.recordsTotal : 8;
-                    totalpage = Math.ceil(total / perpage)
-                    if (total > (total * perpage)) {
-                        sisa = total - (total * totalpage)
-                    }
-                    var paginat = {
-                        total: total,
-                        per_page: perpage,
-                        current_page: page,
-                        last_page: Math.ceil(total / perpage),
-                        from: ((page - 1) * perpage) + 1,
-                        to: page * perpage
-                    };
-
-                    var currentPage = $pagination.twbsPagination('getCurrentPage');
-                    $pagination.twbsPagination('destroy');
-                    $pagination.twbsPagination($.extend({}, defaultOpts, {
-                        startPage: currentPage,
-                        totalPages: totalpage,
-                        onPageClick: function(event, page) {
-                            console.log(page)
-                            load_data(page)
-                        }
-                    }));
-                    data = []
-                    for (let i = paginat.from; i <= paginat.to; i++) {
-                        data.push(result.data[i - 1])
-                    }
-                    show_data(data)
+        $('#pagination').pagination({
+            dataSource: "{{ route('menu.index') }}",
+            locator: 'data',
+            totalNumberLocator: function(response) {
+                return response.data.length
+            },
+            showPageNumbers: true,
+            showSizeChanger: true,
+            ajax: {
+                beforeSend: function() {
+                    dataContainer.html('Loading data from flickr.com ...');
                 }
-            });
-        }
+            },
+            pageSize: 8,
+            callback: function(data, pagination) {
+                page = pagination.pageNumber
+                total = data.length;
+                perpage = total < pagination.pageSize ? total : pagination.pageSize;
+                totalpage = Math.ceil(total / perpage)
+                var paginat = {
+                    total: total,
+                    per_page: perpage,
+                    current_page: page,
+                    last_page: Math.ceil(total / perpage),
+                    from: ((page - 1) * perpage) + 1,
+                    to: (page * perpage) > total ? total : (page * perpage),
+                };
+                var datashow = [];
+                for (let i = paginat.from; i <= paginat.to; i++) {
+                    datashow.push(data[i - 1])
+                }
+                show_data(datashow)
+            }
+        })
 
         function show_data(data) {
             let text = '';
