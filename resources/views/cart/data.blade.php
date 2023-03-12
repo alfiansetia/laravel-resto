@@ -14,7 +14,41 @@
 @section('content')
 <div class="section-body">
     <div class="row">
-        <div class="col-lg-8">
+
+        <div class="col-lg-7">
+            <div class="card card-danger">
+                <div class="card-header">
+                    <h4>Last 5 Order</h4>
+                    <div class="card-header-action">
+                        <a href="{{ route('order.index') }}" class="btn btn-danger">View More <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive-1 w-100">
+                        <div id="data" class="row data-container">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
+                                <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih">
+                                    <img src="" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
+                                    <br>
+                                    ( )
+                                    <br>
+                                    <b style="font-size:10pt;" class="text-primary">Coklat</b>
+                                    <br>
+                                    <b style="font-size:10pt;" class="text-success">Rp10,000,-</b>
+                                    <br>
+                                    (STOK : 35x)
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="wrapper">
+                            <div id="pagination" class="pagination d-inline"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
             <div class="card card-primary">
                 <div class="card-header">
                     <h4>{{ $title }}</h4>
@@ -41,17 +75,6 @@
                             <select name="table" id="select_table" class="form-control" style="width: 100%;"></select>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="card card-success">
-                <div class="card-header pb-0 pt-1">
-                    <h4>List Cart <div id="totalitem" class="badge badge-info">0 Item</div>
-                    </h4>
-                    <div class="card-header-action">
-                        <button type="button" id="add_to_cart" class="btn btn-primary">Add Menu <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                </div>
-                <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
                             <thead>
@@ -69,9 +92,69 @@
                         </table>
                     </div>
                 </div>
+                <div class="card-footer bg-whitesmoke text-md-right">
+                    <div class="form-group row mb-4">
+                        <label for="total" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Total</label>
+                        <div class="col-sm-12 col-md-8">
+                            <input type="text" id="total" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-4">
+                        <label for="gtotal" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Grand Total</label>
+                        <div class="col-sm-12 col-md-8">
+                            <input type="text" id="gtotal" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-4">
+                        <label for="bill" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Bill</label>
+                        <div class="col-sm-12 col-md-8">
+                            <div class="input-group">
+                                <input type="number" id="bill" class="form-control" min="0" value="0">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" data-toggle="tooltip" title="Lunas">
+                                        <input type="checkbox" id="lunas">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-4">
+                        <label for="return" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Return</label>
+                        <div class="col-sm-12 col-md-8">
+                            <input type="text" id="return" class="form-control" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-success">
+                <div class="card-header pb-0 pt-1">
+                    <h4>List Cart <div id="totalitem" class="badge badge-info">0 Item</div>
+                    </h4>
+                    <div class="card-header-action">
+                        <button type="button" id="add_to_cart" class="btn btn-primary">Add Menu <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <!-- <div class="table-responsive">
+                        <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
+                            <thead>
+                                <tr>
+                                    <th class="dt-no-sorting" style="width: 30px;"><i class="fas fa-cog"></i></th>
+                                    <th>Menu</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>Disc</th>
+                                    <th>Subotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div> -->
+                </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-5">
             <div class="card card-warning">
                 <div class="card-body">
                     <h1 id="grandtotal"></h1>
@@ -137,105 +220,6 @@
                                 <th>Action</th>
                             </tr>
                         </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-8">
-            <div class="card card-danger">
-                <div class="card-header">
-                    <h4>Last 5 Order</h4>
-                    <div class="card-header-action">
-                        <a href="{{ route('order.index') }}" class="btn btn-danger">View More <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive-1 w-100">
-                        <div id="data" class="row data-container">
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
-                                <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="5" fdprocessedid="ma35zh">
-                                    <img src="https://app.codekop.com/poscafe/assets/image/produk/produk_1636155890.jpeg" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
-                                    <br>
-                                    ( )
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-primary">Coklat</b>
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-success">Rp10,000,-</b>
-                                    <br>
-                                    (STOK : 35x / LIMIT: 0x)
-                                </button>
-                            </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
-                                <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="6" fdprocessedid="yfelux">
-                                    <img src="https://app.codekop.com/poscafe/assets/image/produk/produk_1674772319.jpg" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
-                                    <br>
-                                    ( )
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-primary">Coklat Keju</b>
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-success">Rp12,000,-</b>
-                                    <br>
-                                    (STOK : 9x / LIMIT: 5x)
-                                </button>
-                            </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
-                                <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="32" fdprocessedid="cqpm09">
-                                    <img src="https://app.codekop.com/poscafe/assets/image/produk/produk_1674772437.jpg" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
-                                    <br>
-                                    ( Cemilan )
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-primary">Hot dog</b>
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-success">Rp13,000,-</b>
-                                    <br>
-                                    (STOK : 5x / LIMIT: 0x)
-                                </button>
-                            </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
-                                <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="24" fdprocessedid="nbrt1y6">
-                                    <img src="https://app.codekop.com/poscafe/assets/image/produk/produk_1674772571.jpg" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
-                                    <br>
-                                    ( Makanan Kenyang )
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-primary">Indomie Goreng / Rebus</b>
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-success">Rp6,000,-</b>
-                                    <br>
-                                    (STOK : 11x / LIMIT: 0x)
-                                </button>
-                            </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
-                                <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="25" fdprocessedid="h6fyfn">
-                                    <img src="https://app.codekop.com/poscafe/assets/image/produk/produk_1674772536.jpeg" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
-                                    <br>
-                                    ( Makanan Kenyang )
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-primary">Indomie Goreng / Rebus Telor</b>
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-success">Rp10,000,-</b>
-                                    <br>
-                                    (STOK : 16x / LIMIT: 0x)
-                                </button>
-                            </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
-                                <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="2" fdprocessedid="7rjz2">
-                                    <img src="https://app.codekop.com/poscafe/assets/image/produk/produk_1674772960.jpeg" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
-                                    <br>
-                                    ( )
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-primary">Keju</b>
-                                    <br>
-                                    <b style="font-size:10pt;" class="text-success">Rp10,000,-</b>
-                                    <br>
-                                    (STOK : 0x / LIMIT: 0x)
-                                </button>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="wrapper">
-                            <div id="pagination" class="pagination d-inline"></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -322,11 +306,11 @@
             },
             pageSize: 8,
             callback: function(data, pagination) {
-                page = pagination.pageNumber
-                total = data.length;
-                perpage = total < pagination.pageSize ? total : pagination.pageSize;
-                totalpage = Math.ceil(total / perpage)
-                var paginat = {
+                let page = pagination.pageNumber
+                let total = data.length;
+                let perpage = total < pagination.pageSize ? total : pagination.pageSize;
+                let totalpage = Math.ceil(total / perpage)
+                let paginat = {
                     total: total,
                     per_page: perpage,
                     current_page: page,
@@ -334,7 +318,7 @@
                     from: ((page - 1) * perpage) + 1,
                     to: (page * perpage) > total ? total : (page * perpage),
                 };
-                var datashow = [];
+                let datashow = [];
                 for (let i = paginat.from; i <= paginat.to; i++) {
                     datashow.push(data[i - 1])
                 }
@@ -346,7 +330,7 @@
             let text = '';
             for (let i = 0; i < data.length; i++) {
                 text += `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
-                            <button ${data[i].status == 'active' && data[i].stock > 0 ? '' : 'disabled'} class="btn btn-outline-${data[i].status == 'active' && data[i].stock > 0 ? 'secondary' : 'danger'} btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="5" fdprocessedid="ma35zh">
+                            <button onclick="add_menu('${data[i].name}', ${data[i].id}, 1)" ${data[i].status == 'active' && data[i].stock > 0 ? '' : 'disabled'} class="btn btn-outline-${data[i].status == 'active' && data[i].stock > 0 ? 'secondary' : 'danger'} btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="5" fdprocessedid="ma35zh">
                                 <img src="{{ url('images/menu/') }}/${data[i].img != null ? data[i].img : 'default.png' }" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
                                 <br>
                                 <b style="font-size:10pt;" class="text-primary">${data[i].catmenu_id != '' ? ('['+data[i].catmenu.name+ '] ') : ''}${data[i].name}</b>
@@ -890,57 +874,7 @@
     $('#tblmenu tbody').on('click', 'tr', function() {
         let data = tblmenu.row(this).data()
         if (data.stock > 0 && data.status == 'active') {
-            swal({
-                title: 'Add Menu?',
-                text: data.name,
-                icon: 'warning',
-                buttons: true,
-                dangerMode: true,
-            }).then(function(result) {
-                if (result) {
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ route('cart.store') }}",
-                        data: {
-                            menu: data.id,
-                            qty: 1,
-                        },
-                        beforeSend: function() {
-                            block();
-                        },
-                        success: function(res) {
-                            unblock();
-                            table.ajax.reload();
-                            if (res.status == true) {
-                                swal(
-                                    'Success!',
-                                    res.message,
-                                    'success'
-                                )
-                            } else {
-                                swal(
-                                    'Failed!',
-                                    res.message,
-                                    'error'
-                                )
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            unblock();
-                            swal(
-                                'Failed!',
-                                'Server Error',
-                                'error'
-                            )
-                        }
-                    });
-                }
-            })
+            add_menu(data.name, data.id, 1);
         } else {
             swal(
                 'Failed!',
@@ -950,6 +884,60 @@
         }
 
     });
+
+    function add_menu(name, menu, qty) {
+        swal({
+            title: 'Add Menu?',
+            text: name,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then(function(result) {
+            if (result) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('cart.store') }}",
+                    data: {
+                        menu: menu,
+                        qty: qty,
+                    },
+                    beforeSend: function() {
+                        block();
+                    },
+                    success: function(res) {
+                        unblock();
+                        table.ajax.reload();
+                        if (res.status == true) {
+                            swal(
+                                'Success!',
+                                res.message,
+                                'success'
+                            )
+                        } else {
+                            swal(
+                                'Failed!',
+                                res.message,
+                                'error'
+                            )
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        unblock();
+                        swal(
+                            'Failed!',
+                            'Server Error',
+                            'error'
+                        )
+                    }
+                });
+            }
+        })
+    }
 
     $('#table').on('click', '#btn_delete', function() {
         let row = $(this).parents('tr')[0];
