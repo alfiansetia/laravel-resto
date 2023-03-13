@@ -21,7 +21,7 @@
 
 <body class="layout-3">
     <div id="app">
-        <div class="main-wrapper container">
+        <div class="main-wrapper {{ $title == 'New Order' ? 'container-fluid' : 'container' }}">
             <div class="navbar-bg"></div>
             @include('components.topnav')
 
