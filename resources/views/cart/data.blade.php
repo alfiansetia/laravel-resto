@@ -15,12 +15,12 @@
 <div class="section-body">
     <div class="row">
 
-        <div class="col-lg-7">
+        <div class="col-lg-6">
             <div class="card card-danger">
                 <div class="card-header">
                     <h4>Last 5 Order</h4>
                     <div class="card-header-action">
-                        <a href="{{ route('order.index') }}" class="btn btn-danger">View More <i class="fas fa-chevron-right"></i></a>
+                        <button type="button" id="add_to_cart" class="btn btn-primary">Add Menu <i class="fas fa-chevron-right"></i></a>
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-5">
+        <div class="col-lg-6">
             <div class="card card-primary">
                 <div class="card-header">
                     <h4>{{ $title }}</h4>
@@ -83,7 +83,7 @@
                                     <th>Menu</th>
                                     <th>Price</th>
                                     <th>Qty</th>
-                                    <th>Disc</th>
+                                    <th style="width: 30px;">Disc</th>
                                     <th>Subotal</th>
                                 </tr>
                             </thead>
@@ -131,7 +131,6 @@
                     <h4>List Cart <div id="totalitem" class="badge badge-info">0 Item</div>
                     </h4>
                     <div class="card-header-action">
-                        <button type="button" id="add_to_cart" class="btn btn-primary">Add Menu <i class="fas fa-chevron-right"></i></a>
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -301,28 +300,33 @@
             showSizeChanger: true,
             ajax: {
                 beforeSend: function() {
-                    dataContainer.html('Loading data from flickr.com ...');
+                    dataContainer.html(`<div class="col-12 text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>`);
                 }
             },
             pageSize: 8,
             callback: function(data, pagination) {
+
                 let page = pagination.pageNumber
                 let total = data.length;
-                let perpage = total < pagination.pageSize ? total : pagination.pageSize;
-                let totalpage = Math.ceil(total / perpage)
-                let paginat = {
-                    total: total,
-                    per_page: perpage,
-                    current_page: page,
-                    last_page: Math.ceil(total / perpage),
-                    from: ((page - 1) * perpage) + 1,
-                    to: (page * perpage) > total ? total : (page * perpage),
-                };
-                let datashow = [];
-                for (let i = paginat.from; i <= paginat.to; i++) {
-                    datashow.push(data[i - 1])
+                if (total > 0) {
+                    let perpage = total < pagination.pageSize ? total : pagination.pageSize;
+                    let totalpage = Math.ceil(total / perpage)
+                    let paginat = {
+                        total: total,
+                        per_page: perpage,
+                        current_page: page,
+                        last_page: Math.ceil(total / perpage),
+                        from: ((page - 1) * perpage) + 1,
+                        to: (page * perpage) > total ? total : (page * perpage),
+                    };
+                    let datashow = [];
+                    for (let i = paginat.from; i <= paginat.to; i++) {
+                        datashow.push(data[i - 1])
+                    }
+                    show_data(datashow)
+                } else {
+                    dataContainer.html(`<div class="col-12 text-center">Menu tidak tersedia</div>`);
                 }
-                show_data(datashow)
             }
         })
 
@@ -820,7 +824,7 @@
                         <div class="input-group-prepend">
                           <button type="button" id="qty_minus" class="btn btn-primary btn-sm"><i class="fas fa-minus"></i></button>
                         </div>
-                        <input type="number" id="qty" class="form-control form-control-sm" value="${data}" min="1" placeholder="Qty" style="width:40px;">
+                        <input type="number" id="qty" class="form-control form-control-sm" value="${data}" min="1" placeholder="Qty" style="width:35px;">
                         <div class="input-group-append">
                           <button type="button" id="qty_plus" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
                         </div>
