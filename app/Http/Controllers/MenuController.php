@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Comp;
 use App\Models\Menu;
+use App\Models\Menulog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -83,7 +85,7 @@ class MenuController extends Controller
     public function edit(Request $request, Menu $menu)
     {
         if ($request->ajax()) {
-            $menu = Menu::with('catmenu')->find($menu->id);
+            $menu = Menu::with('catmenu', 'menulog.user:id,name')->find($menu->id);
             return response()->json(['status' => true, 'message' => '', 'data' => $menu]);
         } else {
             abort(404);
@@ -116,6 +118,24 @@ class MenuController extends Controller
             $destinationPath = 'images/menu/'; // upload path
             $img = date('YmdHis') . "." . $files->getClientOriginalExtension();
             $files->move($destinationPath, $img);
+        }
+        if ($menu->status != $request->status || $menu->disc != $request->disc || $menu->name != $request->name) {
+            $message = '';
+            if ($menu->status != $request->status) {
+                $message .= "status : $menu->status => $request->status ,";
+            }
+            if ($menu->disc != $request->disc) {
+                $message .= "disc : $menu->disc => $request->disc ,";
+            }
+            if ($menu->name != $request->name) {
+                $message .= "name : $menu->name => $request->name ,";
+            }
+            Menulog::create([
+                'menu_id'   => $menu->id,
+                'user_id'   => Auth::id(),
+                'date'      => date("Y-m-d H:i:s"),
+                'message'   => $message,
+            ]);
         }
         $menu->update([
             'name'          => $request->name,
@@ -175,6 +195,14 @@ class MenuController extends Controller
                 $counter = 0;
                 foreach ($request->id as $id) {
                     $menu = Menu::findOrFail($id);
+                    if ($menu->status != $request->status) {
+                        Menulog::create([
+                            'menu_id'   => $menu->id,
+                            'user_id'   => Auth::id(),
+                            'date'      => date("Y-m-d H:i:s"),
+                            'message'   => "status : $menu->status => $request->status",
+                        ]);
+                    }
                     $menu->update([
                         'status'    => $request->status,
                     ]);

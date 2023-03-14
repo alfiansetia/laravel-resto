@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    public function menulog()
+    {
+        return $this->hasOne(Menulog::class);
+    }
 }

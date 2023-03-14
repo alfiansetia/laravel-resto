@@ -35,4 +35,9 @@ class Menu extends Model
     {
         return $this->hasOne(Dtorder::class);
     }
+
+    public function menulog()
+    {
+        return $this->hasMany(Menulog::class)->orderBy('date', 'DESC');
+    }
 }

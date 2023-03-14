@@ -162,6 +162,10 @@
                         <textarea name="desc" class="form-control" id="edit_desc" placeholder="Please Enter desc" maxlength="150"></textarea>
                         <span id="err_edit_desc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
+                    <div class="container-fluid">
+                        <ul class="list-group list-group-flush" id="log" style="max-height: 200px;margin-bottom: 10px;overflow:scroll;-webkit-overflow-scrolling: touch;">
+                        </ul>
+                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
@@ -506,48 +510,7 @@
 
     $('#edit_reset').click(function() {
         id = $(this).val();
-        let url = "{{ route('menu.edit', ':id') }}";
-        url = url.replace(':id', id);
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(result) {
-                unblock();
-                $('#edit_reset').val(result.data.id);
-                $('#edit_id').val(result.data.id);
-                $('#edit_name').val(result.data.name);
-                if (result.data.catmenu_id != null) {
-                    let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
-                    $('#edit_catmenu').append(option).change();
-                } else {
-                    $('#edit_catmenu').val('').change();
-                }
-                if (result.data.img != null) {
-                    $('#img_prev').attr('src', `{{ url('images/menu/') }}/${result.data.img}`);
-                } else {
-                    $('#img_prev').attr('src', `{{ url('images/menu/default.png') }}`);
-                }
-                $('#edit_price').val(result.data.price);
-                $('#edit_status').val(result.data.status).change();
-                $('#edit_desc').val(result.data.desc);
-
-                $('#edit_reset').prop('disabled', false);
-            },
-            beforeSend: function() {
-                block();
-                $('#edit_reset').prop('disabled', true);
-            },
-            error: function(xhr, status, error) {
-                unblock();
-                $('#edit_reset').prop('disabled', false);
-                er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
-            }
-        });
+        ajaxUpdate(id, false);
     })
 
     $('#table tbody').on('click', 'tr td:not(:first-child)', function() {
@@ -559,49 +522,7 @@
         });
         row = $(this).parents('tr')[0];
         id = table.row(row).data().id
-        let url = "{{ route('menu.edit', ':id') }}";
-        url = url.replace(':id', id);
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(result) {
-                unblock();
-                $('#edit_reset').val(result.data.id);
-                $('#edit_id').val(result.data.id);
-                $('#edit_name').val(result.data.name);
-                if (result.data.catmenu_id != null) {
-                    let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
-                    $('#edit_catmenu').append(option).change();
-                } else {
-                    $('#edit_catmenu').val('').change();
-                }
-                if (result.data.img != null) {
-                    $('#img_prev').attr('src', `{{ url('images/menu/') }}/${result.data.img}`);
-                } else {
-                    $('#img_prev').attr('src', `{{ url('images/menu/default.png') }}`);
-                }
-                $('#edit_price').val(result.data.price);
-                $('#edit_status').val(result.data.status).change();
-                $('#edit_desc').val(result.data.desc);
-
-                $('#modalEdit').modal('show');
-                $('#modalEdit').on('shown.bs.modal', function() {
-                    $('#edit_name').focus();
-                })
-            },
-            beforeSend: function() {
-                block();
-            },
-            error: function(xhr, status, error) {
-                unblock();
-                er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
-            }
-        });
+        ajaxUpdate(id, true)
     });
 
     $('#formEdit').submit(function(event) {
@@ -650,6 +571,7 @@
                     table.ajax.reload();
                     $('button[type="submit"]').prop('disabled', false);
                     $('#reset').click();
+                    ajaxUpdate(id, false);
                     if (res.status == true) {
                         swal(
                             'Success!',
@@ -687,6 +609,70 @@
             });
         }
     });
+
+    function ajaxUpdate(id, open = false) {
+        let url = "{{ route('menu.edit', ':id') }}";
+        url = url.replace(':id', id);
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(result) {
+                unblock();
+                $('button').prop('disabled', false);
+                updateModal(result, open);
+            },
+            beforeSend: function() {
+                block();
+                $('button').prop('disabled', true);
+            },
+            error: function(xhr, status, error) {
+                unblock();
+                $('button').prop('disabled', false);
+                er = xhr.responseJSON.errors
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
+        });
+    }
+
+    function updateModal(result, open = false) {
+        $('#edit_reset').val(result.data.id);
+        $('#edit_id').val(result.data.id);
+        $('#edit_name').val(result.data.name);
+        if (result.data.catmenu_id != null) {
+            let option = new Option(result.data.catmenu.name, result.data.catmenu_id, true, true);
+            $('#edit_catmenu').append(option).change();
+        } else {
+            $('#edit_catmenu').val('').change();
+        }
+        if (result.data.img != null) {
+            $('#img_prev').attr('src', `{{ url('images/menu/') }}/${result.data.img}`);
+        } else {
+            $('#img_prev').attr('src', `{{ url('images/menu/default.png') }}`);
+        }
+        $('#edit_price').val(result.data.price);
+        $('#edit_status').val(result.data.status).change();
+        $('#edit_desc').val(result.data.desc);
+
+        let text = '';
+        if (result.data.menulog.length > 0) {
+            for (let i = 0; i < result.data.menulog.length; i++) {
+                text += `<li>${result.data.menulog[i].date} <b>${result.data.menulog[i].user.name}</b> : ${result.data.menulog[i].message}</li>`;
+            }
+            $('#log').html(text);
+        }
+        if (open === true) {
+            $('#modalEdit').modal('show');
+            $('#modalEdit').on('shown.bs.modal', function() {
+                $('#edit_name').focus();
+            })
+        } else {
+            $('#edit_name').focus();
+        }
+    }
 
     function changeData() {
         if (selected()) {
