@@ -25,9 +25,9 @@ class TableController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Table::get();
+            $data = Table::orderBy('number', 'ASC')->get();
             if ($request->number) {
-                $data = Table::where('number', 'like', "%{$request->number}%")->get();
+                $data = Table::where('number', 'like', "%{$request->number}%")->orderBy('number', 'ASC')->get();
             }
             return DataTables::of($data)->toJson();
         }
@@ -46,12 +46,10 @@ class TableController extends Controller
         $this->validate($request, [
             'number'    => 'required|integer|min:1|max:1000|unique:table,number',
             'status'    => 'required|in:free,booked,nonactive',
-            'desc'      => 'max:150',
         ]);
         $table = Table::create([
             'number'    => $request->number,
             'status'    => $request->status,
-            'desc'      => $request->desc,
         ]);
         if ($table) {
             return response()->json(['status' => true, 'message' => 'Success Insert Data', 'data' => '']);
@@ -89,12 +87,10 @@ class TableController extends Controller
         $this->validate($request, [
             'number'    => 'required|integer|min:1|max:1000|unique:table,number,' . $table->id,
             'status'    => 'required|in:free,booked,nonactive',
-            'desc'      => 'max:150',
         ]);
         $table->update([
             'number'    => $request->number,
             'status'    => $request->status,
-            'desc'      => $request->desc,
         ]);
         if ($table) {
             return response()->json(['status' => true, 'message' => 'Success Update Data', 'data' => '']);

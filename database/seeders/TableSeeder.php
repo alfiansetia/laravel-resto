@@ -27,7 +27,6 @@ class TableSeeder extends Seeder
             Table::create([
                 'number'    => $i,
                 'status'    => 'free',
-                'desc'      => '',
             ]);
         }
     }

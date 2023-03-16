@@ -12,7 +12,6 @@ class Table extends Model
     protected $fillable = [
         'number',
         'status',
-        'desc',
     ];
 
     public function order()

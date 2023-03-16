@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="{{ asset('library/datatables.net-select-bs4/css/select.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/table/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
+
+<link rel="stylesheet" href="{{ asset('plugins/pagination/pagination.css') }}">
 @endpush
 
 @push('css')
@@ -17,8 +19,32 @@
             <div class="card card-primary">
                 <div class="card-header">
                     <h4>{{ $title }}</h4>
+                    <div class="card-header-action">
+                        <div class="btn-group">
+                            <button type="button" id="btn_list" class="btn btn-primary">List</button>
+                            <button type="button" id="btn_table" class="btn btn-primary">Table</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body pt-0">
+                <div class="card-body pt-0" id="data_list">
+                    <div class="table-responsive">
+                        <div id="data" class="row data-container">
+                            <div class="col-1 mb-3">
+                                <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih">
+                                    <b style="font-size:12pt;" class="text-primary">#1</b>
+                                    <br>
+                                    (cccc)
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="wrapper">
+                            <div id="pagination" class="pagination d-inline"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body pt-0" id="data_table">
                     <div class="table-responsive">
                         <form action="" id="formSelected">
                             <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
@@ -27,7 +53,6 @@
                                         <th class="dt-no-sorting" style="width: 30px;">Id</th>
                                         <th>Number</th>
                                         <th>Status</th>
-                                        <th>Desc</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,11 +93,6 @@
                         </select>
                         <span id="err_status" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
-                        <textarea name="desc" class="form-control" id="desc" placeholder="Please Enter desc" maxlength="150"></textarea>
-                        <span id="err_desc" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
@@ -109,11 +129,6 @@
                             <option value="nonactive">nonactive</option>
                         </select>
                         <span id="err_edit_status" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
-                        <textarea name="desc" class="form-control" id="edit_desc" placeholder="Please Enter desc" maxlength="150"></textarea>
-                        <span id="err_edit_desc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
             </div>
             <div class="modal-footer">
@@ -169,9 +184,101 @@
 <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
 
+<script src="{{ asset('plugins/pagination/pagination.min.js') }}"></script>
+
 @endpush
 
 @push('js')
+<script>
+    $(document).ready(function() {
+
+        navigasi('list');
+
+        dataContainer = $('#data')
+
+        pg = $('#pagination').pagination({
+            dataSource: "{{ route('table.index') }}",
+            locator: 'data',
+            totalNumberLocator: function(response) {
+                return response.data.length
+            },
+            showPageNumbers: true,
+            showSizeChanger: true,
+            ajax: {
+                beforeSend: function() {
+                    dataContainer.html(`<div class="col-12 text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>`);
+                }
+            },
+            pageSize: 30,
+            formatAjaxError: function(jqXHR, textStatus, errorThrown) {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            },
+            callback: function(data, pagination) {
+
+                let page = pagination.pageNumber
+                let total = data.length;
+                if (total > 0) {
+                    let perpage = total < pagination.pageSize ? total : pagination.pageSize;
+                    let totalpage = Math.ceil(total / perpage)
+                    let paginat = {
+                        total: total,
+                        per_page: perpage,
+                        current_page: page,
+                        last_page: Math.ceil(total / perpage),
+                        from: ((page - 1) * perpage) + 1,
+                        to: (page * perpage) > total ? total : (page * perpage),
+                    };
+                    let datashow = [];
+                    for (let i = paginat.from; i <= paginat.to; i++) {
+                        datashow.push(data[i - 1])
+                    }
+                    show_data(datashow)
+                } else {
+                    dataContainer.html(`<div class="col-12 text-center">Table tidak tersedia</div>`);
+                }
+            }
+        })
+
+        $('#btn_list').click(function() {
+            navigasi('list');
+        })
+
+        $('#btn_table').click(function() {
+            navigasi('table');
+        })
+
+        function navigasi(active) {
+            if (active == 'list') {
+                $('#btn_list').prop('disabled', true);
+                $('#btn_table').prop('disabled', false);
+                $("#data_list").show();
+                $("#data_table").css("display", "none");
+            } else {
+                $('#btn_list').prop('disabled', false);
+                $('#btn_table').prop('disabled', true);
+                $("#data_table").show();
+                $("#data_list").css("display", "none");
+            }
+        }
+
+        function show_data(data) {
+            let text = '';
+            for (let i = 0; i < data.length; i++) {
+                text += `<div class="col-xl-2 col-lg-2 col-md-3 col-4 mb-2 ">
+                            <button onclick="get_data(${data[i].id}, false)"; data-toggle="tooltip" title="${data[i].status}" ${data[i].status == 'free' ? '' : 'disabled'} class="btn btn-lg btn-outline-${data[i].status == 'free' ? 'success' : data[i].status == 'booked'? 'warning' : 'danger'} m-0 btn-menu btn-block">
+                                <b style="font-size:10pt;white-space: nowrap;text-align:center;" class="text-primary">${data[i].number}</b>
+                            </button>
+                        </div>`
+            }
+            $('#data').html(text);
+        }
+    });
+</script>
+
 <script>
     var table = $("#table").DataTable({
         processing: true,
@@ -235,10 +342,7 @@
                     return data
                 }
             }
-        }, {
-            title: "Desc",
-            data: 'desc',
-        }, ],
+        }],
         buttons: [, {
             text: '<i class="fa fa-plus"></i>Add',
             className: 'btn btn-sm btn-primary bs-tooltip',
@@ -391,33 +495,34 @@
         id = $(this).val();
         let url = "{{ route('table.edit', ':id') }}";
         url = url.replace(':id', id);
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(result) {
-                unblock();
-                $('#edit_reset').val(result.data.id);
-                $('#edit_id').val(result.data.id);
-                $('#edit_number').val(result.data.number);
-                $('#edit_status').val(result.data.status).change();
-                $('#edit_desc').val(result.data.desc);
-                $('#edit_reset').prop('disabled', false);
-            },
-            beforeSend: function() {
-                block();
-                $('#edit_reset').prop('disabled', true);
-            },
-            error: function(xhr, status, error) {
-                unblock();
-                $('#edit_reset').prop('disabled', false);
-                er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
-            }
-        });
+        get_data(id, false);
+
+        // $.ajax({
+        //     url: url,
+        //     method: 'GET',
+        //     success: function(result) {
+        //         unblock();
+        //         $('#edit_reset').val(result.data.id);
+        //         $('#edit_id').val(result.data.id);
+        //         $('#edit_number').val(result.data.number);
+        //         $('#edit_status').val(result.data.status).change();
+        //         $('#edit_reset').prop('disabled', false);
+        //     },
+        //     beforeSend: function() {
+        //         block();
+        //         $('#edit_reset').prop('disabled', true);
+        //     },
+        //     error: function(xhr, status, error) {
+        //         unblock();
+        //         $('#edit_reset').prop('disabled', false);
+        //         er = xhr.responseJSON.errors
+        //         swal(
+        //             'Failed!',
+        //             'Server Error',
+        //             'error'
+        //         )
+        //     }
+        // });
     })
 
     $('#table tbody').on('click', 'tr td:not(:first-child)', function() {
@@ -429,6 +534,12 @@
         });
         row = $(this).parents('tr')[0];
         id = table.row(row).data().id
+        get_data(id, true);
+
+    });
+
+    function get_data(ids, open = false) {
+        id = ids;
         let url = "{{ route('table.edit', ':id') }}";
         url = url.replace(':id', id);
         $.ajax({
@@ -440,12 +551,13 @@
                 $('#edit_id').val(result.data.id);
                 $('#edit_number').val(result.data.number);
                 $('#edit_status').val(result.data.status).change();
-                $('#edit_desc').val(result.data.desc);
 
                 $('#modalEdit').modal('show');
-                $('#modalEdit').on('shown.bs.modal', function() {
-                    $('#edit_number').focus();
-                })
+                if (open) {
+                    $('#modalEdit').on('shown.bs.modal', function() {
+                        $('#edit_number').focus();
+                    })
+                }
             },
             beforeSend: function() {
                 block();
@@ -460,7 +572,7 @@
                 )
             }
         });
-    });
+    }
 
     $('#formEdit').submit(function(event) {
         event.preventDefault();
@@ -503,6 +615,7 @@
                 success: function(res) {
                     unblock();
                     table.ajax.reload();
+                    pg.pagination(1);
                     $('button[type="submit"]').prop('disabled', false);
                     $('#reset').click();
                     if (res.status == true) {
@@ -573,6 +686,7 @@
                 btn.prop('disabled', false);
                 unblock();
                 table.ajax.reload();
+                pg.pagination(1);
                 if (res.status == true) {
                     swal(
                         'Changed!',
@@ -636,6 +750,7 @@
                         success: function(res) {
                             unblock();
                             table.ajax.reload();
+                            pg.pagination(1);
                             if (res.status == true) {
                                 swal(
                                     'Deleted!',

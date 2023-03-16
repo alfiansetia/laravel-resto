@@ -14,13 +14,15 @@
 @section('content')
 <div class="section-body">
     <div class="row">
-
         <div class="col-lg-6">
             <div class="card card-danger">
                 <div class="card-header">
-                    <h4>Last 5 Order</h4>
+                    <h4>Menu</h4>
                     <div class="card-header-action">
-                        <button type="button" id="add_to_cart" class="btn btn-primary">Add Menu <i class="fas fa-chevron-right"></i></a>
+                        <div class="btn-group">
+                            <button type="button" id="add_to_cart" class="btn btn-primary">Menu</button>
+                            <button type="button" id="list_table" class="btn btn-primary">Table</button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -35,8 +37,6 @@
                                     <b style="font-size:10pt;" class="text-primary">Coklat</b>
                                     <br>
                                     <b style="font-size:10pt;" class="text-success">Rp10,000,-</b>
-                                    <br>
-                                    (STOK : 35x)
                                 </button>
                             </div>
                         </div>
@@ -52,15 +52,16 @@
             <div class="card card-primary">
                 <div class="card-header">
                     <h4>{{ $title }}</h4>
+                    <div id="totalitem" class="badge badge-info">0 Item</div>
                 </div>
                 <div class="card-body pt-0">
-                    <div class="form-group row">
+                    <div class="form-group row mb-1">
                         <label for="name_cart" class="col-sm-3 col-form-label">Name :</label>
                         <div class="col-sm-9">
                             <input type="text" name="name" class="form-control" id="name_cart" placeholder="Input Name" required>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-1">
                         <label for="select_category" class="col-sm-3 col-form-label">Type :</label>
                         <div class="col-sm-9">
                             <select name="category" id="select_category" class="form-control" style="width: 100%;">
@@ -69,7 +70,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-1">
                         <label for="select_table" class="col-sm-3 col-form-label">Table :</label>
                         <div class="col-sm-9">
                             <select name="table" id="select_table" class="form-control" style="width: 100%;"></select>
@@ -80,9 +81,9 @@
                             <thead>
                                 <tr>
                                     <th class="dt-no-sorting" style="width: 30px;"><i class="fas fa-cog"></i></th>
-                                    <th>Menu</th>
+                                    <th style="max-width: 100px;">Menu</th>
                                     <th>Price</th>
-                                    <th>Qty</th>
+                                    <th style="white-space: nowrap;">Qty</th>
                                     <th style="width: 30px;">Disc</th>
                                     <th>Subotal</th>
                                 </tr>
@@ -93,20 +94,20 @@
                     </div>
                 </div>
                 <div class="card-footer bg-whitesmoke text-md-right">
-                    <div class="form-group row mb-4">
+                    <div class="form-group row mb-1">
                         <label for="total" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Total</label>
                         <div class="col-sm-12 col-md-8">
                             <input type="text" id="total" class="form-control" disabled>
                         </div>
                     </div>
-                    <div class="form-group row mb-4">
+                    <div class="form-group row mb-1">
                         <label for="gtotal" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Grand Total</label>
                         <div class="col-sm-12 col-md-8">
                             <input type="text" id="gtotal" class="form-control" disabled>
                         </div>
                     </div>
-                    <div class="form-group row mb-4">
-                        <label for="bill" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Bill</label>
+                    <div class="form-group row mb-1">
+                        <label for="bill" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Bayar</label>
                         <div class="col-sm-12 col-md-8">
                             <div class="input-group">
                                 <input type="number" id="bill" class="form-control" min="0" value="0">
@@ -118,89 +119,31 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row mb-4">
-                        <label for="return" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Return</label>
+                    <div class="form-group row mb-2">
+                        <label for="return" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Kembali</label>
                         <div class="col-sm-12 col-md-8">
                             <input type="text" id="return" class="form-control" disabled>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="card card-success">
-                <div class="card-header pb-0 pt-1">
-                    <h4>List Cart <div id="totalitem" class="badge badge-info">0 Item</div>
-                    </h4>
-                    <div class="card-header-action">
+                    <div class="form-group row mb-1">
+                        <label class="col-form-label text-md-right col-12 col-md-4 col-lg-4"></label>
+                        <div class="col-sm-12 col-md-8">
+                            <button type="button" id="save" class="btn btn-primary btn-block"><i class="fas fa-save mr-1"></i>Save</button>
+                        </div>
                     </div>
-                </div>
-                <div class="card-body p-0">
-                    <!-- <div class="table-responsive">
-                        <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
-                            <thead>
-                                <tr>
-                                    <th class="dt-no-sorting" style="width: 30px;"><i class="fas fa-cog"></i></th>
-                                    <th>Menu</th>
-                                    <th>Price</th>
-                                    <th>Qty</th>
-                                    <th>Disc</th>
-                                    <th>Subotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div> -->
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col-lg-5">
             <div class="card card-warning">
                 <div class="card-body">
                     <h1 id="grandtotal"></h1>
                 </div>
             </div>
-            <div class="card card-primary">
-                <div class="card-body">
-                    <div class="form-group row mb-4">
-                        <label for="total" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Total</label>
-                        <div class="col-sm-12 col-md-8">
-                            <input type="text" id="total" class="form-control" disabled>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-4">
-                        <label for="gtotal" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Grand Total</label>
-                        <div class="col-sm-12 col-md-8">
-                            <input type="text" id="gtotal" class="form-control" disabled>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-4">
-                        <label for="bill" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Bill</label>
-                        <div class="col-sm-12 col-md-8">
-                            <div class="input-group">
-                                <input type="number" id="bill" class="form-control" min="0" value="0">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" data-toggle="tooltip" title="Lunas">
-                                        <input type="checkbox" id="lunas">
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-4">
-                        <label for="return" class="col-form-label text-md-right col-12 col-md-4 col-lg-4">Return</label>
-                        <div class="col-sm-12 col-md-8">
-                            <input type="text" id="return" class="form-control" disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-whitesmoke">
-                    <button type="button" id="save" class="btn btn-primary btn-block"><i class="fas fa-save mr-1"></i>Save</button>
-                </div>
-            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-7">
             <div class="card card-danger">
                 <div class="card-header">
                     <h4>Last 5 Order</h4>
@@ -268,8 +211,38 @@
     </div>
 </div>
 
+<div class="modal animated fade fadeInDown" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleEdit"><i class="fas fa-list mr-1" data-toggle="tooltip" title="List Table"></i>List Table</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div id="data_table" class="row data-container">
+                        <div class="col-1 mb-3">
+                            <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih">
+                                <b style="font-size:12pt;" class="text-primary">#1</b>
+                                <br>
+                                (cccc)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="wrapper mr-auto">
+                    <div id="pagination_table" class="pagination d-inline"></div>
+                </div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endpush
-
 
 @push('jslib')
 <script src="{{ asset('library/datatables/media/js/jquery.dataTables.min.js') }}"></script>
@@ -288,9 +261,74 @@
 @push('js')
 <script>
     $(document).ready(function() {
-        dataContainer = $('#data')
 
-        $('#pagination').pagination({
+
+        datatbl = $('#data_table')
+        pg1 = $('#pagination_table').pagination({
+            dataSource: "{{ route('table.index') }}",
+            locator: 'data',
+            totalNumberLocator: function(response) {
+                return response.data.length
+            },
+            showPageNumbers: true,
+            showSizeChanger: true,
+            ajax: {
+                beforeSend: function() {
+                    datatbl.html(`<div class="col-12 text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>`);
+                }
+            },
+            pageSize: 30,
+            formatAjaxError: function(jqXHR, textStatus, errorThrown) {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            },
+            callback: function(data, pagination) {
+                let page = pagination.pageNumber
+                let total = data.length;
+                if (total > 0) {
+                    let perpage = total < pagination.pageSize ? total : pagination.pageSize;
+                    let totalpage = Math.ceil(total / perpage)
+                    let paginat = {
+                        total: total,
+                        per_page: perpage,
+                        current_page: page,
+                        last_page: Math.ceil(total / perpage),
+                        from: ((page - 1) * perpage) + 1,
+                        to: (page * perpage) > total ? total : (page * perpage),
+                    };
+                    let datashow = [];
+                    for (let i = paginat.from; i <= paginat.to; i++) {
+                        datashow.push(data[i - 1])
+                    }
+                    show_data_table(datashow)
+                } else {
+                    datatbl.html(`<div class="col-12 text-center">Table tidak tersedia</div>`);
+                }
+            }
+        })
+
+        function show_data_table(data) {
+            let text = '';
+            for (let i = 0; i < data.length; i++) {
+                text += `<div class="col-xl-2 col-lg-2 col-md-3 col-4 mb-2 ">
+                            <button onclick="selected_table(${data[i].id},'${data[i].number}', '${data[i].status}')" data-toggle="tooltip" title="${data[i].status}" ${data[i].status == 'free' ? '' : 'disabled'} class="btn btn-lg btn-outline-${data[i].status == 'free' ? 'success' : data[i].status == 'booked'? 'warning' : 'danger'} m-0 btn-menu btn-block">
+                                <b style="font-size:10pt;white-space: nowrap;text-align:center;" class="text-primary">${data[i].number}</b>
+                            </button>
+                        </div>`
+            }
+            $('#data_table').html(text);
+        }
+
+        $('#list_table').click(function() {
+            $('#modalEdit').modal('show');
+            pg1.pagination(1)
+        })
+
+        dataContainer = $('#data')
+        pg = $('#pagination').pagination({
             dataSource: "{{ route('menu.index') }}",
             locator: 'data',
             totalNumberLocator: function(response) {
@@ -304,8 +342,14 @@
                 }
             },
             pageSize: 8,
+            formatAjaxError: function(jqXHR, textStatus, errorThrown) {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            },
             callback: function(data, pagination) {
-
                 let page = pagination.pageNumber
                 let total = data.length;
                 if (total > 0) {
@@ -340,14 +384,22 @@
                                 <b style="font-size:10pt;" class="text-primary">${data[i].catmenu_id != '' ? ('['+data[i].catmenu.name+ '] ') : ''}${data[i].name}</b>
                                 <br>
                                 <b style="font-size:10pt;" class="text-success">Rp ${hrg(data[i].price)} ${data[i].disc > 0 ? (data[i].disc + '%') : ''}</b>
-                                <br>
-                                (STOK : ${data[i].stock}) ${data[i].status != 'active' ? '<span class="badge badge-danger">Nonactive</span>' : ''}
                             </button>
                         </div>`
             }
             $('#data').html(text);
         }
     });
+
+
+    function selected_table(id, number, status) {
+        if (status == 'free') {
+            var option = new Option((number + ' [' + status + ']'), id, true, true);
+            $("#select_table").append(option).trigger('change');
+            $('#modalEdit').modal('hide');
+            $('#name_cart').focus()
+        }
+    }
 </script>
 
 <script>
@@ -385,7 +437,7 @@
                     return {
                         results: $.map(data.data, function(item) {
                             return {
-                                text: item.number + ' => [' + item.status + '] ' + (item.desc == '' ? '' : '(' + item.desc + ')'),
+                                text: item.number + ' => [' + item.status + '] ',
                                 id: item.id,
                                 disabled: item.status == 'free' ? false : true,
                             }
@@ -410,9 +462,11 @@
     $('#select_category').change(function() {
         if ($(this).val() == 'dine in') {
             $("#select_table").prop('disabled', false);
+            $('#list_table').prop('disabled', false);
         } else {
             $("#select_table").val('').change();
             $("#select_table").prop('disabled', true);
+            $('#list_table').prop('disabled', true);
         }
     })
 
@@ -549,6 +603,7 @@
                             success: function(res) {
                                 unblock();
                                 table.ajax.reload();
+                                pg.pagination(1);
                                 $('#save').prop('disabled', false);
                                 if (res.status == true) {
                                     $('#bill').val(0)
@@ -820,11 +875,11 @@
             data: 'qty',
             render: function(data, type, row, meta) {
                 if (type == 'display') {
-                    return `<div class="input-group">
+                    return `<div class="input-group" style="white-space: nowrap;">
                         <div class="input-group-prepend">
                           <button type="button" id="qty_minus" class="btn btn-primary btn-sm"><i class="fas fa-minus"></i></button>
                         </div>
-                        <input type="number" id="qty" class="form-control form-control-sm" value="${data}" min="1" placeholder="Qty" style="width:35px;">
+                        <input type="number" id="qty" class="form-control form-control-sm" value="${data}" min="1" placeholder="Qty" style="width:30px;">
                         <div class="input-group-append">
                           <button type="button" id="qty_plus" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
                         </div>
