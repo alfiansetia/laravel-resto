@@ -36,7 +36,7 @@
             </div>
             <footer class="main-footer">
                 <div class="footer-left">
-                    Copyright &copy; {{ env('APP_NAME')}} {{ date('Y') }}
+                    Copyright &copy; {{ $comp->name }} {{ date('Y') }}
                     <div class="bullet"></div> Design By <a href="https://kacangan.net/">Alfi</a>
                 </div>
                 <div class="footer-right">
