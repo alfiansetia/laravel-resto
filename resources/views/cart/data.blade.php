@@ -265,10 +265,13 @@
 
         datatbl = $('#data_table')
         pg1 = $('#pagination_table').pagination({
-            dataSource: "{{ route('table.index') }}",
+            dataSource: "{{ route('table.paginate') }}",
             locator: 'data',
+            alias: {
+                pageNumber: 'page',
+            },
             totalNumberLocator: function(response) {
-                return response.data.length
+                return response.total
             },
             showPageNumbers: true,
             showSizeChanger: true,
@@ -289,21 +292,7 @@
                 let page = pagination.pageNumber
                 let total = data.length;
                 if (total > 0) {
-                    let perpage = total < pagination.pageSize ? total : pagination.pageSize;
-                    let totalpage = Math.ceil(total / perpage)
-                    let paginat = {
-                        total: total,
-                        per_page: perpage,
-                        current_page: page,
-                        last_page: Math.ceil(total / perpage),
-                        from: ((page - 1) * perpage) + 1,
-                        to: (page * perpage) > total ? total : (page * perpage),
-                    };
-                    let datashow = [];
-                    for (let i = paginat.from; i <= paginat.to; i++) {
-                        datashow.push(data[i - 1])
-                    }
-                    show_data_table(datashow)
+                    show_data_table(data)
                 } else {
                     datatbl.html(`<div class="col-12 text-center">Table tidak tersedia</div>`);
                 }
@@ -329,10 +318,13 @@
 
         dataContainer = $('#data')
         pg = $('#pagination').pagination({
-            dataSource: "{{ route('menu.index') }}",
+            dataSource: "{{ route('menu.paginate') }}",
             locator: 'data',
+            alias: {
+                pageNumber: 'page',
+            },
             totalNumberLocator: function(response) {
-                return response.data.length
+                return response.total
             },
             showPageNumbers: true,
             showSizeChanger: true,
@@ -353,21 +345,7 @@
                 let page = pagination.pageNumber
                 let total = data.length;
                 if (total > 0) {
-                    let perpage = total < pagination.pageSize ? total : pagination.pageSize;
-                    let totalpage = Math.ceil(total / perpage)
-                    let paginat = {
-                        total: total,
-                        per_page: perpage,
-                        current_page: page,
-                        last_page: Math.ceil(total / perpage),
-                        from: ((page - 1) * perpage) + 1,
-                        to: (page * perpage) > total ? total : (page * perpage),
-                    };
-                    let datashow = [];
-                    for (let i = paginat.from; i <= paginat.to; i++) {
-                        datashow.push(data[i - 1])
-                    }
-                    show_data(datashow)
+                    show_data(data)
                 } else {
                     dataContainer.html(`<div class="col-12 text-center">Menu tidak tersedia</div>`);
                 }

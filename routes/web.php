@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::delete('/user', [UserController::class, 'destroy'])->name('user.destroy');
     Route::resource('user', UserController::class)->except('create', 'show', 'destroy');
 
+    Route::get('/table/paginate', [TableController::class, 'paginate'])->name('table.paginate');
     Route::post('/table/change', [TableController::class, 'change'])->name('table.change');
     Route::delete('/table', [TableController::class, 'destroy'])->name('table.destroy');
     Route::resource('table', TableController::class)->except('create', 'show', 'destroy');
@@ -55,6 +56,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::delete('/catmenu', [CatmenuController::class, 'destroy'])->name('catmenu.destroy');
     Route::resource('catmenu', CatmenuController::class)->except('create', 'show', 'destroy');
 
+    Route::get('/menu/paginate', [MenuController::class, 'paginate'])->name('menu.paginate');
     Route::post('/menu/change', [MenuController::class, 'change'])->name('menu.change');
     Route::delete('/menu', [MenuController::class, 'destroy'])->name('menu.destroy');
     Route::resource('menu', MenuController::class)->except('create', 'show', 'destroy');

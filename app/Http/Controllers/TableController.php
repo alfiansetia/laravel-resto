@@ -25,13 +25,27 @@ class TableController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Table::orderBy('number', 'ASC')->get();
+            $data = Table::orderBy('number', 'ASC');
             if ($request->number) {
                 $data = Table::where('number', 'like', "%{$request->number}%")->orderBy('number', 'ASC')->get();
             }
             return DataTables::of($data)->toJson();
         }
         return view('table.data')->with(['comp' => $this->comp, 'title' => 'Data Table']);
+    }
+
+    public function paginate(Request $request)
+    {
+        if ($request->ajax()) {
+            $number = 20;
+            if ($request->has('pageSize') && $request->pageSize != '') {
+                $number = $request->pageSize;
+            }
+            $data = Table::orderBy('number', 'ASC')->paginate($number);
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
     }
 
 

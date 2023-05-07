@@ -37,6 +37,22 @@ class MenuController extends Controller
         return view('menu.data')->with(['comp' => $this->comp, 'title' => 'Data Menu']);
     }
 
+    
+    public function paginate(Request $request)
+    {
+        if ($request->ajax()) {
+            $number = 20;
+            if ($request->has('pageSize') && $request->pageSize != '') {
+                $number = $request->pageSize;
+            }
+            $data = Menu::with('catmenu')->paginate($number);
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *

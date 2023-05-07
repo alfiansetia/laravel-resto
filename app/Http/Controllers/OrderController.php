@@ -31,10 +31,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Order::with('dtorder', 'table', 'user')->get();
-            if ($request->name) {
-                $data = Order::where('name', 'like', "%{$request->name}%")->get();
-            }
+            $data = Order::where('name', 'like', "%{$request->name}%")->with('dtorder', 'table', 'user')->get();
             return DataTables::of($data)->toJson();
         }
         return view('order.data')->with(['comp' => $this->comp, 'title' => 'Data Order']);
