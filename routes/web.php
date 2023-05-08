@@ -6,6 +6,7 @@ use App\Http\Controllers\CompController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReqstockController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -65,8 +66,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/order/lastfive', [OrderController::class, 'lastfive'])->name('order.lastfive');
     Route::post('/order/change', [OrderController::class, 'change'])->name('order.change');
     Route::delete('/order', [OrderController::class, 'destroy'])->name('order.destroy');
-    // Route::resource('order', OrderController::class)->except('create', 'update', 'show', 'destroy');
     Route::resource('order', OrderController::class)->only('index', 'store', 'edit');
+
+    Route::resource('reqstock', ReqstockController::class)->only('index', 'store', 'edit');
 
     Route::post('/cart/change', [CartController::class, 'change'])->name('cart.change');
     Route::resource('cart', CartController::class)->except('create', 'show');
