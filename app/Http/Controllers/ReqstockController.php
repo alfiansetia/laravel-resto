@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comp;
+use App\Models\Dtreqstock;
 use App\Models\Reqstock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class ReqstockController extends Controller
@@ -49,7 +52,44 @@ class ReqstockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'desc'  => 'max:150',
+            'menu'  => 'required|array|min:1'
+        ]);
+        $last = Reqstock::latest()->first() ?? new Reqstock();
+        $reqnumber = 'REQ' . str_pad($last->id + 1, 5, "0", STR_PAD_LEFT);
+
+        DB::beginTransaction();
+        try {
+            $req = Reqstock::create([
+                'number'    => $reqnumber,
+                'user_id'   => Auth::id(),
+                'date'      => date("Y-m-d H:i:s"),
+                'status'    => 'pending',
+                'desc'      => $request->desc,
+            ]);
+            $menus = $request->menu;
+            foreach ($menus as $menu) {
+                Dtreqstock::create([
+                    'reqstock_id'   => $req->id,
+                    'menu_id'       => $menu['id'],
+                    'qty'           => $menu['qty'],
+                ]);
+            }
+            DB::commit();
+            return response()->json([
+                'status'    => true,
+                'message'   => 'Transaksi berhasil',
+                'data'      => [],
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Transaksi Gagal',
+                'data'      => [],
+            ]);
+        }
     }
 
     /**

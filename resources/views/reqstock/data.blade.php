@@ -48,7 +48,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-plus mr-1" data-toggle="tooltip" title="Add Data"></i>Add Data</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-plus mr-1" data-toggle="tooltip" title="Add Data"></i>Add Data Request</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" data-toggle="tooltip" title="Close">&times;</span>
                 </button>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="menu"><i class="fas fa-tags mr-1" data-toggle="tooltip" title="Menu"></i>Menu :</label>
-                        <select name="menu" id="menu" class="form-control" style="width: 100%;" required>
+                        <select id="menu" class="form-control" style="width: 100%;">
                         </select>
                         <span id="err_menu" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
@@ -329,6 +329,93 @@
             $('#menu').focus();
         }
 
+    })
+
+
+    $('#form').submit(function(event) {
+        event.preventDefault();
+        let dttbl = table_add.rows().data().toArray()
+        let data = {
+            desc: $('#desc').val(),
+            menu: dttbl,
+        }
+        if (dttbl.length > 0) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('reqstock.store') }}",
+                data: data,
+                beforeSend: function() {
+                    block();
+                    $('button[type="submit"]').prop('disabled', true);
+                    $('#form .error.invalid-feedback').each(function(i) {
+                        $(this).hide();
+                    });
+                    $('#desc').removeClass('is-invalid');
+                    $('#form input.is-invalid').each(function(i) {
+                        $(this).removeClass('is-invalid');
+                    });
+                },
+                success: function(res) {
+                    unblock();
+                    $('button[type="submit"]').prop('disabled', false);
+                    if (res.status == true) {
+                        table.ajax.reload()
+                        $('#reset').click();
+                        swal(
+                            'Success!',
+                            res.message,
+                            'success'
+                        )
+                    } else {
+                        swal(
+                            'Failed!',
+                            res.message,
+                            'error'
+                        )
+                    }
+                },
+                error: function(xhr, status, error) {
+                    unblock();
+                    $('button[type="submit"]').prop('disabled', false);
+                    er = xhr.responseJSON.errors
+                    if (xhr.status == 500) {
+                        swal(
+                            'Failed!',
+                            'Server Error',
+                            'error'
+                        )
+                    } else {
+                        erlen = Object.keys(er).length
+                        for (i = 0; i < erlen; i++) {
+                            obname = Object.keys(er)[i];
+                            $('#' + obname).addClass('is-invalid');
+                            $('#err_' + obname).text(er[obname][0]);
+                            $('#err_' + obname).show();
+                        }
+                    }
+                }
+            });
+        } else {
+            $('#menu').focus()
+        }
+
+    })
+
+    $('#reset').click(function() {
+        table_add.rows().remove().draw()
+        $("#menu").empty('').change()
+        $('#form .error.invalid-feedback').each(function(i) {
+            $(this).hide();
+        });
+        $('#desc').removeClass('is-invalid');
+        $('#form input.is-invalid').each(function(i) {
+            $(this).removeClass('is-invalid');
+        });
     })
 
 

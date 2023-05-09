@@ -11,9 +11,12 @@ class Reqstock extends Model
     protected $table = 'reqstock';
 
     protected $fillable = [
-        'reqstock_id',
-        'menu_id',
-        'qty',
+        'number',
+        'user_id',
+        'stateby_id',
+        'status',
+        'date',
+        'desc',
     ];
 
     public function dtreqstock()
