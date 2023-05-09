@@ -14,7 +14,6 @@ class Reqstock extends Model
         'number',
         'user_id',
         'stateby_id',
-        'type',
         'status',
         'date',
         'date_state',

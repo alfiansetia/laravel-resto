@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comp;
 use App\Models\Dtreqstock;
 use App\Models\Menu;
+use App\Models\Menulog;
 use App\Models\Reqstock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -55,7 +56,6 @@ class ReqstockController extends Controller
     {
         $this->validate($request, [
             'desc'  => 'max:150',
-            'type'  => 'required|in:adjust,add',
             'menu'  => 'required|array|min:1',
         ]);
         $last = Reqstock::latest()->first() ?? new Reqstock();
@@ -66,7 +66,6 @@ class ReqstockController extends Controller
                 'number'    => $reqnumber,
                 'user_id'   => Auth::id(),
                 'date'      => date("Y-m-d H:i:s"),
-                'type'      => $request->type,
                 'status'    => 'pending',
                 'desc'      => $request->desc,
             ]);
@@ -75,6 +74,7 @@ class ReqstockController extends Controller
                 Dtreqstock::create([
                     'reqstock_id'   => $req->id,
                     'menu_id'       => $menu['id'],
+                    'type'          => $menu['type'],
                     'qty'           => $menu['qty'],
                 ]);
             }
@@ -155,19 +155,20 @@ class ReqstockController extends Controller
             try {
                 if ($request->status == 'done') {
                     $menus = $reqstock->dtreqstock;
-                    if ($reqstock->type == 'add') {
-                        foreach ($menus as $m) {
-                            if ($m->menu_id != null) {
-                                $menu = Menu::find($m->menu_id);
+                    foreach ($menus as $m) {
+                        if ($m->menu_id != null) {
+                            $menu = Menu::find($m->menu_id);
+                            if ($m->type == 'add') {
                                 $menu->update(['stock' => ($menu->stock + $m->qty)]);
-                            }
-                        }
-                    } else {
-                        foreach ($menus as $m) {
-                            if ($m->menu_id != null) {
-                                $menu = Menu::find($m->menu_id);
+                            } elseif ($m->type == 'adjust') {
                                 $menu->update(['stock' =>  $m->qty]);
                             }
+                            Menulog::create([
+                                'menu_id'   => $menu->id,
+                                'user_id'   => Auth::id(),
+                                'date'      => date("Y-m-d H:i:s"),
+                                'message'   => 'stock : change on Request ' . $reqstock->number,
+                            ]);
                         }
                     }
                 }

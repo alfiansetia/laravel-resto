@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('number')->unique();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('stateby_id')->nullable();
-            $table->enum('type', ['adjust', 'add'])->default('add');
             $table->enum('status', ['pending', 'cancel', 'done'])->default('pending');
             $table->dateTime('date', $precision = 0)->useCurrent();
             $table->dateTime('date_state', $precision = 0)->nullable();

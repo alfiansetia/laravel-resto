@@ -12,6 +12,7 @@ class Dtreqstock extends Model
     protected $fillable = [
         'reqstock_id',
         'menu_id',
+        'type',
         'qty',
     ];
 

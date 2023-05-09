@@ -27,7 +27,6 @@
                                         <th class="dt-no-sorting" style="width: 30px;">Id</th>
                                         <th>Number</th>
                                         <th>Date</th>
-                                        <th>Type</th>
                                         <th>Status</th>
                                         <th>Desc</th>
                                     </tr>
@@ -57,14 +56,6 @@
             <div class="modal-body">
                 <form id="form" class="form-vertical" action="" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label class="control-label" for="type"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Type"></i>Type :</label>
-                        <select name="type" id="type" class="form-control" style="width: 100%;">
-                            <option value="add">add</option>
-                            <option value="adjust">adjust</option>
-                        </select>
-                        <span id="err_type" class="error invalid-feedback" style="display: hide;"></span>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label" for="desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc"></i>Desc :</label>
                         <textarea name="desc" class="form-control" id="desc" placeholder="Please Enter Desc" maxlength="150"></textarea>
                         <span id="err_desc" class="error invalid-feedback" style="display: hide;"></span>
@@ -75,12 +66,21 @@
                         </select>
                         <span id="err_menu" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label" for="type"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Type"></i>Type :</label>
+                        <select name="type" id="type" class="form-control" style="width: 100%;">
+                            <option value="add">add</option>
+                            <option value="adjust">adjust</option>
+                        </select>
+                        <span id="err_type" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
                     <button type="button" class="btn btn-info btn-sm mb-2" id="btn_table_add">Add Menu to table</button>
                     <div class="table-responsive">
                         <table class="table table-hover table-sm" id="tableadd" style="width: 100%;cursor: pointer;">
                             <thead>
                                 <tr>
                                     <th>Menu</th>
+                                    <th>Type</th>
                                     <th>Qty</th>
                                     <th class="dt-no-sorting" style="width: 30px;">Act</th>
                                 </tr>
@@ -124,11 +124,6 @@
                                 <td style="text-align: left;" id="req_date">sads</td>
                             </tr>
                             <tr>
-                                <td style="text-align: left;">Type</td>
-                                <td style="width: 10px;text-align: center;">:</td>
-                                <td style="text-align: left;" id="req_type">Type</td>
-                            </tr>
-                            <tr>
                                 <td style="text-align: left;">Status</td>
                                 <td style="width: 10px;text-align: center;">:</td>
                                 <td style="text-align: left;" id="req_status">paid</td>
@@ -156,6 +151,7 @@
                                 <thead>
                                     <tr>
                                         <th>Menu</th>
+                                        <th>Type</th>
                                         <th>Qty</th>
                                     </tr>
                                 </thead>
@@ -210,16 +206,15 @@
                     return {
                         results: $.map(data.data, function(item) {
                             return {
-                                text: item.name,
+                                stock: item.stock,
+                                text: item.name + ' => ' + item.stock,
                                 id: item.id,
-                                // disabled: item.status == 'nonactive' ? true : false,
                             }
                         })
                     };
                 },
             }
         });
-
         $("#type").select2();
 
     });
@@ -235,6 +230,9 @@
         columns: [{
             title: "Menu",
             data: "name"
+        }, {
+            title: "Type",
+            data: "type"
         }, {
             title: 'Qty',
             data: 'qty',
@@ -284,18 +282,22 @@
     $('#tableadd').on('click', '#qty_plus', function() {
         let row = $(this).parents('tr')[0];
         let row_data = table_add.row(row)
-        qty = row_data.data().qty
-        if (qty >= 0) {
+        let qty = row_data.data().qty
+        let type = row_data.data().type
+        if (qty > 0 && type == 'add') {
+            row_data.data()['qty'] = parseInt(qty) + 1
+            row_data.invalidate().draw(false);
+        } else if (qty >= 0 && type == 'adjust') {
             row_data.data()['qty'] = parseInt(qty) + 1
             row_data.invalidate().draw(false);
         }
     });
 
     $('#tableadd').on('click', '#qty_minus', function() {
-        let type = $('#type').val()
         let row = $(this).parents('tr')[0];
         let row_data = table_add.row(row)
-        qty = row_data.data().qty
+        let qty = row_data.data().qty
+        let type = row_data.data().type
         if (qty > 1 && type == 'add') {
             row_data.data()['qty'] = parseInt(qty) - 1
             row_data.invalidate().draw(false);
@@ -306,7 +308,8 @@
     });
 
     $('#btn_table_add').click(function() {
-        let cari = 0;
+        let type = $('#type').val()
+        let cari = 0
         let menu = $("#menu").select2('data')
         let dttbl = table_add.rows().data().toArray()
         if (menu.length > 0) {
@@ -315,6 +318,7 @@
                     cari++
                 }
             }
+
             if (cari > 0) {
                 swal(
                     'Failed!',
@@ -322,13 +326,21 @@
                     'error'
                 )
             } else {
-                table_add.row.add({
-                    id: menu[0].id,
-                    name: menu[0].text,
-                    qty: 1,
-                }).draw();
+                if (menu[0].stock == 0 && type == 'adjust') {
+                    swal(
+                        'Failed!',
+                        'Stok 0 hanya bisa type add!',
+                        'error'
+                    )
+                } else {
+                    table_add.row.add({
+                        id: menu[0].id,
+                        name: menu[0].text,
+                        type: type,
+                        qty: 1,
+                    }).draw();
+                }
             }
-
         } else {
             $('#menu').focus();
         }
@@ -338,14 +350,13 @@
     $('#form').submit(function(event) {
         event.preventDefault();
         let dttbl = table_add.rows().data().toArray()
-        let type = $('#type').val()
         let cari = 0
         for (let i = 0; i < dttbl.length; i++) {
-            if (dttbl[i].qty < 1) {
+            if (dttbl[i].qty < 1 && type == 'add') {
                 cari++
             }
         }
-        if (cari > 0 && type == 'add') {
+        if (cari > 0) {
             swal(
                 'Failed!',
                 'Qty tidak boleh kurang dari 1 jika type add!',
@@ -354,7 +365,6 @@
         } else {
             let data = {
                 desc: $('#desc').val(),
-                type: $('#type').val(),
                 menu: dttbl,
             }
             if (dttbl.length > 0) {
@@ -486,9 +496,6 @@
             title: "Date",
             data: 'date',
         }, {
-            title: "Type",
-            data: 'type',
-        }, {
             title: "Status",
             data: 'status',
             render: function(data, type, row, meta) {
@@ -573,6 +580,9 @@
                     return data
                 }
             }
+        }, {
+            title: "Type",
+            data: 'type',
         }, {
             title: "Qty",
             data: 'qty',
