@@ -29,7 +29,7 @@ class CartController extends Controller
         $carts = Cart::with('menu.catmenu')->where('user_id', '=', Auth::id())->get();
         if (count($carts) > 0) {
             foreach ($carts as $cart) {
-                if ($cart->menu->stock < 1 || $cart->menu->status == 'nonactive') {
+                if ($cart->menu->stock < 1) {
                     $cart->delete();
                 }
                 if ($cart->menu->stock > 0 && $cart->qty > $cart->menu->stock) {
@@ -75,8 +75,8 @@ class CartController extends Controller
         $cart = Cart::where('user_id', '=', Auth::user()->id)->where('menu_id', '=', $request->menu)->first();
         $menu = Menu::find($request->menu);
         if ($cart) {
-            if (($menu->stock < ($cart->qty + $request->qty)) || ($menu->status == 'nonactive')) {
-                return response()->json(['status' => false, 'message' => 'Out of stock / Nonactive', 'data' => '']);
+            if (($menu->stock < ($cart->qty + $request->qty))) {
+                return response()->json(['status' => false, 'message' => 'Out of stock', 'data' => '']);
             } else {
                 $cart->update([
                     'qty'       => $cart->qty + $request->qty,

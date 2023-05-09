@@ -58,7 +58,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('catmenu', CatmenuController::class)->except('create', 'show', 'destroy');
 
     Route::get('/menu/paginate', [MenuController::class, 'paginate'])->name('menu.paginate');
-    Route::post('/menu/change', [MenuController::class, 'change'])->name('menu.change');
     Route::delete('/menu', [MenuController::class, 'destroy'])->name('menu.destroy');
     Route::resource('menu', MenuController::class)->except('create', 'show', 'destroy');
 

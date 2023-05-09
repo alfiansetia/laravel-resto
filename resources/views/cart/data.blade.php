@@ -198,6 +198,7 @@
                                 <th>a</th>
                                 <th>a</th>
                                 <th>a</th>
+                                <th>a</th>
                             </tr>
                         </thead>
                         <tbody> </tbody>
@@ -261,6 +262,30 @@
 @push('js')
 <script>
     $(document).ready(function() {
+
+        $("#catmenu").select2({
+            placeholder: "Select a Category",
+            ajax: {
+                delay: 1000,
+                url: "{{ route('catmenu.index') }}",
+                data: function(params) {
+                    return {
+                        name: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data.data, function(item) {
+                            return {
+                                text: item.name,
+                                id: item.id,
+                            }
+                        })
+                    };
+                },
+            }
+        });
 
 
         datatbl = $('#data_table')
@@ -356,7 +381,7 @@
             let text = '';
             for (let i = 0; i < data.length; i++) {
                 text += `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
-                            <button onclick="add_menu('${data[i].name}', ${data[i].id}, 1)" ${data[i].status == 'active' && data[i].stock > 0 ? '' : 'disabled'} class="btn btn-outline-${data[i].status == 'active' && data[i].stock > 0 ? 'secondary' : 'danger'} btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="5" fdprocessedid="ma35zh">
+                            <button onclick="add_menu('${data[i].name}', ${data[i].id}, 1)" ${data[i].stock > 0 ? '' : 'disabled'} class="btn btn-outline-${data[i].stock > 0 ? 'secondary' : 'danger'} btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="5" fdprocessedid="ma35zh">
                                 <img src="{{ url('images/menu/') }}/${data[i].img != null ? data[i].img : 'default.png' }" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
                                 <br>
                                 <b style="font-size:10pt;" class="text-primary">${data[i].catmenu_id != '' ? ('['+data[i].catmenu.name+ '] ') : ''}${data[i].name}</b>
@@ -714,21 +739,6 @@
         columns: [{
             title: "Name",
             data: 'name',
-            render: function(data, type, row, meta) {
-                let text;
-                if (data != null) {
-                    if (row.status == 'active') {
-                        text = `<i class="fas fa-circle text-success" data-toggle="tooltip" title="Active"></i> ${data}`;
-                    } else {
-                        text = `<i class="fas fa-circle text-danger" data-toggle="tooltip" title="Nonactive"></i> ${data}`;
-                    }
-                }
-                if (type == 'display') {
-                    return text
-                } else {
-                    return data
-                }
-            }
         }, {
             title: "Category",
             data: 'catmenu_id',
@@ -749,6 +759,16 @@
             render: function(data, type, row, meta) {
                 if (type == 'display') {
                     return hrg(data)
+                } else {
+                    return data
+                }
+            }
+        }, {
+            title: "Disc",
+            data: 'disc',
+            render: function(data, type, row, meta) {
+                if (type == 'display') {
+                    return `${data}%`
                 } else {
                     return data
                 }
@@ -910,12 +930,12 @@
 
     $('#tblmenu tbody').on('click', 'tr', function() {
         let data = tblmenu.row(this).data()
-        if (data.stock > 0 && data.status == 'active') {
+        if (data.stock > 0) {
             add_menu(data.name, data.id, 1);
         } else {
             swal(
                 'Failed!',
-                'Stock 0 / Nonactive',
+                'Stock 0',
                 'error'
             )
         }

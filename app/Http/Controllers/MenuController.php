@@ -37,7 +37,7 @@ class MenuController extends Controller
         return view('menu.data')->with(['comp' => $this->comp, 'title' => 'Data Menu']);
     }
 
-    
+
     public function paginate(Request $request)
     {
         if ($request->ajax()) {
@@ -45,7 +45,12 @@ class MenuController extends Controller
             if ($request->has('pageSize') && $request->pageSize != '') {
                 $number = $request->pageSize;
             }
+            // if ($request->has('category') && $request->category != '') {
+            //     $data = Menu::where('catmenu_id', $request->category)->with('catmenu')->paginate($number);
+            // } else {
             $data = Menu::with('catmenu')->paginate($number);
+            // }
+
             return response()->json($data);
         } else {
             abort(404);
@@ -64,7 +69,6 @@ class MenuController extends Controller
         $this->validate($request, [
             'name'      => 'required|max:25|min:3|unique:menu,name',
             'catmenu'   => 'required|integer',
-            'status'    => 'required|in:active,nonactive',
             'img'       => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'price'     => 'integer|gte:0',
             'disc'      => 'integer|gte:0',
@@ -79,7 +83,6 @@ class MenuController extends Controller
         $menu = Menu::create([
             'name'          => $request->name,
             'catmenu_id'    => $request->catmenu,
-            'status'        => $request->status,
             'img'           => $img,
             'price'         => $request->price,
             'disc'          => $request->disc,
@@ -120,7 +123,6 @@ class MenuController extends Controller
         $this->validate($request, [
             'name'      => 'required|max:25|min:3|unique:menu,name,' . $menu->id,
             'catmenu'   => 'required|integer',
-            'status'    => 'required|in:active,nonactive',
             'img'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'price'     => 'integer|gte:0',
             'disc'      => 'integer|gte:0',
@@ -135,11 +137,8 @@ class MenuController extends Controller
             $img = date('YmdHis') . "." . $files->getClientOriginalExtension();
             $files->move($destinationPath, $img);
         }
-        if ($menu->status != $request->status || $menu->disc != $request->disc || $menu->name != $request->name) {
+        if ($menu->disc != $request->disc || $menu->name != $request->name) {
             $message = '';
-            if ($menu->status != $request->status) {
-                $message .= "status : $menu->status => $request->status ,";
-            }
             if ($menu->disc != $request->disc) {
                 $message .= "disc : $menu->disc => $request->disc ,";
             }
@@ -156,7 +155,6 @@ class MenuController extends Controller
         $menu->update([
             'name'          => $request->name,
             'catmenu_id'    => $request->catmenu,
-            'status'        => $request->status,
             'img'           => $img,
             'price'         => $request->price,
             'disc'          => $request->disc,
@@ -192,41 +190,6 @@ class MenuController extends Controller
                     }
                 }
                 return response()->json(['status' => true, 'message' => 'Success Delete ' . $count . '/' . $counter . ' Data', 'data' => '']);
-            } else {
-                return response()->json(['status' => false, 'message' => 'No Selected Data', 'data' => '']);
-            }
-        } else {
-            abort(404);
-        }
-    }
-
-    public function change(Request $request)
-    {
-        if ($request->ajax()) {
-            $this->validate($request, [
-                'status'    => 'required|in:active,nonactive',
-            ]);
-            if ($request->id) {
-                $count = count($request->id);
-                $counter = 0;
-                foreach ($request->id as $id) {
-                    $menu = Menu::findOrFail($id);
-                    if ($menu->status != $request->status) {
-                        Menulog::create([
-                            'menu_id'   => $menu->id,
-                            'user_id'   => Auth::id(),
-                            'date'      => date("Y-m-d H:i:s"),
-                            'message'   => "status : $menu->status => $request->status",
-                        ]);
-                    }
-                    $menu->update([
-                        'status'    => $request->status,
-                    ]);
-                    if ($menu) {
-                        $counter = $counter + 1;
-                    }
-                }
-                return response()->json(['status' => true, 'message' => 'Success Change Status ' . $count . '/' . $counter . ' Data', 'data' => '']);
             } else {
                 return response()->json(['status' => false, 'message' => 'No Selected Data', 'data' => '']);
             }

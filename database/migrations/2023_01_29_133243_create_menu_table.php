@@ -20,7 +20,6 @@ return new class extends Migration
             $table->integer('price')->default(0);
             $table->integer('disc')->default(0);
             $table->integer('stock')->default(0);
-            $table->enum('status', ['active', 'nonactive'])->default('active');
             $table->string('img')->nullable();
             $table->string('desc')->nullable();
             $table->timestamps();
