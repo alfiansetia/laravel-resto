@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::delete('/order', [OrderController::class, 'destroy'])->name('order.destroy');
     Route::resource('order', OrderController::class)->only('index', 'store', 'edit');
 
+    Route::post('/reqstock/{id}/change', [ReqstockController::class, 'change'])->name('reqstock.change');
     Route::resource('reqstock', ReqstockController::class)->only('index', 'store', 'edit');
 
     Route::post('/cart/change', [CartController::class, 'change'])->name('cart.change');

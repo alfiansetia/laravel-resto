@@ -20,7 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('stateby_id')->nullable();
             $table->enum('status', ['pending', 'cancel', 'done'])->default('pending');
             $table->dateTime('date', $precision = 0)->useCurrent();
-            $table->string('desc');
+            $table->dateTime('date_state', $precision = 0)->nullable();
+            $table->string('desc')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreign('stateby_id')->references('id')->on('users')->cascadeOnUpdate()->nullOnDelete();
             $table->timestamps();

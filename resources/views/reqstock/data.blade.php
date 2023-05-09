@@ -95,7 +95,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titleEdit"><i class="fas fa-info mr-1" data-toggle="tooltip" title="Edit Data"></i>Detail Order <span class="badge badge-success" id="order_number">12345</span></h5>
+                <h5 class="modal-title" id="titleEdit"><i class="fas fa-info mr-1" data-toggle="tooltip" title="Edit Data"></i>Detail Request <span class="badge badge-success" id="req_number">12345</span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -105,39 +105,34 @@
                     <div class="col-lg-4">
                         <table class="table table-sm table-hover table-responsive">
                             <tr>
-                                <td style="text-align: left;">Kasir</td>
+                                <td style="text-align: left;">User</td>
                                 <td style="width: 10px;text-align: center;">:</td>
-                                <td style="text-align: left;" id="order_user">Aku</td>
+                                <td style="text-align: left;" id="req_user">Aku</td>
                             </tr>
                             <tr>
                                 <td style="text-align: left;">Date</td>
                                 <td style="width: 10px;text-align: center;">:</td>
-                                <td style="text-align: left;" id="order_date">sads</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: left;">Name</td>
-                                <td style="width: 10px;text-align: center;">:</td>
-                                <td style="text-align: left;" id="order_name">Aku</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: left;">Table</td>
-                                <td style="width: 10px;text-align: center;">:</td>
-                                <td style="text-align: left;" id="order_table">#1</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: left;">Total</td>
-                                <td style="width: 10px;text-align: center;">:</td>
-                                <td style="text-align: left;" id="order_total">Rp 10.000</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: left;">Bayar</td>
-                                <td style="width: 10px;text-align: center;">:</td>
-                                <td style="text-align: left;" id="order_bill">Rp 10.000</td>
+                                <td style="text-align: left;" id="req_date">sads</td>
                             </tr>
                             <tr>
                                 <td style="text-align: left;">Status</td>
                                 <td style="width: 10px;text-align: center;">:</td>
-                                <td style="text-align: left;" id="order_status">paid</td>
+                                <td style="text-align: left;" id="req_status">paid</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Date State</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="req_date_state">sads</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">State By</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="req_stateby">sads</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Desc</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="req_desc">sads</td>
                             </tr>
                         </table>
                     </div>
@@ -147,10 +142,7 @@
                                 <thead>
                                     <tr>
                                         <th>Menu</th>
-                                        <th>Price</th>
                                         <th>Qty</th>
-                                        <th>Disc</th>
-                                        <th>Subtotal</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -158,41 +150,16 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
+                <button type="button" class="btn btn-warning" id="btn_cancel"><i class="fas fa-ban mr-1" data-toggle="tooltip" title="State Status Cancel"></i>Set Cancel</button>
+                <button type="button" class="btn btn-success" id="btn_done"><i class="fas fa-check-circle mr-1" data-toggle="tooltip" title="State Status Done"></i>Set Done</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal animated fade fadeInDown" id="modalChange" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-edit mr-1" data-toggle="tooltip" title="Change Data"></i>Change Data</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" data-toggle="tooltip" title="Close">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="control-label" for="change_status"><i class="fas fa-question-circle mr-1" data-toggle="tooltip" title="Status Table"></i>Status :</label>
-                    <select name="status" id="change_status" class="form-control select2" style="width: 100%;" required>
-                        <option value="active">active</option>
-                        <option value="nonactive">nonactive</option>
-                    </select>
-                    <span id="err_change_status" class="error invalid-feedback" style="display: hide;"></span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1" data-toggle="tooltip" title="Close"></i>Close</button>
-                <button type="button" id="submitChange" class="btn btn-primary"><i class="fas fa-paper-plane mr-1" data-toggle="tooltip" title="Save"></i>Save</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endpush
 
 
@@ -285,19 +252,36 @@
         row.remove().draw(false);
     });
 
-    $('#tableadd').on('click', '#qty_plus', function() {
+    $('#tableadd').on('change', '#qty', function() {
         let row = $(this).parents('tr')[0];
+        let row_data = table_add.row(row)
         qty = $(this).closest("td").find("#qty")
         if (qty.val() > 0) {
-            qty.val(parseInt(qty.val()) + 1).change();
+            row_data.data()['qty'] = qty.val()
+            row_data.invalidate().draw(false);
+        } else {
+            row_data.data()['qty'] = row_data.data().qty
+            row_data.invalidate().draw(false);
+        }
+    });
+
+    $('#tableadd').on('click', '#qty_plus', function() {
+        let row = $(this).parents('tr')[0];
+        let row_data = table_add.row(row)
+        qty = row_data.data().qty
+        if (qty > 0) {
+            row_data.data()['qty'] = parseInt(qty) + 1
+            row_data.invalidate().draw(false);
         }
     });
 
     $('#tableadd').on('click', '#qty_minus', function() {
         let row = $(this).parents('tr')[0];
-        qty = $(this).closest("td").find("#qty")
-        if (qty.val() > 1) {
-            qty.val(parseInt(qty.val()) - 1).change();
+        let row_data = table_add.row(row)
+        qty = row_data.data().qty
+        if (qty > 1) {
+            row_data.data()['qty'] = parseInt(qty) - 1
+            row_data.invalidate().draw(false);
         }
     });
 
@@ -305,6 +289,7 @@
         let cari = 0;
         let menu = $("#menu").select2('data')
         let dttbl = table_add.rows().data().toArray()
+        console.log(dttbl)
         if (menu.length > 0) {
             for (let i = 0; i < dttbl.length; i++) {
                 if (dttbl[i].id == menu[0].id) {
@@ -330,7 +315,6 @@
         }
 
     })
-
 
     $('#form').submit(function(event) {
         event.preventDefault();
@@ -418,7 +402,6 @@
         });
     })
 
-
     var table = $("#table").DataTable({
         processing: true,
         serverSide: true,
@@ -476,7 +459,7 @@
                 } else if (data == 'pending') {
                     text = `<span class="badge badge-warning">${data}</span>`;
                 } else {
-                    text = `<span class="badge badge-danger">${data}</span>`;
+                    text = `<span class="badge badge-secondary">${data}</span>`;
                 }
                 if (type == 'display') {
                     return text
@@ -558,7 +541,7 @@
         columnDefs: [],
         info: false,
         order: [
-            [0, 'desc']
+            [0, 'asc']
         ],
         columns: [{
             title: "Menu",
@@ -566,11 +549,7 @@
             render: function(data, type, row, meta) {
                 let text = ''
                 if (data != null) {
-                    if (row.menu.catmenu_id != null) {
-                        text = '[' + row.menu.catmenu.name + '] <b>' + row.menu.name + '</b>'
-                    } else {
-                        text = row.menu.name
-                    }
+                    text = row.menu.name
                 }
                 if (type == 'display') {
                     return text
@@ -579,72 +558,132 @@
                 }
             }
         }, {
-            title: "Price",
-            data: 'price',
-            render: function(data, type, row, meta) {
-                if (type == 'display') {
-                    return hrg(data)
-                } else {
-                    return data
-                }
-            }
-        }, {
             title: "Qty",
             data: 'qty',
-        }, {
-            title: "Disc",
-            data: 'disc',
-            render: function(data, type, row, meta) {
-                if (type == 'display') {
-                    return data + '%'
-                } else {
-                    return data
-                }
-            }
-        }, {
-            title: "Subtotal",
-            data: 'id',
-            render: function(data, type, row, meta) {
-                let text
-                if (data != null) {
-                    text = (row.price * row.qty) - (row.price * row.qty * row.disc / 100)
-                }
-                if (type == 'display') {
-                    return hrg(text)
-                } else {
-                    return data
-                }
-            }
         }]
     });
 
     $('#table tbody').on('click', 'tr td:not(:first-child,:last-child)', function() {
         row = $(this).parents('tr')[0];
         id = table.row(row).data().id
-        let url = "{{ route('order.edit', ':id') }}";
+        detail(id, true);
+    });
+
+    $('#btn_done').click(function() {
+        let btn = $(this);
+        setStatus(id, 'done', btn)
+    })
+
+    $('#btn_cancel').click(function() {
+        let btn = $(this);
+        setStatus(id, 'cancel', btn)
+    })
+
+    function setStatus(id, status, btn) {
+        let url = "{{ route('reqstock.change', ':id') }}";
+        url = url.replace(':id', id);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                status: status
+            },
+            beforeSend: function() {
+                btn.prop('disabled', true);
+                block();
+            },
+            success: function(res) {
+                btn.prop('disabled', false);
+                unblock();
+                table.ajax.reload();
+                detail(id, false)
+                if (res.status == true) {
+                    swal(
+                        'Changed!',
+                        res.message,
+                        'success'
+                    )
+                } else {
+                    swal(
+                        'Failed!',
+                        res.message,
+                        'error'
+                    )
+                }
+            },
+            error: function(xhr, status, error) {
+                btn.prop('disabled', false);
+                unblock();
+                er = xhr.responseJSON.errors
+                if (xhr.status == 500) {
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                } else {
+                    swal(
+                        'Failed!',
+                        'Error',
+                        'error'
+                    )
+                }
+            }
+        });
+    }
+
+    function detail(id, openModal) {
+        let url = "{{ route('reqstock.edit', ':id') }}";
         url = url.replace(':id', id);
         $.ajax({
             url: url,
             method: 'GET',
             success: function(result) {
                 unblock();
-                $('#order_number').text(result.data.number)
-                $('#order_date').text(result.data.date)
-                $('#order_name').text(result.data.name)
-                if (result.data.category == 'dine in' && result.data.table_id != '') {
-                    $('#order_table').text('#' + result.data.table.number)
-                } else {
-                    $('#order_table').text(result.data.category)
+                $('#req_number').text(result.data.number)
+                if (result.data.status == 'pending') {
+                    $('#req_number').addClass('badge-warning')
+                    $('#req_number').removeClass('badge-secondary')
+                    $('#req_number').removeClass('badge-success')
+                } else if (result.data.status == 'done') {
+                    $('#req_number').addClass('badge-success')
+                    $('#req_number').removeClass('badge-secondary')
+                    $('#req_number').removeClass('badge-warning')
+                } else if (result.data.status == 'cancel') {
+                    $('#req_number').addClass('badge-secondary')
+                    $('#req_number').removeClass('badge-success')
+                    $('#req_number').removeClass('badge-warning')
                 }
-                if (result.data.user_id != '') {
-                    $('#order_user').text(result.data.user.name)
+                $('#req_date').text(result.data.date)
+                $('#req_date_state').text(result.data.date_state ?? '-')
+                if (result.data.user_id != null) {
+                    $('#req_user').text(result.data.user.name)
                 } else {
-                    $('#order_user').text('-')
+                    $('#req_user').text('-')
                 }
-                $('#order_total').text('Rp ' + hrg(result.data.total))
-                $('#order_bill').text('Rp ' + hrg(result.data.bill))
-                tbltrx.clear().rows.add(result.data.dtorder).draw();
-                $('#modalEdit').modal('show');
+                if (result.data.stateby_id != null) {
+                    $('#req_stateby').text(result.data.stateby.name)
+                } else {
+                    $('#req_stateby').text('-')
+                }
+                $('#req_status').text(result.data.status)
+                if (result.data.status == 'pending') {
+                    $('#btn_done').prop('disabled', false)
+                    $('#btn_cancel').prop('disabled', false)
+                } else {
+                    $('#btn_done').prop('disabled', true)
+                    $('#btn_cancel').prop('disabled', true)
+                }
+                $('#req_desc').text(result.data.desc)
+                tbltrx.clear().rows.add(result.data.dtreqstock).draw();
+                if (openModal == true) {
+                    $('#modalEdit').modal('show');
+                }
             },
             beforeSend: function() {
                 block();
@@ -659,7 +698,7 @@
                 )
             }
         });
-    });
+    }
 
     $('#table').on('click', '#btn_print', function() {
         let row = $(this).parents('tr')[0];

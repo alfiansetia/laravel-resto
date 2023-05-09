@@ -58,7 +58,6 @@ class ReqstockController extends Controller
         ]);
         $last = Reqstock::latest()->first() ?? new Reqstock();
         $reqnumber = 'REQ' . str_pad($last->id + 1, 5, "0", STR_PAD_LEFT);
-
         DB::beginTransaction();
         try {
             $req = Reqstock::create([
@@ -109,19 +108,24 @@ class ReqstockController extends Controller
      * @param  \App\Models\ReqStock  $reqStock
      * @return \Illuminate\Http\Response
      */
-    public function edit(ReqStock $reqStock)
+    public function edit(Request $request, Reqstock $reqstock)
     {
-        //
+        if ($request->ajax()) {
+            $reqstock = Reqstock::with('dtreqstock.menu', 'user', 'stateby')->find($reqstock->id);
+            return response()->json(['status' => true, 'message' => '', 'data' => $reqstock]);
+        } else {
+            abort(404);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ReqStock  $reqStock
+     * @param  \App\Models\Reqstock  $reqstock
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ReqStock $reqStock)
+    public function update(Request $request, Reqstock $reqstock)
     {
         //
     }
@@ -129,11 +133,33 @@ class ReqstockController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ReqStock  $reqStock
+     * @param  \App\Models\Reqstock  $reqstock
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ReqStock $reqStock)
+    public function destroy(Reqstock $reqstock)
     {
         //
+    }
+
+    public function change(Request $request, $id)
+    {
+        $this->validate($request, [
+            'status' => 'required|in:done,pending,cancel',
+        ]);
+        if ($request->ajax()) {
+            $reqstock = Reqstock::with('dtreqstock')->find($id);
+            $reqstock->update([
+                'stateby_id' => Auth::id(),
+                'status'     => $request->status,
+                'date_state' => date("Y-m-d H:i:s"),
+            ]);
+            if ($reqstock) {
+                return response()->json(['status' => true, 'message' => 'Success Change Data', 'data' => $reqstock]);
+            } else {
+                return response()->json(['status' => false, 'message' => 'No Selected Data sf', 'data' => $reqstock]);
+            }
+        } else {
+            abort(404);
+        }
     }
 }

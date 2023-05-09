@@ -149,6 +149,7 @@
         </div>
     </div>
 </div>
+
 @endpush
 
 
@@ -273,42 +274,7 @@
                 }
             }
         }],
-        buttons: [, {
-            text: '<i class="fa fa-plus"></i>Add',
-            className: 'btn btn-sm btn-primary bs-tooltip',
-            attr: {
-                'data-toggle': 'tooltip',
-                'title': 'Add Data'
-            },
-            action: function(e, dt, node, config) {
-                $('#modalAdd').modal('show');
-                $('#modalAdd').on('shown.bs.modal', function() {
-                    $('#name').focus();
-                })
-            }
-        }, {
-            text: '<i class="fa fa-tools"></i>Action',
-            className: 'btn btn-sm btn-info bs-tooltip',
-            attr: {
-                'data-toggle': 'tooltip',
-                'title': 'Action'
-            },
-            extend: 'collection',
-            autoClose: true,
-            buttons: [{
-                text: 'Change',
-                className: 'btn btn-info',
-                action: function(e, dt, node, config) {
-                    changeData();
-                }
-            }, {
-                text: 'Remove',
-                className: 'btn btn-danger',
-                action: function(e, dt, node, config) {
-                    deleteData();
-                }
-            }]
-        }, {
+        buttons: [{
             extend: "colvis",
             attr: {
                 'data-toggle': 'tooltip',
