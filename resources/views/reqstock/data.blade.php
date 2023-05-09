@@ -27,6 +27,7 @@
                                         <th class="dt-no-sorting" style="width: 30px;">Id</th>
                                         <th>Number</th>
                                         <th>Date</th>
+                                        <th>Type</th>
                                         <th>Status</th>
                                         <th>Desc</th>
                                     </tr>
@@ -56,8 +57,16 @@
             <div class="modal-body">
                 <form id="form" class="form-vertical" action="" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label class="control-label" for="desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc Table"></i>Desc :</label>
-                        <textarea name="desc" class="form-control" id="desc" placeholder="Please Enter desc" maxlength="150"></textarea>
+                        <label class="control-label" for="type"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Type"></i>Type :</label>
+                        <select name="type" id="type" class="form-control" style="width: 100%;">
+                            <option value="add">add</option>
+                            <option value="adjust">adjust</option>
+                        </select>
+                        <span id="err_type" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="desc"><i class="fas fa-comment mr-1" data-toggle="tooltip" title="Desc"></i>Desc :</label>
+                        <textarea name="desc" class="form-control" id="desc" placeholder="Please Enter Desc" maxlength="150"></textarea>
                         <span id="err_desc" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
@@ -113,6 +122,11 @@
                                 <td style="text-align: left;">Date</td>
                                 <td style="width: 10px;text-align: center;">:</td>
                                 <td style="text-align: left;" id="req_date">sads</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Type</td>
+                                <td style="width: 10px;text-align: center;">:</td>
+                                <td style="text-align: left;" id="req_type">Type</td>
                             </tr>
                             <tr>
                                 <td style="text-align: left;">Status</td>
@@ -206,6 +220,8 @@
             }
         });
 
+        $("#type").select2();
+
     });
     var table_add = $('#tableadd').DataTable({
         rowId: id,
@@ -230,7 +246,7 @@
                         <div class="input-group-prepend">
                           <button type="button" id="qty_minus" class="btn btn-primary btn-sm"><i class="fas fa-minus"></i></button>
                         </div>
-                        <input type="number" id="qty" class="form-control form-control-sm" value="${data}" min="1" placeholder="Qty" style="width:30px;">
+                        <input type="number" id="qty" class="form-control form-control-sm" value="${data}" min="0" placeholder="Qty" style="width:30px;">
                         <div class="input-group-append">
                           <button type="button" id="qty_plus" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button>
                         </div>
@@ -269,17 +285,21 @@
         let row = $(this).parents('tr')[0];
         let row_data = table_add.row(row)
         qty = row_data.data().qty
-        if (qty > 0) {
+        if (qty >= 0) {
             row_data.data()['qty'] = parseInt(qty) + 1
             row_data.invalidate().draw(false);
         }
     });
 
     $('#tableadd').on('click', '#qty_minus', function() {
+        let type = $('#type').val()
         let row = $(this).parents('tr')[0];
         let row_data = table_add.row(row)
         qty = row_data.data().qty
-        if (qty > 1) {
+        if (qty > 1 && type == 'add') {
+            row_data.data()['qty'] = parseInt(qty) - 1
+            row_data.invalidate().draw(false);
+        } else if (qty > 0 && type == 'adjust') {
             row_data.data()['qty'] = parseInt(qty) - 1
             row_data.invalidate().draw(false);
         }
@@ -289,7 +309,6 @@
         let cari = 0;
         let menu = $("#menu").select2('data')
         let dttbl = table_add.rows().data().toArray()
-        console.log(dttbl)
         if (menu.length > 0) {
             for (let i = 0; i < dttbl.length; i++) {
                 if (dttbl[i].id == menu[0].id) {
@@ -319,73 +338,89 @@
     $('#form').submit(function(event) {
         event.preventDefault();
         let dttbl = table_add.rows().data().toArray()
-        let data = {
-            desc: $('#desc').val(),
-            menu: dttbl,
+        let type = $('#type').val()
+        let cari = 0
+        for (let i = 0; i < dttbl.length; i++) {
+            if (dttbl[i].qty < 1) {
+                cari++
+            }
         }
-        if (dttbl.length > 0) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('reqstock.store') }}",
-                data: data,
-                beforeSend: function() {
-                    block();
-                    $('button[type="submit"]').prop('disabled', true);
-                    $('#form .error.invalid-feedback').each(function(i) {
-                        $(this).hide();
-                    });
-                    $('#desc').removeClass('is-invalid');
-                    $('#form input.is-invalid').each(function(i) {
-                        $(this).removeClass('is-invalid');
-                    });
-                },
-                success: function(res) {
-                    unblock();
-                    $('button[type="submit"]').prop('disabled', false);
-                    if (res.status == true) {
-                        table.ajax.reload()
-                        $('#reset').click();
-                        swal(
-                            'Success!',
-                            res.message,
-                            'success'
-                        )
-                    } else {
-                        swal(
-                            'Failed!',
-                            res.message,
-                            'error'
-                        )
+        if (cari > 0 && type == 'add') {
+            swal(
+                'Failed!',
+                'Qty tidak boleh kurang dari 1 jika type add!',
+                'error'
+            )
+        } else {
+            let data = {
+                desc: $('#desc').val(),
+                type: $('#type').val(),
+                menu: dttbl,
+            }
+            if (dttbl.length > 0) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
-                },
-                error: function(xhr, status, error) {
-                    unblock();
-                    $('button[type="submit"]').prop('disabled', false);
-                    er = xhr.responseJSON.errors
-                    if (xhr.status == 500) {
-                        swal(
-                            'Failed!',
-                            'Server Error',
-                            'error'
-                        )
-                    } else {
-                        erlen = Object.keys(er).length
-                        for (i = 0; i < erlen; i++) {
-                            obname = Object.keys(er)[i];
-                            $('#' + obname).addClass('is-invalid');
-                            $('#err_' + obname).text(er[obname][0]);
-                            $('#err_' + obname).show();
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('reqstock.store') }}",
+                    data: data,
+                    beforeSend: function() {
+                        block();
+                        $('button[type="submit"]').prop('disabled', true);
+                        $('#form .error.invalid-feedback').each(function(i) {
+                            $(this).hide();
+                        });
+                        $('#desc').removeClass('is-invalid');
+                        $('#form input.is-invalid').each(function(i) {
+                            $(this).removeClass('is-invalid');
+                        });
+                    },
+                    success: function(res) {
+                        unblock();
+                        $('button[type="submit"]').prop('disabled', false);
+                        if (res.status == true) {
+                            table.ajax.reload()
+                            $('#reset').click();
+                            swal(
+                                'Success!',
+                                res.message,
+                                'success'
+                            )
+                        } else {
+                            swal(
+                                'Failed!',
+                                res.message,
+                                'error'
+                            )
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        unblock();
+                        $('button[type="submit"]').prop('disabled', false);
+                        er = xhr.responseJSON.errors
+                        if (xhr.status == 500) {
+                            swal(
+                                'Failed!',
+                                'Server Error',
+                                'error'
+                            )
+                        } else {
+                            erlen = Object.keys(er).length
+                            for (i = 0; i < erlen; i++) {
+                                obname = Object.keys(er)[i];
+                                $('#' + obname).addClass('is-invalid');
+                                $('#err_' + obname).text(er[obname][0]);
+                                $('#err_' + obname).show();
+                            }
                         }
                     }
-                }
-            });
-        } else {
-            $('#menu').focus()
+                });
+            } else {
+                $('#menu').focus()
+            }
         }
 
     })
@@ -451,6 +486,9 @@
             title: "Date",
             data: 'date',
         }, {
+            title: "Type",
+            data: 'type',
+        }, {
             title: "Status",
             data: 'status',
             render: function(data, type, row, meta) {
@@ -473,7 +511,7 @@
         }],
         buttons: [, {
             text: '<i class="fa fa-plus"></i>Add',
-            className: 'btn btn-sm btn-primary bs-tooltip',
+            className: 'btn btn-sm btn-info bs-tooltip',
             attr: {
                 'data-toggle': 'tooltip',
                 'title': 'Add Data'
@@ -481,31 +519,9 @@
             action: function(e, dt, node, config) {
                 $('#modalAdd').modal('show');
                 $('#modalAdd').on('shown.bs.modal', function() {
-                    $('#qty').focus();
+                    $('#desc').focus();
                 })
             }
-        }, {
-            text: '<i class="fa fa-tools"></i>Action',
-            className: 'btn btn-sm btn-info bs-tooltip',
-            attr: {
-                'data-toggle': 'tooltip',
-                'title': 'Action'
-            },
-            extend: 'collection',
-            autoClose: true,
-            buttons: [{
-                text: 'Change',
-                className: 'btn btn-info',
-                action: function(e, dt, node, config) {
-                    changeData();
-                }
-            }, {
-                text: 'Remove',
-                className: 'btn btn-danger',
-                action: function(e, dt, node, config) {
-                    deleteData();
-                }
-            }]
         }, {
             extend: "colvis",
             attr: {
@@ -660,6 +676,7 @@
                     $('#req_number').removeClass('badge-warning')
                 }
                 $('#req_date').text(result.data.date)
+                $('#req_type').text(result.data.type)
                 $('#req_date_state').text(result.data.date_state ?? '-')
                 if (result.data.user_id != null) {
                     $('#req_user').text(result.data.user.name)
@@ -711,141 +728,5 @@
         data = table.row(row).data()
         win = window.open(`{{ url('order/${data.number}/print?type=pdf') }}`, 'blank');
     });
-
-    function changeData() {
-        if (selected()) {
-            $('#modalChange').modal('show');
-            $('#modalChange').on('shown.bs.modal', function() {
-                $('#change_status').focus();
-            })
-        }
-    }
-
-    $("#submitChange").click(function() {
-        let btn = $(this);
-        let status = $('#change_status').val();
-        let form = $("#formSelected");
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('order.change') }}",
-            data: $(form).serialize() + '&status=' + status,
-            beforeSend: function() {
-                btn.prop('disabled', true);
-                block();
-            },
-            success: function(res) {
-                btn.prop('disabled', false);
-                unblock();
-                table.ajax.reload();
-                if (res.status == true) {
-                    swal(
-                        'Changed!',
-                        res.message,
-                        'success'
-                    )
-                } else {
-                    swal(
-                        'Failed!',
-                        res.message,
-                        'error'
-                    )
-                }
-            },
-            error: function(xhr, status, error) {
-                btn.prop('disabled', false);
-                unblock();
-                er = xhr.responseJSON.errors
-                if (xhr.status == 500) {
-                    swal(
-                        'Failed!',
-                        'Server Error',
-                        'error'
-                    )
-                } else {
-                    erlen = Object.keys(er).length
-                    for (i = 0; i < erlen; i++) {
-                        obname = Object.keys(er)[i];
-                        $('#' + obname).addClass('is-invalid');
-                        $('#err_change_' + obname).text(er[obname][0]);
-                        $('#err_change_' + obname).show();
-                    }
-                }
-            }
-        });
-    })
-
-    function deleteData() {
-        if (selected()) {
-            swal({
-                title: 'Delete Selected Data?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                buttons: true,
-                dangerMode: true,
-            }).then(function(result) {
-                if (result) {
-                    let form = $("#formSelected");
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.ajax({
-                        type: 'DELETE',
-                        url: "{{ route('order.destroy') }}",
-                        data: $(form).serialize(),
-                        beforeSend: function() {
-                            block();
-                        },
-                        success: function(res) {
-                            unblock();
-                            table.ajax.reload();
-                            if (res.status == true) {
-                                swal(
-                                    'Deleted!',
-                                    res.message,
-                                    'success'
-                                )
-                            } else {
-                                swal(
-                                    'Failed!',
-                                    res.message,
-                                    'error'
-                                )
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            unblock();
-                            er = xhr.responseJSON.errors
-                            swal(
-                                'Failed!',
-                                'Server Error',
-                                'error'
-                            )
-                        }
-                    });
-                }
-            })
-        }
-    }
-
-    function selected() {
-        let id = $('input[name="id[]"]:checked').length;
-        if (id <= 0) {
-            swal({
-                title: 'Failed!',
-                text: "No Selected Data!",
-                icon: 'error',
-            })
-            return false
-        } else {
-            return true
-        }
-    }
 </script>
 @endpush

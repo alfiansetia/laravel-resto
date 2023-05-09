@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comp;
 use App\Models\Dtreqstock;
+use App\Models\Menu;
 use App\Models\Reqstock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,7 +55,8 @@ class ReqstockController extends Controller
     {
         $this->validate($request, [
             'desc'  => 'max:150',
-            'menu'  => 'required|array|min:1'
+            'type'  => 'required|in:adjust,add',
+            'menu'  => 'required|array|min:1',
         ]);
         $last = Reqstock::latest()->first() ?? new Reqstock();
         $reqnumber = 'REQ' . str_pad($last->id + 1, 5, "0", STR_PAD_LEFT);
@@ -64,6 +66,7 @@ class ReqstockController extends Controller
                 'number'    => $reqnumber,
                 'user_id'   => Auth::id(),
                 'date'      => date("Y-m-d H:i:s"),
+                'type'      => $request->type,
                 'status'    => 'pending',
                 'desc'      => $request->desc,
             ]);
@@ -148,15 +151,44 @@ class ReqstockController extends Controller
         ]);
         if ($request->ajax()) {
             $reqstock = Reqstock::with('dtreqstock')->find($id);
-            $reqstock->update([
-                'stateby_id' => Auth::id(),
-                'status'     => $request->status,
-                'date_state' => date("Y-m-d H:i:s"),
-            ]);
-            if ($reqstock) {
-                return response()->json(['status' => true, 'message' => 'Success Change Data', 'data' => $reqstock]);
-            } else {
-                return response()->json(['status' => false, 'message' => 'No Selected Data sf', 'data' => $reqstock]);
+            DB::beginTransaction();
+            try {
+                if ($request->status == 'done') {
+                    $menus = $reqstock->dtreqstock;
+                    if ($reqstock->type == 'add') {
+                        foreach ($menus as $m) {
+                            if ($m->menu_id != null) {
+                                $menu = Menu::find($m->menu_id);
+                                $menu->update(['stock' => ($menu->stock + $m->qty)]);
+                            }
+                        }
+                    } else {
+                        foreach ($menus as $m) {
+                            if ($m->menu_id != null) {
+                                $menu = Menu::find($m->menu_id);
+                                $menu->update(['stock' =>  $m->qty]);
+                            }
+                        }
+                    }
+                }
+                $reqstock->update([
+                    'stateby_id' => Auth::id(),
+                    'status'     => $request->status,
+                    'date_state' => date("Y-m-d H:i:s"),
+                ]);
+                DB::commit();
+                return response()->json([
+                    'status'    => true,
+                    'message'   => 'Transaksi berhasil',
+                    'data'      => [],
+                ]);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Transaksi Gagal',
+                    'data'      => [],
+                ]);
             }
         } else {
             abort(404);
