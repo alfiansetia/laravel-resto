@@ -16,6 +16,7 @@ class Reqstock extends Model
         'stateby_id',
         'status',
         'date',
+        'date_state',
         'desc',
     ];
 
