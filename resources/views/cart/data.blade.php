@@ -62,12 +62,16 @@
                         </div>
                     </div>
                     <div class="form-group row mb-1">
-                        <label for="select_category" class="col-sm-3 col-form-label">Type :</label>
+                        <label for="type" class="col-sm-3 col-form-label">Type :</label>
                         <div class="col-sm-9">
-                            <select name="category" id="select_category" class="form-control" style="width: 100%;">
-                                <option value="dine in">dine in</option>
-                                <option value="take away">take away</option>
-                            </select>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="dine_in" name="category" class="custom-control-input" value="dine in" checked>
+                                <label class="custom-control-label" for="dine_in">dine in</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="take_away" name="category" class="custom-control-input" value="take away">
+                                <label class="custom-control-label" for="take_away">take away</label>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row mb-1">
@@ -263,29 +267,29 @@
 <script>
     $(document).ready(function() {
 
-        $("#catmenu").select2({
-            placeholder: "Select a Category",
-            ajax: {
-                delay: 1000,
-                url: "{{ route('catmenu.index') }}",
-                data: function(params) {
-                    return {
-                        name: params.term,
-                        page: params.page
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data.data, function(item) {
-                            return {
-                                text: item.name,
-                                id: item.id,
-                            }
-                        })
-                    };
-                },
-            }
-        });
+        // $("#catmenu").select2({
+        //     placeholder: "Select a Category",
+        //     ajax: {
+        //         delay: 1000,
+        //         url: "{{ route('catmenu.index') }}",
+        //         data: function(params) {
+        //             return {
+        //                 name: params.term,
+        //                 page: params.page
+        //             };
+        //         },
+        //         processResults: function(data) {
+        //             return {
+        //                 results: $.map(data.data, function(item) {
+        //                     return {
+        //                         text: item.name,
+        //                         id: item.id,
+        //                     }
+        //                 })
+        //             };
+        //         },
+        //     }
+        // });
 
 
         datatbl = $('#data_table')
@@ -451,7 +455,16 @@
         });
         $('#name_cart').focus()
 
-        $('#select_category').select2();
+        $('input[type=radio][name=category]').change(function() {
+            if ($(this).val() == 'dine in') {
+                $("#select_table").prop('disabled', false);
+                $('#list_table').prop('disabled', false);
+            } else {
+                $("#select_table").val('').change();
+                $("#select_table").prop('disabled', true);
+                $('#list_table').prop('disabled', true);
+            }
+        });
 
     });
 
@@ -460,17 +473,6 @@
     })
     $('#lunas').change(function() {
         table.ajax.reload()
-    })
-
-    $('#select_category').change(function() {
-        if ($(this).val() == 'dine in') {
-            $("#select_table").prop('disabled', false);
-            $('#list_table').prop('disabled', false);
-        } else {
-            $("#select_table").val('').change();
-            $("#select_table").prop('disabled', true);
-            $('#list_table').prop('disabled', true);
-        }
     })
 
     $('#table').on('change', '#qty', function() {
@@ -525,11 +527,6 @@
                 }
             });
         } else {
-            swal(
-                'Failed!',
-                'Qty harus lebih dari 0',
-                'error'
-            )
             $(this).val(1)
         }
     });
@@ -553,6 +550,7 @@
     });
 
     $('#save').click(function() {
+        let category = $('input[type=radio][name=category]:checked').val()
         let data = table.rows().data();
         var total = 0;
         $.each(data, function(i, v) {
@@ -561,7 +559,7 @@
         if ($('#name_cart').val() == '') {
             $('#name_cart').addClass('is-invalid');
             $('#name_cart').focus()
-        } else if ($('#select_category').val() == 'dine in' && $('#select_table').val() == null) {
+        } else if (category == 'dine in' && $('#select_table').val() == null) {
             $('#name_cart').removeClass('is-invalid');
             swal(
                 'Failed!',
@@ -596,7 +594,7 @@
                             data: {
                                 name: $('#name_cart').val(),
                                 table: $('#select_table').val(),
-                                category: $('#select_category').val(),
+                                category: category,
                                 bill: $('#bill').val(),
                             },
                             beforeSend: function() {
@@ -612,7 +610,7 @@
                                     $('#bill').val(0)
                                     $('#name_cart').val('')
                                     $('#select_table').val('').change()
-                                    $('#select_category').val('dine in').change()
+                                    $("#dine_in").prop('checked', true).change();
                                     tbltrx.ajax.reload();
                                     swal(
                                         'Success!',
