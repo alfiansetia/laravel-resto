@@ -1,7 +1,9 @@
 @extends('layouts.template')
 
-@push('modal')
-
+@push('csslib')
+<link rel="stylesheet" href="{{ asset('library/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('library/datatables.net-select-bs4/css/select.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
 @endpush
 
 @section('content')
@@ -121,15 +123,41 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-5">
             <div class="card gradient-bottom">
                 <div class="card-header">
                     <h4>Menu Stock Limit</h4>
+                    <div class="card-header-action">
+                        <a href="{{ route('menu.index') }}" class="btn btn-danger">View More <i class="fas fa-chevron-right"></i></a>
+                    </div>
                 </div>
                 <div class="card-body" id="top-4-scroll">
                     <ul class="list-unstyled list-unstyled-border" id="lost">
                         Loading...
                     </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="card card-danger">
+                <div class="card-header">
+                    <h4>Last 5 Order</h4>
+                    <div class="card-header-action">
+                        <a href="{{ route('order.index') }}" class="btn btn-danger">View More <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tabletrx" style="width: 100%;">
+                            <tr>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,6 +167,10 @@
 @endsection
 
 @push('jslib')
+<script src="{{ asset('library/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('library/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('library/datatables.net-select-bs4/js/select.bootstrap4.min.js') }}"></script>
+
 <script src="{{ asset('library/chart.js/dist/Chart.min.js') }}"></script>
 @endpush
 
@@ -155,6 +187,76 @@
             height: 450
         }).niceScroll();
     }
+
+
+    var tbltrx = $("#tabletrx").DataTable({
+        processing: true,
+        serverSide: true,
+        rowId: 'id',
+        ajax: {
+            url: "{{ route('order.lastfive') }}",
+            error: function(xhr, error, code) {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
+        },
+        dom: 'lrt',
+        scrollY: '255px',
+        scrollCollapse: true,
+        scrollX: true,
+        scroller: true,
+        lengthChange: false,
+        paging: false,
+        searching: true,
+        columnDefs: [],
+        info: false,
+        order: [
+            [0, 'desc']
+        ],
+        columns: [{
+            title: "ID",
+            data: 'number',
+        }, {
+            title: "Date",
+            data: 'date',
+        }, {
+            title: "Customer",
+            data: 'name',
+        }, {
+            title: "Category",
+            data: 'category',
+        }, {
+            title: "Action",
+            data: 'id',
+            orderable: false,
+            render: function(data, type, row, meta) {
+                let text = `<div class="btn-group mb-3" role="group" aria-label="Basic example">
+                      <button type="button" id="btn_print" class="btn btn-primary" data-toggle="tooltip" title="Print"><i class="fas fa-print"></i></button>
+                      <button type="button" id="btn_pdf" class="btn btn-danger" data-toggle="tooltip" title="Download PDF"><i class="fas fa-file-pdf"></i></button>
+                    </div>`;
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
+        }]
+    });
+
+    $('#tabletrx').on('click', '#btn_print', function() {
+        let row = $(this).parents('tr')[0];
+        data = tbltrx.row(row).data()
+        win = window.open(`{{ url('order/${data.number}/print?type=small') }}`, 'blank');
+    });
+
+    $('#tabletrx').on('click', '#btn_pdf', function() {
+        let row = $(this).parents('tr')[0];
+        data = tbltrx.row(row).data()
+        win = window.open(`{{ url('order/${data.number}/print?type=pdf') }}`, 'blank');
+    });
 
     var statistics_chart = document.getElementById("myChart").getContext('2d');
 
@@ -252,6 +354,7 @@
     setInterval(function() {
         getData()
         getReport()
+        tbltrx.ajax.reload()
     }, 10000)
 
     function getData() {
