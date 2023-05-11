@@ -17,7 +17,17 @@
         <div class="col-lg-6">
             <div class="card card-danger">
                 <div class="card-header">
-                    <h4>Menu</h4>
+                    <h4>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="all" name="stock" class="custom-control-input" value="all" checked>
+                            <label class="custom-control-label" for="all">all</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="available" name="stock" class="custom-control-input" value="available">
+                            <label class="custom-control-label" for="available">available</label>
+                        </div>
+                    </h4>
+
                     <div class="card-header-action">
                         <div class="btn-group">
                             <button type="button" id="add_to_cart" class="btn btn-primary">Menu</button>
@@ -220,7 +230,18 @@
     <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titleEdit"><i class="fas fa-list mr-1" data-toggle="tooltip" title="List Table"></i>List Table</h5>
+                <h5 class="modal-title">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="table_all" name="status" class="custom-control-input" value="all" checked>
+                        <label class="custom-control-label" for="table_all">all</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="table_available" name="status" class="custom-control-input" value="available">
+                        <label class="custom-control-label" for="table_available">available</label>
+                    </div>
+                </h5>
+
+                <!-- <h5 class="modal-title" id="titleEdit"><i class="fas fa-list mr-1" data-toggle="tooltip" title="List Table"></i>List Table</h5> -->
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -267,34 +288,37 @@
 <script>
     $(document).ready(function() {
 
-        // $("#catmenu").select2({
-        //     placeholder: "Select a Category",
-        //     ajax: {
-        //         delay: 1000,
-        //         url: "{{ route('catmenu.index') }}",
-        //         data: function(params) {
-        //             return {
-        //                 name: params.term,
-        //                 page: params.page
-        //             };
-        //         },
-        //         processResults: function(data) {
-        //             return {
-        //                 results: $.map(data.data, function(item) {
-        //                     return {
-        //                         text: item.name,
-        //                         id: item.id,
-        //                     }
-        //                 })
-        //             };
-        //         },
-        //     }
-        // });
+    });
 
+    $('#name_cart').val('Umum')
 
-        datatbl = $('#data_table')
-        pg1 = $('#pagination_table').pagination({
-            dataSource: "{{ route('table.paginate') }}",
+    datatbl = $('#data_table')
+    var pg1 = pgn_table()
+
+    $('#list_table').click(function() {
+        pg1.pagination(1)
+        $('#modalEdit').modal('show');
+    })
+
+    dataContainer = $('#data')
+    var pg = pgn_menu()
+
+    $('input[type=radio][name=stock]').change(function() {
+        pg.pagination('destroy');
+        pg = pgn_menu()
+        pg.pagination(1);
+    });
+
+    $('input[type=radio][name=status]').change(function() {
+        pg1.pagination('destroy');
+        pg1 = pgn_table()
+        pg1.pagination(1);
+    });
+
+    function pgn_table() {
+        let status = $('input[type=radio][name=status]:checked').val()
+        let object = $('#pagination_table').pagination({
+            dataSource: "{{ route('table.paginate') }}" + (status == 'available' ? '?status=available' : ''),
             locator: 'data',
             alias: {
                 pageNumber: 'page',
@@ -327,27 +351,25 @@
                 }
             }
         })
+        return object
+    }
 
-        function show_data_table(data) {
-            let text = '';
-            for (let i = 0; i < data.length; i++) {
-                text += `<div class="col-xl-2 col-lg-2 col-md-3 col-4 mb-2 ">
+    function show_data_table(data) {
+        let text = '';
+        for (let i = 0; i < data.length; i++) {
+            text += `<div class="col-xl-2 col-lg-2 col-md-3 col-4 mb-2 ">
                             <button onclick="selected_table(${data[i].id},'${data[i].number}', '${data[i].status}')" data-toggle="tooltip" title="${data[i].status}" ${data[i].status == 'free' ? '' : 'disabled'} class="btn btn-lg btn-outline-${data[i].status == 'free' ? 'success' : data[i].status == 'booked'? 'warning' : 'danger'} m-0 btn-menu btn-block">
                                 <b style="font-size:10pt;white-space: nowrap;text-align:center;" class="text-primary">${data[i].number}</b>
                             </button>
                         </div>`
-            }
-            $('#data_table').html(text);
         }
+        $('#data_table').html(text);
+    }
 
-        $('#list_table').click(function() {
-            $('#modalEdit').modal('show');
-            pg1.pagination(1)
-        })
-
-        dataContainer = $('#data')
-        pg = $('#pagination').pagination({
-            dataSource: "{{ route('menu.paginate') }}",
+    function pgn_menu() {
+        let stock = $('input[type=radio][name=stock]:checked').val()
+        let object = $('#pagination').pagination({
+            dataSource: "{{ route('menu.paginate') }}" + (stock == 'available' ? '?stock=available' : ''),
             locator: 'data',
             alias: {
                 pageNumber: 'page',
@@ -378,13 +400,16 @@
                 } else {
                     dataContainer.html(`<div class="col-12 text-center">Menu tidak tersedia</div>`);
                 }
+
             }
         })
+        return object
+    }
 
-        function show_data(data) {
-            let text = '';
-            for (let i = 0; i < data.length; i++) {
-                text += `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
+    function show_data(data) {
+        let text = '';
+        for (let i = 0; i < data.length; i++) {
+            text += `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
                             <button onclick="add_menu('${data[i].name}', ${data[i].id}, 1)" ${data[i].stock > 0 ? '' : 'disabled'} class="btn btn-outline-${data[i].stock > 0 ? 'secondary' : 'danger'} btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="5" fdprocessedid="ma35zh">
                                 <img src="{{ url('images/menu/') }}/${data[i].img != null ? data[i].img : 'default.png' }" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
                                 <br>
@@ -393,11 +418,9 @@
                                 <b style="font-size:10pt;" class="text-success">Rp ${hrg(data[i].price)} ${data[i].disc > 0 ? (data[i].disc + '%') : ''}</b>
                             </button>
                         </div>`
-            }
-            $('#data').html(text);
         }
-    });
-
+        $('#data').html(text);
+    }
 
     function selected_table(id, number, status) {
         if (status == 'free') {
@@ -453,6 +476,7 @@
                 },
             },
         });
+
         $('#name_cart').focus()
 
         $('input[type=radio][name=category]').change(function() {
@@ -608,7 +632,7 @@
                                 $('#save').prop('disabled', false);
                                 if (res.status == true) {
                                     $('#bill').val(0)
-                                    $('#name_cart').val('')
+                                    $('#name_cart').val('Umum')
                                     $('#select_table').val('').change()
                                     $("#dine_in").prop('checked', true).change();
                                     tbltrx.ajax.reload();

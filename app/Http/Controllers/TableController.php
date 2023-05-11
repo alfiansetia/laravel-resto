@@ -41,7 +41,11 @@ class TableController extends Controller
             if ($request->has('pageSize') && $request->pageSize != '') {
                 $number = $request->pageSize;
             }
-            $data = Table::orderBy('number', 'ASC')->paginate($number);
+            if ($request->has('status') && $request->status == 'available') {
+                $data = Table::where('status', 'free')->orderBy('number', 'ASC')->paginate($number);
+            } else {
+                $data = Table::orderBy('number', 'ASC')->paginate($number);
+            }
             return response()->json($data);
         } else {
             abort(404);

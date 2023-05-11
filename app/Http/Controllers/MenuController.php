@@ -48,7 +48,11 @@ class MenuController extends Controller
             // if ($request->has('category') && $request->category != '') {
             //     $data = Menu::where('catmenu_id', $request->category)->with('catmenu')->paginate($number);
             // } else {
-            $data = Menu::with('catmenu')->paginate($number);
+            if ($request->has('stock') && $request->stock == 'available') {
+                $data = Menu::where('stock', '>', 0)->with('catmenu')->paginate($number);
+            } else {
+                $data = Menu::with('catmenu')->paginate($number);
+            }
             // }
 
             return response()->json($data);

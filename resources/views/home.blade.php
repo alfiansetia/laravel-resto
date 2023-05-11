@@ -150,10 +150,10 @@
                     <div class="table-responsive">
                         <table class="table table-hover" id="tabletrx" style="width: 100%;">
                             <tr>
+                                <th>ID</th>
                                 <th>Date</th>
                                 <th>Customer</th>
                                 <th>Category</th>
-                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </table>
