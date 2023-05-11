@@ -44,6 +44,8 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
+    Route::get('/report/getdata', [ReportController::class, 'getData'])->name('report.getdata');
+    Route::get('/report/perdate', [ReportController::class, 'perDate'])->name('report.perdate');
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/home/getdata', [HomeController::class, 'getData'])->name('home.getdata');

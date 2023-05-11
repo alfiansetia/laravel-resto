@@ -75,7 +75,7 @@ class HomeController extends Controller
                     ->first();
                 $data[] = [
                     'date' => $date->format('Y-m-d'),
-                    'total' => $result ? $result->total : 0,
+                    'total' => ($result ? $result->total : 0) ?? 0,
                 ];
             }
             return response()->json(['status' => true, 'data' => $data, 'message' => '']);
