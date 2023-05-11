@@ -125,10 +125,10 @@
                     <li class="nav-item {{ $title == 'Cancel Order' ? 'active' : '' }}"><a class="nav-link" href="{{ route('order.index') }}">Cancel Order</a></li>
                 </ul>
             </li>
-            <li class="nav-item dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i class="far fa-clone"></i><span>Report</span></a>
+            <li class="nav-item dropdown {{ $title == 'Report' ? 'active' : '' }}">
+                <a href="javascript:void(0);" data-toggle="dropdown" class="nav-link has-dropdown"><i class="far fa-clone"></i><span>Report</span></a>
                 <ul class="dropdown-menu">
-                    <li class="nav-item"><a href="#" class="nav-link">Sales</a></li>
+                    <li class="nav-item {{ $title == 'Report' ? 'active' : '' }}"><a href="{{ route('report.index') }}" class="nav-link">Sales</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Sales</a></li>
                     <li class="nav-item dropdown"><a href="#" class="nav-link has-dropdown">Hover Me</a>
                         <ul class="dropdown-menu">

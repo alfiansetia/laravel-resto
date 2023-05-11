@@ -6,6 +6,7 @@ use App\Http\Controllers\CompController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReqstockController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UserController;
@@ -41,6 +42,9 @@ Route::get('/', function () {
 });
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
+
+    Route::get('/report', [ReportController::class, 'index'])->name('report.index');
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/home/getdata', [HomeController::class, 'getData'])->name('home.getdata');
     Route::get('/home/report', [HomeController::class, 'report'])->name('home.report');
