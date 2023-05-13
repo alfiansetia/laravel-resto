@@ -150,7 +150,7 @@
                 <td colspan="2">Date : <span>{{ date('d-m-Y H:i:s', strtotime($order->date)) }}</span></td>
             </tr>
             <tr>
-                <td colspan="2">Cust : {{ $order->name }}<span>4</span></td>
+                <td colspan="2">Cust : {{ $order->name }}</td>
             </tr>
         </tbody>
     </table>

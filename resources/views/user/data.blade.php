@@ -19,24 +19,22 @@
                     <h4>{{ $title }}</h4>
                 </div>
                 <div class="card-body pt-0">
-                    <div class="table-responsive">
-                        <form action="" id="formSelected">
-                            <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
-                                <thead>
-                                    <tr>
-                                        <th class="dt-no-sorting" style="width: 30px;">Id</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>WA</th>
-                                        <th>Role</th>
-                                        <th>Address</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
+                    <form action="" id="formSelected">
+                        <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
+                            <thead>
+                                <tr>
+                                    <th class="dt-no-sorting" style="width: 30px;">Id</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>WA</th>
+                                    <th>Role</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
             </div>
         </div>

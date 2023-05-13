@@ -245,7 +245,6 @@
                         <label class="custom-control-label" for="table_available">available</label>
                     </div>
                 </h5>
-
                 <!-- <h5 class="modal-title" id="titleEdit"><i class="fas fa-list mr-1" data-toggle="tooltip" title="List Table"></i>List Table</h5> -->
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close">
                     <span aria-hidden="true">&times;</span>
@@ -297,45 +296,14 @@
         $('#select_category').selectric({
             disableOnMobile: false,
             nativeOnMobile: false,
-            // onOpen: function() {
-            //     $.get("{{ route('catmenu.index') }}").done(function(response) {
-            //         console.log(response)
-            //         for (let i = 0; i < response.data.length; i++) {
-            //             $('#select_category').append(`<option value="${response.data[i].id}">${response.data[i].name}</option>`)
-            //         }
-            //     })
-            // },
             onChange: function() {
                 console.log($('#select_category').val())
                 pg.pagination('destroy');
                 pg = pgn_menu()
                 pg.pagination(1)
             },
-            // onClose: function() {
-            //     console.log('Close');
-            // }
         })
-
         getCatmenu()
-
-
-        // $('#select_category')
-        //     .on('selectric-before-open', function() {
-        //         $.get("{{ route('catmenu.index') }}").done(function(response) {
-        //             console.log(response)
-        //             for (let i = 0; i < response.data.length; i++) {
-        //                 $('#select_category').append(`<option value="${response.data[i].id}">${response.data[i].name}</option>`)
-        //             }
-        //             $('#select_category').selectric('refresh');
-        //         })
-        //     })
-        // .on('selectric-before-close', function() {
-        //     alert('Before close');
-        // })
-        // // You can bind to change event on original element
-        // .on('change', function() {
-        //     alert('Change');
-        // });
     });
 
     function getCatmenu() {
@@ -514,7 +482,7 @@
             placeholder: "Select a Table",
             ajax: {
                 delay: 1000,
-                url: "{{ route('table.index') }}",
+                url: "{{ route('table.index') }}?status=available",
                 data: function(params) {
                     return {
                         number: params.term,

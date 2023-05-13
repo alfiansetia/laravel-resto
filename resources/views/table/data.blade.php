@@ -27,6 +27,16 @@
                     </div>
                 </div>
                 <div class="card-body pt-0" id="data_list">
+                    <div class="m-2">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="table_all" name="status" class="custom-control-input" value="all" checked>
+                            <label class="custom-control-label" for="table_all">all</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="table_available" name="status" class="custom-control-input" value="available">
+                            <label class="custom-control-label" for="table_available">available</label>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <div id="data" class="row data-container">
                             <div class="col-1 mb-3">
@@ -43,7 +53,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card-body pt-0" id="data_table">
                     <div class="table-responsive">
                         <form action="" id="formSelected">
@@ -196,41 +205,7 @@
 
         dataContainer = $('#data')
 
-        pg = $('#pagination').pagination({
-            dataSource: "{{ route('table.paginate') }}",
-            alias: {
-                pageNumber: 'page',
-            },
-            locator: 'data',
-            totalNumberLocator: function(response) {
-                return response.total
-            },
-            showPageNumbers: true,
-            showSizeChanger: true,
-            ajax: {
-                beforeSend: function() {
-                    dataContainer.html(`<div class="col-12 text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>`);
-                }
-            },
-            pageSize: 30,
-            formatAjaxError: function(jqXHR, textStatus, errorThrown) {
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
-            },
-            callback: function(data, pagination) {
-
-                let page = pagination.pageNumber
-                let total = data.length;
-                if (total > 0) {
-                    show_data(data);
-                } else {
-                    dataContainer.html(`<div class="col-12 text-center">Table tidak tersedia</div>`);
-                }
-            }
-        })
+        pg = pgn_table()
 
         $('#btn_list').click(function() {
             navigasi('list');
@@ -239,6 +214,54 @@
         $('#btn_table').click(function() {
             navigasi('table');
         })
+
+        $('input[type=radio][name=status]').change(function() {
+            pg.pagination('destroy');
+            pg = pgn_table()
+            pg.pagination(1);
+        });
+
+        function pgn_table() {
+            let status = $('input[type=radio][name=status]:checked').val()
+            let object = $('#pagination').pagination({
+                dataSource: "{{ route('table.paginate') }}" + (status == 'available' ? '?status=available' : ''),
+                alias: {
+                    pageNumber: 'page',
+                },
+                locator: 'data',
+                totalNumberLocator: function(response) {
+                    return response.total
+                },
+                showPageNumbers: true,
+                showSizeChanger: true,
+                ajax: {
+                    beforeSend: function() {
+                        dataContainer.html(`<div class="col-12 text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>`);
+                    }
+                },
+                pageSize: 30,
+                formatAjaxError: function(jqXHR, textStatus, errorThrown) {
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                },
+                callback: function(data, pagination) {
+
+                    let page = pagination.pageNumber
+                    let total = data.length;
+                    if (total > 0) {
+                        show_data(data);
+                    } else {
+                        dataContainer.html(`<div class="col-12 text-center">Table tidak tersedia</div>`);
+                    }
+                }
+            })
+
+            return object
+
+        }
 
         function navigasi(active) {
             if (active == 'list') {
@@ -258,7 +281,7 @@
             let text = '';
             for (let i = 0; i < data.length; i++) {
                 text += `<div class="col-xl-2 col-lg-2 col-md-3 col-4 mb-2 ">
-                            <button onclick="get_data(${data[i].id}, false)"; data-toggle="tooltip" title="${data[i].status}" ${data[i].status == 'free' ? '' : 'disabled'} class="btn btn-lg btn-outline-${data[i].status == 'free' ? 'success' : data[i].status == 'booked'? 'warning' : 'danger'} m-0 btn-menu btn-block">
+                            <button onclick="get_data(${data[i].id}, false)"; data-toggle="tooltip" title="${data[i].status}"} class="btn btn-lg btn-outline-${data[i].status == 'free' ? 'success' : data[i].status == 'booked'? 'warning' : 'danger'} m-0 btn-menu btn-block">
                                 <b style="font-size:10pt;white-space: nowrap;text-align:center;" class="text-primary">${data[i].number}</b>
                             </button>
                         </div>`
@@ -318,6 +341,7 @@
             title: "Status",
             data: 'status',
             render: function(data, type, row, meta) {
+                let text = ''
                 if (data == 'free') {
                     text = `<span class="badge badge-success">${data}</span>`;
                 } else if (data == 'nonactive') {

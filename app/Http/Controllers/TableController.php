@@ -25,11 +25,15 @@ class TableController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Table::orderBy('number', 'ASC');
+            $data = Table::query();
             if ($request->number) {
-                $data = Table::where('number', 'like', "%{$request->number}%")->orderBy('number', 'ASC')->get();
+                $data->where('number', 'like', "%{$request->number}%");
             }
-            return DataTables::of($data)->toJson();
+            if ($request->has('status') && $request->status != '') {
+                $data->where('status', 'free');
+            }
+            $result = $data->orderBy('number', 'ASC');
+            return DataTables::of($result)->toJson();
         }
         return view('table.data')->with(['comp' => $this->comp, 'title' => 'Data Table']);
     }
@@ -41,12 +45,13 @@ class TableController extends Controller
             if ($request->has('pageSize') && $request->pageSize != '') {
                 $number = $request->pageSize;
             }
+            $data = Table::query();
+
             if ($request->has('status') && $request->status == 'available') {
-                $data = Table::where('status', 'free')->orderBy('number', 'ASC')->paginate($number);
-            } else {
-                $data = Table::orderBy('number', 'ASC')->paginate($number);
+                $data->where('status', 'free');
             }
-            return response()->json($data);
+            $result = $data->orderBy('number', 'ASC')->paginate($number);
+            return response()->json($result);
         } else {
             abort(404);
         }

@@ -19,26 +19,25 @@
                     <h4>{{ $title }}</h4>
                 </div>
                 <div class="card-body pt-0">
-                    <div class="table-responsive">
-                        <form action="" id="formSelected">
-                            <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
-                                <thead>
-                                    <tr>
-                                        <th class="dt-no-sorting" style="width: 30px;">Id</th>
-                                        <th>Kasir</th>
-                                        <th>Number</th>
-                                        <th>Date</th>
-                                        <th>Customer</th>
-                                        <th>Category</th>
-                                        <th>Status</th>
-                                        <th class="dt-no-sorting">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
+                    <form action="" id="formSelected">
+                        <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
+                            <thead>
+                                <tr>
+                                    <th class="dt-no-sorting" style="width: 30px;">Id</th>
+                                    <th>Kasir</th>
+                                    <th>Number</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Category</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th class="dt-no-sorting">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
             </div>
         </div>
@@ -243,6 +242,12 @@
         }, {
             title: "Category",
             data: 'category',
+        }, {
+            title: "Total",
+            data: 'total',
+            render: function(data, type, row, meta) {
+                return type == 'display' ? hrg(data) : data
+            }
         }, {
             title: "Status",
             data: 'status',
