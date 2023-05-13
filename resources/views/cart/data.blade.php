@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ asset('library/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('library/datatables.net-select-bs4/css/select.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('library/selectric/public/selectric.css') }}">
 
 <link rel="stylesheet" href="{{ asset('plugins/pagination/pagination.css') }}">
 @endpush
@@ -27,7 +28,6 @@
                             <label class="custom-control-label" for="available">available</label>
                         </div>
                     </h4>
-
                     <div class="card-header-action">
                         <div class="btn-group">
                             <button type="button" id="add_to_cart" class="btn btn-primary">Menu</button>
@@ -36,6 +36,11 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
+                    <div class="m-2">
+                        <select name="" id="select_category" class="form-control">
+                            <option value="">All</option>
+                        </select>
+                    </div>
                     <div class="table-responsive-1 w-100">
                         <div id="data" class="row data-container">
                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
@@ -274,6 +279,7 @@
 <script src="{{ asset('library/datatables/media/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('library/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('library/datatables.net-select-bs4/js/select.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
 
 <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
 
@@ -282,13 +288,65 @@
 
 <script src="{{ asset('plugins/pagination/pagination.min.js') }}"></script>
 
+
 @endpush
 
 @push('js')
 <script>
     $(document).ready(function() {
+        $('#select_category').selectric({
+            disableOnMobile: false,
+            nativeOnMobile: false,
+            // onOpen: function() {
+            //     $.get("{{ route('catmenu.index') }}").done(function(response) {
+            //         console.log(response)
+            //         for (let i = 0; i < response.data.length; i++) {
+            //             $('#select_category').append(`<option value="${response.data[i].id}">${response.data[i].name}</option>`)
+            //         }
+            //     })
+            // },
+            onChange: function() {
+                console.log($('#select_category').val())
+                pg.pagination('destroy');
+                pg = pgn_menu()
+                pg.pagination(1)
+            },
+            // onClose: function() {
+            //     console.log('Close');
+            // }
+        })
 
+        getCatmenu()
+
+
+        // $('#select_category')
+        //     .on('selectric-before-open', function() {
+        //         $.get("{{ route('catmenu.index') }}").done(function(response) {
+        //             console.log(response)
+        //             for (let i = 0; i < response.data.length; i++) {
+        //                 $('#select_category').append(`<option value="${response.data[i].id}">${response.data[i].name}</option>`)
+        //             }
+        //             $('#select_category').selectric('refresh');
+        //         })
+        //     })
+        // .on('selectric-before-close', function() {
+        //     alert('Before close');
+        // })
+        // // You can bind to change event on original element
+        // .on('change', function() {
+        //     alert('Change');
+        // });
     });
+
+    function getCatmenu() {
+        $.get("{{ route('catmenu.index') }}").done(function(response) {
+            console.log(response)
+            for (let i = 0; i < response.data.length; i++) {
+                $('#select_category').append(`<option value="${response.data[i].id}">${response.data[i].name}</option>`)
+            }
+            $('#select_category').selectric('refresh');
+        })
+    }
 
     $('#name_cart').val('Umum')
 
@@ -369,7 +427,7 @@
     function pgn_menu() {
         let stock = $('input[type=radio][name=stock]:checked').val()
         let object = $('#pagination').pagination({
-            dataSource: "{{ route('menu.paginate') }}" + (stock == 'available' ? '?stock=available' : ''),
+            dataSource: "{{ route('menu.paginate') }}?category=" + $('#select_category').val() + "&" + (stock == 'available' ? 'stock=available' : ''),
             locator: 'data',
             alias: {
                 pageNumber: 'page',
@@ -411,9 +469,9 @@
         for (let i = 0; i < data.length; i++) {
             text += `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
                             <button onclick="add_menu('${data[i].name}', ${data[i].id}, 1)" ${data[i].stock > 0 ? '' : 'disabled'} class="btn btn-outline-${data[i].stock > 0 ? 'secondary' : 'danger'} btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="5" fdprocessedid="ma35zh">
-                                <img src="{{ url('images/menu/') }}/${data[i].img != null ? data[i].img : 'default.png' }" class="img-fluid w-100 mb-2" style="height:140px;object-fit: cover;">
+                                <img src="{{ url('images/menu/') }}/${data[i].img != null ? data[i].img : 'default.png' }" class="img-fluid w-100 mb-2" style="height:100px;object-fit: cover;">
                                 <br>
-                                <b style="font-size:10pt;" class="text-primary">${data[i].catmenu_id != '' ? ('['+data[i].catmenu.name+ '] ') : ''}${data[i].name}</b>
+                                <b class="text-primary">${data[i].catmenu_id != '' ? ('['+data[i].catmenu.name+ '] ') : ''}${data[i].name}</b>
                                 <br>
                                 <b style="font-size:10pt;" class="text-success">Rp ${hrg(data[i].price)} ${data[i].disc > 0 ? (data[i].disc + '%') : ''}</b>
                             </button>

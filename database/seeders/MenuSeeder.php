@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Catmenu;
 use App\Models\Menu;
 use App\Models\Menulog;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class MenuSeeder extends Seeder
@@ -16,101 +16,51 @@ class MenuSeeder extends Seeder
      */
     public function run()
     {
-        //
-        $a = Menu::create([
-            'name'          => 'Ayam Goreng Iga Mekkah',
-            'catmenu_id'    => 1,
-            'price'         => 16000,
-            'stock'         => 10,
-            'desc'          => '',
-        ]);
-        Menulog::create([
-            'menu_id'   => $a->id,
-            'user_id'   => 1,
-            'date'      => date("Y-m-d H:i:s"),
-            'message'   => 'Product created',
-        ]);
+        $menus = [
+            ['name' => 'Nasi Goreng', 'category' => 'Makanan', 'price' => 20000],
+            ['name' => 'Mie Goreng', 'category' => 'Makanan', 'price' => 18000],
+            ['name' => 'Nasi Padang', 'category' => 'Makanan', 'price' => 25000],
+            ['name' => 'Bakso', 'category' => 'Makanan', 'price' => 15000],
+            ['name' => 'Mie Ayam', 'category' => 'Makanan', 'price' => 12000],
+            ['name' => 'Sate Ayam', 'category' => 'Makanan', 'price' => 25000],
+            ['name' => 'Es Teh', 'category' => 'Minuman', 'price' => 5000],
+            ['name' => 'Es Jeruk', 'category' => 'Minuman', 'price' => 7000],
+            ['name' => 'Kopi', 'category' => 'Minuman', 'price' => 8000],
+            ['name' => 'Teh', 'category' => 'Minuman', 'price' => 5000],
+            ['name' => 'Jus Alpukat', 'category' => 'Minuman', 'price' => 12000],
+            ['name' => 'Jus Mangga', 'category' => 'Minuman', 'price' => 10000],
+            ['name' => 'Brownies', 'category' => 'Other', 'price' => 15000],
+            ['name' => 'Pudding', 'category' => 'Other', 'price' => 10000],
+            ['name' => 'Salad Buah', 'category' => 'Other', 'price' => 18000],
+            ['name' => 'Roti Bakar', 'category' => 'Other', 'price' => 12000],
+            ['name' => 'Martabak', 'category' => 'Other', 'price' => 25000],
+            ['name' => 'Pizza', 'category' => 'Other', 'price' => 30000],
+            ['name' => 'Pancake', 'category' => 'Other', 'price' => 12000],
+            ['name' => 'Susu Kedelai', 'category' => 'Minuman', 'price' => 9000],
+            ['name' => 'Sate Kambing', 'category' => 'Makanan', 'price' => 35000],
+            ['name' => 'Soto Ayam', 'category' => 'Makanan', 'price' => 18000],
+            ['name' => 'Nasi Uduk', 'category' => 'Makanan', 'price' => 20000],
+            ['name' => 'Gado-Gado', 'category' => 'Makanan', 'price' => 22000],
+            ['name' => 'Pecel', 'category' => 'Makanan', 'price' => 18000],
+            ['name' => 'Kerupuk Udang', 'category' => 'Other', 'price' => 8000],
+            ['name' => 'Rendang', 'category' => 'Makanan', 'price' => 35000],
+        ];
 
-        $b = Menu::create([
-            'name'          => 'Ayam Bakar Syafaat Ummat',
-            'catmenu_id'    => 1,
-            'price'         => 16000,
-            'stock'         => 10,
-            'desc'          => '',
-        ]);
-        Menulog::create([
-            'menu_id'   => $b->id,
-            'user_id'   => 1,
-            'date'      => date("Y-m-d H:i:s"),
-            'message'   => 'Product created',
-        ]);
-
-        $c = Menu::create([
-            'name'          => 'Es Teh Jannah',
-            'catmenu_id'    => 2,
-            'price'         => 10000,
-            'stock'         => 10,
-            'desc'          => '',
-        ]);
-        Menulog::create([
-            'menu_id'   => $c->id,
-            'user_id'   => 1,
-            'date'      => date("Y-m-d H:i:s"),
-            'message'   => 'Product created',
-        ]);
-        $d = Menu::create([
-            'name'          => 'Es Jeruk Kebajikan',
-            'catmenu_id'    => 2,
-            'price'         => 10000,
-            'stock'         => 10,
-            'desc'          => '',
-        ]);
-        Menulog::create([
-            'menu_id'   => $d->id,
-            'user_id'   => 1,
-            'date'      => date("Y-m-d H:i:s"),
-            'message'   => 'Product created',
-        ]);
-        $e = Menu::create([
-            'name'          => 'Tempe Geprek',
-            'catmenu_id'    => 3,
-            'price'         => 2000,
-            'stock'         => 10,
-            'desc'          => '',
-        ]);
-        Menulog::create([
-            'menu_id'   => $e->id,
-            'user_id'   => 1,
-            'date'      => date("Y-m-d H:i:s"),
-            'message'   => 'Product created',
-        ]);
-        $f = Menu::create([
-            'name'          => 'Tahu Krispi Gurun',
-            'catmenu_id'    => 3,
-            'price'         => 2000,
-            'stock'         => 10,
-            'desc'          => '',
-        ]);
-        Menulog::create([
-            'menu_id'   => $f->id,
-            'user_id'   => 1,
-            'date'      => date("Y-m-d H:i:s"),
-            'message'   => 'Product created',
-        ]);
-
-        for ($i = 0; $i < 100; $i++) {
-            $g = Menu::create([
-                'name'          => 'Sample Menu ke ' . $i,
-                'catmenu_id'    => 3,
-                'price'         => 2000,
+        foreach ($menus as $menu) {
+            $m = Menu::create([
+                'name'          => $menu['name'],
+                'catmenu_id'    => Catmenu::firstOrCreate([
+                    'name' => $menu['category']
+                ])->id,
+                'price'         => $menu['price'],
                 'stock'         => 10,
                 'desc'          => '',
             ]);
             Menulog::create([
-                'menu_id'   => $g->id,
+                'menu_id'   => $m->id,
                 'user_id'   => 1,
                 'date'      => date("Y-m-d H:i:s"),
-                'message'   => 'Product created',
+                'message'   => 'Menu created',
             ]);
         }
     }

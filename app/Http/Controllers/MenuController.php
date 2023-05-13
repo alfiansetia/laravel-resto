@@ -45,17 +45,28 @@ class MenuController extends Controller
             if ($request->has('pageSize') && $request->pageSize != '') {
                 $number = $request->pageSize;
             }
+            $data = Menu::query()->with('catmenu');
+            // $data->with('catmenu');
+
+            if ($request->has('category') && $request->category != '') {
+                $data->where('catmenu_id', $request->category);
+            }
+            if ($request->has('stock') && $request->stock == 'available') {
+                $data->where('stock', '>', 0);
+            }
             // if ($request->has('category') && $request->category != '') {
             //     $data = Menu::where('catmenu_id', $request->category)->with('catmenu')->paginate($number);
             // } else {
-            if ($request->has('stock') && $request->stock == 'available') {
-                $data = Menu::where('stock', '>', 0)->with('catmenu')->paginate($number);
-            } else {
-                $data = Menu::with('catmenu')->paginate($number);
-            }
+            // if ($request->has('stock') && $request->stock == 'available') {
+            //     $data = Menu::where('stock', '>', 0)->orWhere('catmenu_id', 'like', "%$request->category%")->with('catmenu')->paginate($number);
+            // } else {
+            //     $data = Menu::with('catmenu')->orWhere('catmenu_id', 'like', "%$request->category%")->paginate($number);
             // }
 
-            return response()->json($data);
+            $result = $data->paginate($number);
+            // }
+
+            return response()->json($result);
         } else {
             abort(404);
         }

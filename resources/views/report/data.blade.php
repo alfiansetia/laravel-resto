@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="card card-primary">
-                <div class="card-body" style="height: 168px;">
+                <div class="card-body">
                     <h3>
                         Total Sales = Rp. <span id="total"></span>
                     </h3>
@@ -49,14 +49,14 @@
                     <h4>Report Sales</h4>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
-                            <thead>
-                                <th>Date</th>
-                                <th>Total</th>
-                            </thead>
-                        </table>
-                    </div>
+                    <!-- <div class="table-responsive"> -->
+                    <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
+                        <thead>
+                            <th>Date</th>
+                            <th>Total</th>
+                        </thead>
+                    </table>
+                    <!-- </div> -->
                 </div>
             </div>
         </div>
@@ -262,7 +262,7 @@
         } else if (angka < 20) {
             hasil = terbilangRupiah(angka - 10) + ' belas';
         } else if (angka < 100) {
-            hasil = terbilangRupiah(Math.floor(angka / 10)) + ' puluh' + terbilangRupiah(angka % 10);
+            hasil = terbilangRupiah(Math.floor(angka / 10)) + ' puluh ' + terbilangRupiah(angka % 10);
         } else if (angka < 200) {
             hasil = ' seratus ' + terbilangRupiah(angka - 100);
         } else if (angka < 1000) {

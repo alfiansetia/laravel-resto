@@ -15,15 +15,7 @@ class TableSeeder extends Seeder
      */
     public function run()
     {
-        $status = ['free', 'booked', 'nonactive'];
-        // for ($i = 1; $i < 100; $i++) {
-        //     Table::create([
-        //         'number'    => $i,
-        //         'status'    => $status[array_rand($status)],
-        //         'desc'      => '',
-        //     ]);
-        // }
-        for ($i = 1; $i <= 100; $i++) {
+        for ($i = 1; $i <= 50; $i++) {
             Table::create([
                 'number'    => $i,
                 'status'    => 'free',
