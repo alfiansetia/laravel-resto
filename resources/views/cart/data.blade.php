@@ -297,7 +297,6 @@
             disableOnMobile: false,
             nativeOnMobile: false,
             onChange: function() {
-                console.log($('#select_category').val())
                 pg.pagination('destroy');
                 pg = pgn_menu()
                 pg.pagination(1)
@@ -308,7 +307,6 @@
 
     function getCatmenu() {
         $.get("{{ route('catmenu.index') }}").done(function(response) {
-            console.log(response)
             for (let i = 0; i < response.data.length; i++) {
                 $('#select_category').append(`<option value="${response.data[i].id}">${response.data[i].name}</option>`)
             }

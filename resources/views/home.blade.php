@@ -279,6 +279,13 @@
             legend: {
                 display: false
             },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        return "Rp. " + hrg(tooltipItem.value)
+                    }
+                }
+            },
             scales: {
                 yAxes: [{
                     gridLines: {
@@ -297,15 +304,13 @@
                 }]
             },
             animation: {
-                duration: 2000, // durasi animasi dalam milidetik
-                easing: 'easeInOutQuart', // jenis easing
+                duration: 2000,
+                easing: 'easeInOutQuart',
                 onProgress: function(animation) {
-                    // tindakan yang dilakukan selama animasi sedang berjalan
-                    // contoh: menampilkan pesan loading atau spinner
+                    // 
                 },
                 onComplete: function(animation) {
-                    // tindakan yang dilakukan setelah animasi selesai
-                    // contoh: menyembunyikan pesan loading atau spinner
+                    // 
                 }
             }
         }
