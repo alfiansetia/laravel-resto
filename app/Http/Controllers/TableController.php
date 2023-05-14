@@ -32,7 +32,7 @@ class TableController extends Controller
             if ($request->has('status') && $request->status != '') {
                 $data->where('status', 'free');
             }
-            $result = $data->orderBy('number', 'ASC');
+            $result = $data->orderBy('number', 'ASC')->get();
             return DataTables::of($result)->toJson();
         }
         return view('table.data')->with(['comp' => $this->comp, 'title' => 'Data Table']);
