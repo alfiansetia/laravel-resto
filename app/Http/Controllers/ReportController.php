@@ -37,8 +37,8 @@ class ReportController extends Controller
     public function getData(Request $request)
     {
         $this->validate($request, [
-            'from' => 'required',
-            'to' => 'required',
+            'from' => 'required|date_format:Y-m-d',
+            'to' => 'required|date_format:Y-m-d',
         ]);
         $from = Carbon::parse($request->from);
         $to = Carbon::parse($request->to);
@@ -60,7 +60,7 @@ class ReportController extends Controller
     public function perDate(Request $request)
     {
         $this->validate($request, [
-            'date' => 'required',
+            'date' => 'required|date_format:Y-m-d',
         ]);
         if (!auth()->user()->hasRole('admin')) {
             $data = Order::where('user_id', auth()->user()->id)->whereDate('date', '=', Carbon::parse($request->date)->format('Y-m-d'))->get();
@@ -73,5 +73,39 @@ class ReportController extends Controller
     public function user(Request $request)
     {
         return view('report.user')->with(['title' => 'Report Kasir', 'comp' => $this->comp]);
+    }
+
+    public function data(Request $request)
+    {
+        $this->validate($request, [
+            'from' => 'required|date_format:Y-m-d',
+            'to' => 'required|date_format:Y-m-d',
+        ]);
+        $from = Carbon::parse($request->from);
+        $to = Carbon::parse($request->to)->addDay();
+
+        $data = Order::select('user_id', DB::raw('SUM(total) as total'))
+            ->groupBy('user_id')
+            ->whereBetween('date', [$from->toDateString(), $to->toDateString()])
+            ->with('user')
+            ->get();
+        return response()->json(['status' => true, 'data' => $data, 'message' => '']);
+    }
+
+    public function peruser(Request $request)
+    {
+        $this->validate($request, [
+            'user'  => 'required|integer',
+            'from'  => 'required|date_format:Y-m-d',
+            'to'    => 'required|date_format:Y-m-d',
+        ]);
+        $from = Carbon::parse($request->from);
+        $to = Carbon::parse($request->to)->addDay();
+
+        $data = Order::whereBetween('date', [$from->toDateString(), $to->toDateString()])
+            ->where('user_id', $request->user)
+            ->with('user')
+            ->get();
+        return response()->json(['status' => true, 'data' => $data, 'message' => '']);
     }
 }

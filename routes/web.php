@@ -62,6 +62,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/reqstock/{id}/change', [ReqstockController::class, 'change'])->name('reqstock.change');
 
         Route::get('/report/user', [ReportController::class, 'user'])->name('report.user');
+        Route::get('/report/user/data', [ReportController::class, 'data'])->name('report.user.data');
+        Route::get('/report/user/peruser', [ReportController::class, 'peruser'])->name('report.user.peruser');
     });
 
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');

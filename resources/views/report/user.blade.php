@@ -4,10 +4,17 @@
 <link rel="stylesheet" href="{{ asset('library/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('library/datatables.net-select-bs4/css/select.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/table/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+
 <link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
 
-
 <link rel="stylesheet" href="{{ asset('library/bootstrap-daterangepicker/daterangepicker.css') }}">
+
+<style>
+    /* .table-condensed thead tr:nth-child(2),
+    .table-condensed tbody {
+        display: none
+    } */
+</style>
 
 @endpush
 
@@ -23,7 +30,7 @@
                     <div class="form-group row">
                         <label for="range" class="col-sm-3 col-form-label">Range</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="range" placeholder="YYYY-MM-DD">
+                            <input type="text" class="form-control" id="range" placeholder="YYYY-MM" autocomplete="off">
                         </div>
                     </div>
                     <div class="card-footer text-right mt-0">
@@ -49,14 +56,12 @@
                     <h4>Report Sales</h4>
                 </div>
                 <div class="card-body p-0">
-                    <!-- <div class="table-responsive"> -->
                     <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
                         <thead>
-                            <th>Date</th>
+                            <th>Kasir</th>
                             <th>Total</th>
                         </thead>
                     </table>
-                    <!-- </div> -->
                 </div>
             </div>
         </div>
@@ -70,7 +75,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titleEdit"><i class="fas fa-info mr-1" data-toggle="tooltip" title="Detail Order"></i>Order Date : <span id="detail_date"></span></h5>
+                <h5 class="modal-title" id="titleEdit"><i class="fas fa-info mr-1" data-toggle="tooltip" title="Detail Order"></i>Kasir : <span id="detail_date"></span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -117,6 +122,7 @@
 <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
 
 <script src="{{ asset('library/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+
 @endpush
 
 @push('js')
@@ -134,19 +140,19 @@
                 days: 31
             },
             ranges: {
-                'Last 31 Days': [moment().subtract(30, 'days'), moment()],
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
                 'Last 7 Days': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+                'Last 31 Days': [moment().subtract(30, 'days'), moment()],
                 'This Month': [moment().startOf('month'), moment()],
-                'Last Month': [
-                    moment().subtract(1, 'month').startOf('month'),
-                    moment().subtract(1, 'month').endOf('month')
-                ]
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
             },
             showDropdowns: true,
             startDate: moment().startOf('month'),
             endDate: moment(),
             maxDate: moment(),
         });
+
     }
 
     var table = $('#table').DataTable({
@@ -162,8 +168,19 @@
         columnDefs: [],
         info: false,
         columns: [{
-            title: "Date",
-            data: "date",
+            title: "kasir",
+            data: "user_id",
+            render: function(data, type, row, meta) {
+                let text = ''
+                if (data != null) {
+                    text = row.user.name
+                }
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
         }, {
             title: "Total",
             data: "total",
@@ -210,22 +227,33 @@
         let data = table.row(row).data()
         $('#detail_total').text(hrg(data.total))
         $('#detail_terbilang').text(terbilangRupiah(data.total) + (data.total == 0 ? '' : ' rupiah'))
-        getOrder(data.date)
+        getOrder(data)
     })
 
     getData()
 
-    function getOrder(date) {
-        $.get(`{{ route('report.perdate') }}?date=${date}`).done(function(response) {
-            $('#detail_date').text(date)
+    function getOrder(data) {
+        let from = $('#range').data('daterangepicker').startDate.format('YYYY-MM-DD');
+        let to = $('#range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+
+        $.get(`{{ route('report.user.peruser') }}?user=${data.user_id}&from=${from}&to=${to}`).done(function(response) {
+            $('#detail_date').text(data.user_id != null ? data.user.name : '')
             $('#modalEdit').modal('show')
             table_detail.clear().rows.add(response.data).draw();
-        }).fail(function() {
-            swal(
-                'Failed!',
-                'Server Error',
-                'error'
-            )
+        }).fail(function(xhr) {
+            if (xhr.status == 403) {
+                swal(
+                    'Failed!',
+                    xhr.responseJSON.message,
+                    'error'
+                )
+            } else {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
         })
     }
 
@@ -233,7 +261,7 @@
         let from = $('#range').data('daterangepicker').startDate.format('YYYY-MM-DD');
         let to = $('#range').data('daterangepicker').endDate.format('YYYY-MM-DD');
 
-        $.get(`{{ route('report.getdata') }}?from=${from}&to=${to}`).done(function(response) {
+        $.get(`{{ route('report.user.data') }}?from=${from}&to=${to}`).done(function(response) {
             table.clear().rows.add(response.data).draw();
             let total = 0;
             for (let i = 0; i < response.data.length; i++) {
@@ -241,12 +269,20 @@
             }
             $('#total').text(hrg(total))
             $('#terbilang').text(terbilangRupiah(total) + (total == 0 ? '' : ' rupiah'))
-        }).fail(function() {
-            swal(
-                'Failed!',
-                'Server Error',
-                'error'
-            )
+        }).fail(function(xhr) {
+            if (xhr.status == 403) {
+                swal(
+                    'Failed!',
+                    xhr.responseJSON.message,
+                    'error'
+                )
+            } else {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
         })
     }
 

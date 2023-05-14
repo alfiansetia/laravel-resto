@@ -23,7 +23,7 @@
                     <div class="form-group row">
                         <label for="range" class="col-sm-3 col-form-label">Range</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="range" placeholder="YYYY-MM-DD">
+                            <input type="text" class="form-control" id="range" placeholder="YYYY-MM-DD" autocomplete="off">
                         </div>
                     </div>
                     <div class="card-footer text-right mt-0">
@@ -134,13 +134,12 @@
                 days: 31
             },
             ranges: {
-                'Last 31 Days': [moment().subtract(30, 'days'), moment()],
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
                 'Last 7 Days': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+                'Last 31 Days': [moment().subtract(30, 'days'), moment()],
                 'This Month': [moment().startOf('month'), moment()],
-                'Last Month': [
-                    moment().subtract(1, 'month').startOf('month'),
-                    moment().subtract(1, 'month').endOf('month')
-                ]
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
             },
             showDropdowns: true,
             startDate: moment().startOf('month'),
@@ -220,12 +219,20 @@
             $('#detail_date').text(date)
             $('#modalEdit').modal('show')
             table_detail.clear().rows.add(response.data).draw();
-        }).fail(function() {
-            swal(
-                'Failed!',
-                'Server Error',
-                'error'
-            )
+        }).fail(function(xhr) {
+            if (xhr.status == 403) {
+                swal(
+                    'Failed!',
+                    xhr.responseJSON.message,
+                    'error'
+                )
+            } else {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
         })
     }
 
@@ -241,12 +248,20 @@
             }
             $('#total').text(hrg(total))
             $('#terbilang').text(terbilangRupiah(total) + (total == 0 ? '' : ' rupiah'))
-        }).fail(function() {
-            swal(
-                'Failed!',
-                'Server Error',
-                'error'
-            )
+        }).fail(function(xhr) {
+            if (xhr.status == 403) {
+                swal(
+                    'Failed!',
+                    xhr.responseJSON.message,
+                    'error'
+                )
+            } else {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
         })
     }
 

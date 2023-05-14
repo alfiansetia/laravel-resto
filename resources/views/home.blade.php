@@ -347,12 +347,20 @@
                 myChart.data.labels.push(response.data[i].date)
                 myChart.update();
             }
-        }).fail(function() {
-            swal(
-                'Failed!',
-                'Server Error',
-                'error'
-            )
+        }).fail(function(xhr) {
+            if (xhr.status == 403) {
+                swal(
+                    'Failed!',
+                    xhr.responseJSON.message,
+                    'error'
+                )
+            } else {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
         })
     }
 
@@ -367,7 +375,7 @@
             $('#total_user').text(response.data.total_user)
             $('#total_menu').text(response.data.total_menu)
             $('#total_order_today').text(response.data.total_order_today)
-            $('#total_sales_today').text('Rp.' + format(response.data.total_sales_today))
+            $('#total_sales_today').text('Rp.' + hrg(response.data.total_sales_today))
             $('#top').empty()
             $('#lost').empty()
             let top = response.data.top_menu
@@ -397,18 +405,24 @@
                         </li>`
                 $('#lost').append(text)
             }
-        }).fail(function() {
-            swal(
-                'Failed!',
-                'Server Error',
-                'error'
-            )
+        }).fail(function(xhr) {
+            if (xhr.status == 403) {
+                swal(
+                    'Failed!',
+                    xhr.responseJSON.message,
+                    'error'
+                )
+            } else {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
         })
     }
 
-    function format(number) {
-        return new Intl.NumberFormat('id-ID').format(number);
-    }
+    
 </script>
 
 

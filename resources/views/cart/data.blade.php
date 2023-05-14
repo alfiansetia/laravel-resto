@@ -311,6 +311,20 @@
                 $('#select_category').append(`<option value="${response.data[i].id}">${response.data[i].name}</option>`)
             }
             $('#select_category').selectric('refresh');
+        }).fail(function(xhr) {
+            if (xhr.status == 403) {
+                swal(
+                    'Failed!',
+                    xhr.responseJSON.message,
+                    'error'
+                )
+            } else {
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
         })
     }
 

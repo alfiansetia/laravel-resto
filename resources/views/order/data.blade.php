@@ -222,7 +222,7 @@
             render: function(data, type, row, meta) {
                 let text = ''
                 if (data != null) {
-                    text = row.user.email
+                    text = row.user.name
                 }
                 if (type == 'display') {
                     return text

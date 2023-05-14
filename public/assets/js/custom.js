@@ -65,5 +65,14 @@ function checkall(clickchk, relChkbox) {
 
 function hrg(x) {
     let a = parseInt(x)
-    return a.toLocaleString('en-US')
+    return new Intl.NumberFormat('id-ID').format(a);
 }
+
+function format(number) {
+    return new Intl.NumberFormat('id-ID').format(number);
+}
+
+// function hrg(x) {
+//     let a = parseInt(x)
+//     return a.toLocaleString('id-ID')
+// }
