@@ -37,16 +37,10 @@ class UserSeeder extends Seeder
         ]);
         $kasir->assignRole('kasir');
 
-        $all = User::factory(100)->create();
+        // $all = User::factory(5)->create();
 
-        foreach ($all as $a) {
-            $a->assignRole('kasir');
-        }
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
+        // foreach ($all as $a) {
+        //     $a->assignRole('kasir');
+        // }
     }
 }

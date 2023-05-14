@@ -43,14 +43,19 @@ class HomeController extends Controller
         if ($request->ajax()) {
             $data['total_user'] = User::count();
             $data['total_menu'] = Menu::count();
-            $data['total_order_today'] = Order::whereDate('date', Carbon::today())->count();
-            $data['total_sales_today'] = Order::whereDate('date', Carbon::today())->sum('total');
-            $data['lost_menu'] = Menu::orderBy('stock')->limit(5)->get();
+            if (!auth()->user()->hasRole('admin')) {
+                $data['total_order_today'] = Order::where('user_id', auth()->user()->id)->whereDate('date', Carbon::today())->count();
+                $data['total_sales_today'] = Order::where('user_id', auth()->user()->id)->whereDate('date', Carbon::today())->sum('total');
+            } else {
+                $data['total_order_today'] = Order::whereDate('date', Carbon::today())->count();
+                $data['total_sales_today'] = Order::whereDate('date', Carbon::today())->sum('total');
+            }
+            $data['lost_menu'] = Menu::orderBy('stock')->limit(10)->get();
             $data['top_menu'] = Dtorder::select('menu.*', DB::raw('SUM(dtorder.qty) as total_sales'))
                 ->join('menu', 'dtorder.menu_id', '=', 'menu.id')
                 ->groupBy('menu.id', 'menu.name', 'menu.price', 'menu.disc', 'stock', 'img', 'menu.catmenu_id', 'menu.desc', 'menu.created_at', 'menu.updated_at')
                 ->orderByDesc('total_sales')
-                ->take(6)
+                ->take(10)
                 ->get();
             return response()->json(['status' => true, 'data' => $data, 'message' => '']);
         } else {
@@ -70,9 +75,11 @@ class HomeController extends Controller
             //     ->get();
             $data = [];
             for ($date = $startOfMonth; $date <= $endOfMonth; $date->addDay()) {
-                $result = Order::select(DB::raw('SUM(total) as total'))
-                    ->whereDate('date', $date->format('Y-m-d'))
-                    ->first();
+                if (!auth()->user()->hasRole('admin')) {
+                    $result = Order::select(DB::raw('SUM(total) as total'))->where('user_id', auth()->user()->id)->whereDate('date', $date->format('Y-m-d'))->first();
+                } else {
+                    $result = Order::select(DB::raw('SUM(total) as total'))->whereDate('date', $date->format('Y-m-d'))->first();
+                }
                 $data[] = [
                     'date' => $date->format('Y-m-d'),
                     'total' => ($result ? $result->total : 0) ?? 0,

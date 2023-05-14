@@ -31,20 +31,14 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Order::where('name', 'like', "%{$request->name}%")->with('dtorder', 'table', 'user')->get();
+            $data = Order::query();
+            if (!auth()->user()->hasRole('admin')) {
+                $data->where('user_id', auth()->user()->id);
+            }
+            $data->where('name', 'like', "%{$request->name}%")->with('dtorder', 'table', 'user')->get();
             return DataTables::of($data)->toJson();
         }
         return view('order.data')->with(['comp' => $this->comp, 'title' => 'Data Order']);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -132,17 +126,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Order $order)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Order  $order
@@ -151,40 +134,25 @@ class OrderController extends Controller
     public function edit(Request $request, Order $order)
     {
         if ($request->ajax()) {
-            $order = Order::with('dtorder.menu.catmenu', 'table', 'user')->find($order->id);
+            if (!auth()->user()->hasRole('admin')) {
+                $order = Order::where('user_id', auth()->user()->id)->with('dtorder.menu.catmenu', 'table', 'user')->find($order->id);
+            } else {
+                $order = Order::with('dtorder.menu.catmenu', 'table', 'user')->find($order->id);
+            }
             return response()->json(['status' => true, 'message' => '', 'data' => $order]);
         } else {
             abort(404);
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Order $order)
-    {
-        //
-    }
-
     public function lastfive(Request $request)
     {
         if ($request->ajax()) {
-            $data = Order::with('dtorder', 'table', 'user')->where('user_id', Auth::id())->latest()->take(5)->get();
+            if (!auth()->user()->hasRole('admin')) {
+                $data = Order::where('user_id', auth()->user()->id)->with('dtorder', 'table', 'user')->where('user_id', Auth::id())->latest()->take(5)->get();
+            } else {
+                $data = Order::with('dtorder', 'table', 'user')->where('user_id', Auth::id())->latest()->take(5)->get();
+            }
             return DataTables::of($data)->toJson();
         } else {
             abort(404);
@@ -193,7 +161,11 @@ class OrderController extends Controller
 
     public function print(Request $request, $number)
     {
-        $order = Order::whereNumber($number)->with('dtorder.menu.catmenu')->first();
+        if (!auth()->user()->hasRole('admin')) {
+            $order = Order::where('user_id', auth()->user()->id)->whereNumber($number)->with('dtorder.menu.catmenu')->first();
+        } else {
+            $order = Order::whereNumber($number)->with('dtorder.menu.catmenu')->first();
+        }
         if ($order) {
             $comp = $this->comp;
             $user = Auth::user();
@@ -214,13 +186,5 @@ class OrderController extends Controller
         } else {
             abort(404);
         }
-    }
-
-    public function tes()
-    {
-        // return $pdf->download('sample.pdf');
-        // $data = 'INV' . date('ymd') . str_pad(1 + 1, 5, "0", STR_PAD_LEFT);
-        $data = date('d-m-Y H:i:s');
-        return response()->json($data);
     }
 }

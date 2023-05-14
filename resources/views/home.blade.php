@@ -111,7 +111,7 @@
         <div class="col-lg-4">
             <div class="card gradient-bottom">
                 <div class="card-header">
-                    <h4>Top 6 Menu</h4>
+                    <h4>Top Menu</h4>
                 </div>
                 <div class="card-body" id="top-6-scroll">
                     <ul class="list-unstyled list-unstyled-border" id="top">
@@ -292,9 +292,9 @@
                         display: false,
                         drawBorder: false,
                     },
-                    ticks: {
-                        stepSize: 150
-                    }
+                    // ticks: {
+                    //     stepSize: 150
+                    // }
                 }],
                 xAxes: [{
                     gridLines: {

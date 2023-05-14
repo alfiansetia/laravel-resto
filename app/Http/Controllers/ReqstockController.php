@@ -30,20 +30,14 @@ class ReqstockController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Reqstock::where('number', 'like', "%{$request->number}%")->with('dtreqstock', 'user', 'stateby')->get();
+            if (!auth()->user()->hasRole('admin')) {
+                $data = Reqstock::where('user_id', auth()->user()->id)->where('number', 'like', "%{$request->number}%")->with('dtreqstock', 'user', 'stateby')->get();
+            } else {
+                $data = Reqstock::where('number', 'like', "%{$request->number}%")->with('dtreqstock', 'user', 'stateby')->get();
+            }
             return DataTables::of($data)->toJson();
         }
         return view('reqstock.data')->with(['comp' => $this->comp, 'title' => 'Request Stock']);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -95,17 +89,6 @@ class ReqstockController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ReqStock  $reqStock
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ReqStock $reqStock)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\ReqStock  $reqStock
@@ -114,34 +97,15 @@ class ReqstockController extends Controller
     public function edit(Request $request, Reqstock $reqstock)
     {
         if ($request->ajax()) {
-            $reqstock = Reqstock::with('dtreqstock.menu', 'user', 'stateby')->find($reqstock->id);
+            if (!auth()->user()->hasRole('admin')) {
+                $reqstock = Reqstock::where('user_id', auth()->user()->id)->with('dtreqstock.menu', 'user', 'stateby')->find($reqstock->id);
+            } else {
+                $reqstock = Reqstock::with('dtreqstock.menu', 'user', 'stateby')->find($reqstock->id);
+            }
             return response()->json(['status' => true, 'message' => '', 'data' => $reqstock]);
         } else {
             abort(404);
         }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Reqstock  $reqstock
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Reqstock $reqstock)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Reqstock  $reqstock
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Reqstock $reqstock)
-    {
-        //
     }
 
     public function change(Request $request, $id)

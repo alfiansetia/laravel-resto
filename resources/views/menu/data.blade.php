@@ -413,6 +413,12 @@
                             'Server Error',
                             'error'
                         )
+                    } else if (xhr.status == 403) {
+                        swal(
+                            'Failed!',
+                            xhr.responseJSON.message,
+                            'error'
+                        )
                     } else {
                         erlen = Object.keys(er).length
                         for (i = 0; i < erlen; i++) {
@@ -524,6 +530,12 @@
                             'Server Error',
                             'error'
                         )
+                    } else if (xhr.status == 403) {
+                        swal(
+                            'Failed!',
+                            xhr.responseJSON.message,
+                            'error'
+                        )
                     } else {
                         erlen = Object.keys(er).length
                         for (i = 0; i < erlen; i++) {
@@ -557,11 +569,20 @@
                 unblock();
                 $('button').prop('disabled', false);
                 er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
+                if (xhr.status == 403) {
+                    swal(
+                        'Failed!',
+                        xhr.responseJSON.message,
+                        'error'
+                    )
+                } else {
+
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                }
             }
         });
     }
@@ -644,11 +665,19 @@
                         error: function(xhr, status, error) {
                             unblock();
                             er = xhr.responseJSON.errors
-                            swal(
-                                'Failed!',
-                                'Server Error',
-                                'error'
-                            )
+                            if (xhr.status == 403) {
+                                swal(
+                                    'Failed!',
+                                    xhr.responseJSON.message,
+                                    'error'
+                                )
+                            } else {
+                                swal(
+                                    'Failed!',
+                                    'Server Error',
+                                    'error'
+                                )
+                            }
                         }
                     });
                 }

@@ -408,11 +408,19 @@
             error: function(xhr, status, error) {
                 unblock();
                 er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
+                if (xhr.status == 403) {
+                    swal(
+                        'Failed!',
+                        xhr.responseJSON.message,
+                        'error'
+                    )
+                } else {
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                }
             }
         });
     });
@@ -428,128 +436,6 @@
         data = table.row(row).data()
         win = window.open(`{{ url('order/${data.number}/print?type=pdf') }}`, 'blank');
     });
-
-    function changeData() {
-        if (selected()) {
-            $('#modalChange').modal('show');
-            $('#modalChange').on('shown.bs.modal', function() {
-                $('#change_status').focus();
-            })
-        }
-    }
-
-    $("#submitChange").click(function() {
-        let btn = $(this);
-        let status = $('#change_status').val();
-        let form = $("#formSelected");
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('order.change') }}",
-            data: $(form).serialize() + '&status=' + status,
-            beforeSend: function() {
-                btn.prop('disabled', true);
-                block();
-            },
-            success: function(res) {
-                btn.prop('disabled', false);
-                unblock();
-                table.ajax.reload();
-                if (res.status == true) {
-                    swal(
-                        'Changed!',
-                        res.message,
-                        'success'
-                    )
-                } else {
-                    swal(
-                        'Failed!',
-                        res.message,
-                        'error'
-                    )
-                }
-            },
-            error: function(xhr, status, error) {
-                btn.prop('disabled', false);
-                unblock();
-                er = xhr.responseJSON.errors
-                if (xhr.status == 500) {
-                    swal(
-                        'Failed!',
-                        'Server Error',
-                        'error'
-                    )
-                } else {
-                    erlen = Object.keys(er).length
-                    for (i = 0; i < erlen; i++) {
-                        obname = Object.keys(er)[i];
-                        $('#' + obname).addClass('is-invalid');
-                        $('#err_change_' + obname).text(er[obname][0]);
-                        $('#err_change_' + obname).show();
-                    }
-                }
-            }
-        });
-    })
-
-    function deleteData() {
-        if (selected()) {
-            swal({
-                title: 'Delete Selected Data?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                buttons: true,
-                dangerMode: true,
-            }).then(function(result) {
-                if (result) {
-                    let form = $("#formSelected");
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.ajax({
-                        type: 'DELETE',
-                        url: "{{ route('order.destroy') }}",
-                        data: $(form).serialize(),
-                        beforeSend: function() {
-                            block();
-                        },
-                        success: function(res) {
-                            unblock();
-                            table.ajax.reload();
-                            if (res.status == true) {
-                                swal(
-                                    'Deleted!',
-                                    res.message,
-                                    'success'
-                                )
-                            } else {
-                                swal(
-                                    'Failed!',
-                                    res.message,
-                                    'error'
-                                )
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            unblock();
-                            er = xhr.responseJSON.errors
-                            swal(
-                                'Failed!',
-                                'Server Error',
-                                'error'
-                            )
-                        }
-                    });
-                }
-            })
-        }
-    }
 
     function selected() {
         let id = $('input[name="id[]"]:checked').length;

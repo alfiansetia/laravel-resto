@@ -19,7 +19,7 @@
         </ul>
     </form> -->
     <ul class="navbar-nav navbar-right ml-auto">
-        <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg beep"><i class="far fa-bell"></i></a>
+        <!-- <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg beep"><i class="far fa-bell"></i></a>
             <div class="dropdown-menu dropdown-list dropdown-menu-right">
                 <div class="dropdown-header">Notifications
                     <div class="float-right">
@@ -77,7 +77,7 @@
                     <a href="#">View All <i class="fas fa-chevron-right"></i></a>
                 </div>
             </div>
-        </li>
+        </li> -->
         <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                 <img alt="image" src="{{ asset('assets/img/avatar/avatar-1.png') }}" class="rounded-circle mr-1">
                 <div class="d-sm-none d-lg-inline-block">Hi, {{ auth()->user()->name }}</div>
@@ -129,6 +129,7 @@
                 <a href="javascript:void(0);" data-toggle="dropdown" class="nav-link has-dropdown"><i class="far fa-clone"></i><span>Report</span></a>
                 <ul class="dropdown-menu">
                     <li class="nav-item {{ $title == 'Report' ? 'active' : '' }}"><a href="{{ route('report.index') }}" class="nav-link">Sales</a></li>
+                    <li class="nav-item {{ $title == 'Report Kasir' ? 'active' : '' }}"><a href="{{ route('report.user') }}" class="nav-link">Kasir</a></li>
                     <!-- <li class="nav-item"><a href="#" class="nav-link">Sales</a></li>
                     <li class="nav-item dropdown"><a href="#" class="nav-link has-dropdown">Hover Me</a>
                         <ul class="dropdown-menu">

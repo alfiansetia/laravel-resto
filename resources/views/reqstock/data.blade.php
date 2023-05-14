@@ -19,23 +19,22 @@
                     <h4>{{ $title }}</h4>
                 </div>
                 <div class="card-body pt-0">
-                    <div class="table-responsive">
-                        <form action="" id="formSelected">
-                            <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
-                                <thead>
-                                    <tr>
-                                        <th class="dt-no-sorting" style="width: 30px;">Id</th>
-                                        <th>Number</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Desc</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
+                    <form action="" id="formSelected">
+                        <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
+                            <thead>
+                                <tr>
+                                    <th class="dt-no-sorting" style="width: 30px;">Id</th>
+                                    <th>Number</th>
+                                    <th>Kasir</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Desc</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
             </div>
         </div>
@@ -417,6 +416,12 @@
                                 'Server Error',
                                 'error'
                             )
+                        } else if (xhr.status == 403) {
+                            swal(
+                                'Failed!',
+                                xhr.responseJSON.message,
+                                'error'
+                            )
                         } else {
                             erlen = Object.keys(er).length
                             for (i = 0; i < erlen; i++) {
@@ -492,6 +497,21 @@
         }, {
             title: "Number",
             data: 'number',
+        }, {
+            title: "Kasir",
+            data: 'user_id',
+            visible: false,
+            render: function(data, type, row, meta) {
+                let text = ''
+                if (data != null) {
+                    text = row.user.email
+                }
+                if (type == 'display') {
+                    return text
+                } else {
+                    return data
+                }
+            }
         }, {
             title: "Date",
             data: 'date',
@@ -652,6 +672,12 @@
                         'Server Error',
                         'error'
                     )
+                } else if (xhr.status == 403) {
+                    swal(
+                        'Failed!',
+                        xhr.responseJSON.message,
+                        'error'
+                    )
                 } else {
                     swal(
                         'Failed!',
@@ -718,11 +744,19 @@
             error: function(xhr, status, error) {
                 unblock();
                 er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
+                if (xhr.status == 403) {
+                    swal(
+                        'Failed!',
+                        xhr.responseJSON.message,
+                        'error'
+                    )
+                } else {
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                }
             }
         });
     }

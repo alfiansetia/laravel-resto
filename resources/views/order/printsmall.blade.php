@@ -175,7 +175,7 @@
             $disc = $disc + ($ord->qty * $ord->price * $ord->disc / 100);
             @endphp
             <tr>
-                <td colspan="2">@if($ord->menu->catmenu_id != null)[{{ $ord->menu->catmenu->name ?? '' }}]@endif <b>{{ $ord->menu->name }}</b></td>
+                <td colspan="2">@if($ord->menu_id != null && $ord->menu->catmenu_id != null)[{{ $ord->menu->catmenu->name ?? '' }}]@endif <b>{{ $ord->menu->name ?? '' }}</b></td>
             </tr>
             <tr>
                 <td>{{ $ord->qty }} X {{ number_format($ord->price,0,',','.') }}</td>

@@ -292,6 +292,12 @@
                             'Server Error',
                             'error'
                         )
+                    } else if (xhr.status == 403) {
+                        swal(
+                            'Failed!',
+                            xhr.responseJSON.message,
+                            'error'
+                        )
                     } else {
                         erlen = Object.keys(er).length
                         for (i = 0; i < erlen; i++) {
@@ -338,11 +344,19 @@
                 unblock();
                 $('#edit_reset').prop('disabled', false);
                 er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
+                if (xhr.status == 403) {
+                    swal(
+                        'Failed!',
+                        xhr.responseJSON.message,
+                        'error'
+                    )
+                } else {
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                }
             }
         });
     })
@@ -378,11 +392,19 @@
             error: function(xhr, status, error) {
                 unblock();
                 er = xhr.responseJSON.errors
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
+                if (xhr.status == 403) {
+                    swal(
+                        'Failed!',
+                        xhr.responseJSON.message,
+                        'error'
+                    )
+                } else {
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                }
             }
         });
     });
@@ -454,6 +476,12 @@
                             'Server Error',
                             'error'
                         )
+                    } else if (xhr.status == 403) {
+                        swal(
+                            'Failed!',
+                            xhr.responseJSON.message,
+                            'error'
+                        )
                     } else {
                         erlen = Object.keys(er).length
                         for (i = 0; i < erlen; i++) {
@@ -511,11 +539,19 @@
                         error: function(xhr, status, error) {
                             unblock();
                             er = xhr.responseJSON.errors
-                            swal(
-                                'Failed!',
-                                'Server Error',
-                                'error'
-                            )
+                            if (xhr.status == 403) {
+                                swal(
+                                    'Failed!',
+                                    xhr.responseJSON.message,
+                                    'error'
+                                )
+                            } else {
+                                swal(
+                                    'Failed!',
+                                    'Server Error',
+                                    'error'
+                                )
+                            }
                         }
                     });
                 }
