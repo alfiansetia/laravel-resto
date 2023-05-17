@@ -98,7 +98,6 @@
         </li>
     </ul>
 </nav>
-Alfinetwork
 <nav class="navbar navbar-secondary navbar-expand-lg">
     <div class="container">
         <ul class="navbar-nav">
