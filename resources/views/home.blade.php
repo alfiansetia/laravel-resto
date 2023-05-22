@@ -177,16 +177,19 @@
 @push('js')
 
 <script>
-    if ($("#top-4-scroll").length) {
+    $(document).ready(function() {
+        // if ($("#top-4-scroll").length) {
         $("#top-4-scroll").css({
             height: 315
         }).niceScroll();
-    }
-    if ($("#top-6-scroll").length) {
+        // }
+        // if ($("#top-6-scroll").length) {
         $("#top-6-scroll").css({
             height: 450
         }).niceScroll();
-    }
+        // }
+
+    })
 
 
     var tbltrx = $("#tabletrx").DataTable({
@@ -196,11 +199,15 @@
         ajax: {
             url: "{{ route('order.lastfive') }}",
             error: function(xhr, error, code) {
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
+                if (xhr.status == 401) {
+                    window.location.reload()
+                } else {
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                }
             }
         },
         dom: 'lrt',
@@ -354,6 +361,8 @@
                     xhr.responseJSON.message,
                     'error'
                 )
+            } else if (xhr.status == 401) {
+                window.location.reload()
             } else {
                 swal(
                     'Failed!',
@@ -412,6 +421,8 @@
                     xhr.responseJSON.message,
                     'error'
                 )
+            } else if (xhr.status == 401) {
+                window.location.reload()
             } else {
                 swal(
                     'Failed!',
@@ -421,8 +432,6 @@
             }
         })
     }
-
-    
 </script>
 
 
