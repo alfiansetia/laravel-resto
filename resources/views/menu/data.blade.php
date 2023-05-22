@@ -206,11 +206,15 @@
         ajax: {
             url: "{{ route('menu.index') }}",
             error: function(xhr, error, code) {
-                swal(
-                    'Failed!',
-                    'Server Error',
-                    'error'
-                )
+                if (xhr.status == 401) {
+                    window.location.reload()
+                } else {
+                    swal(
+                        'Failed!',
+                        'Server Error',
+                        'error'
+                    )
+                }
             }
         },
         dom: "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
@@ -419,6 +423,8 @@
                             xhr.responseJSON.message,
                             'error'
                         )
+                    } else if (xhr.status == 401) {
+                        window.location.reload()
                     } else {
                         erlen = Object.keys(er).length
                         for (i = 0; i < erlen; i++) {
@@ -536,6 +542,8 @@
                             xhr.responseJSON.message,
                             'error'
                         )
+                    } else if (xhr.status == 401) {
+                        window.location.reload()
                     } else {
                         erlen = Object.keys(er).length
                         for (i = 0; i < erlen; i++) {
@@ -575,8 +583,9 @@
                         xhr.responseJSON.message,
                         'error'
                     )
+                } else if (xhr.status == 401) {
+                    window.location.reload()
                 } else {
-
                     swal(
                         'Failed!',
                         'Server Error',
@@ -671,6 +680,8 @@
                                     xhr.responseJSON.message,
                                     'error'
                                 )
+                            } else if (xhr.status == 401) {
+                                window.location.reload()
                             } else {
                                 swal(
                                     'Failed!',

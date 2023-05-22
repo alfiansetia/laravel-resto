@@ -26,6 +26,19 @@ class CartController extends Controller
 
     public function index(Request $request)
     {
+        $this->monitor();
+        if ($request->ajax()) {
+            $data = Cart::with('user', 'menu.catmenu')->where('user_id', '=', Auth::id())->get();
+            if ($request->name) {
+                $data = Cart::with('menu.catmenu')->where('name', 'like', "%{$request->name}%")->get();
+            }
+            return DataTables::of($data)->toJson();
+        }
+        return view('cart.data')->with(['comp' => $this->comp, 'title' => 'New Order']);
+    }
+
+    private function monitor()
+    {
         $carts = Cart::with('menu.catmenu')->where('user_id', '=', Auth::id())->get();
         if (count($carts) > 0) {
             foreach ($carts as $cart) {
@@ -39,24 +52,6 @@ class CartController extends Controller
                 }
             }
         }
-        if ($request->ajax()) {
-            $data = Cart::with('user', 'menu.catmenu')->get();
-            if ($request->name) {
-                $data = Cart::with('menu.catmenu')->where('name', 'like', "%{$request->name}%")->get();
-            }
-            return DataTables::of($data)->toJson();
-        }
-        return view('cart.data')->with(['comp' => $this->comp, 'title' => 'New Order']);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -68,7 +63,7 @@ class CartController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'menu'    => 'required|integer',
+            'menu'    => 'required|integer|exists:menu,id',
             'qty'     => 'required|integer',
         ]);
         // $cart = Cart::where('user_id', '=', Auth::user()->id)->whereRelation('menu', 'paid', '=', 0);
@@ -94,17 +89,6 @@ class CartController extends Controller
         } else {
             return response()->json(['status' => false, 'message' => 'Failed Insert Data', 'data' => '']);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cart $cart)
-    {
-        //
     }
 
     /**

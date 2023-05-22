@@ -37,7 +37,7 @@
                             <label class="custom-control-label" for="table_available">available</label>
                         </div>
                     </div>
-                    <div class="table-responsive">
+                    <!-- <div class="row"> -->
                         <div id="data" class="row data-container">
                             <div class="col-1 mb-3">
                                 <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih">
@@ -51,24 +51,22 @@
                         <div class="wrapper">
                             <div id="pagination" class="pagination d-inline"></div>
                         </div>
-                    </div>
+                    <!-- </div> -->
                 </div>
                 <div class="card-body pt-0" id="data_table">
-                    <div class="table-responsive">
-                        <form action="" id="formSelected">
-                            <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
-                                <thead>
-                                    <tr>
-                                        <th class="dt-no-sorting" style="width: 30px;">Id</th>
-                                        <th>Number</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
+                    <form action="" id="formSelected">
+                        <table class="table table-hover" id="table" style="width: 100%;cursor: pointer;">
+                            <thead>
+                                <tr>
+                                    <th class="dt-no-sorting" style="width: 30px;">Id</th>
+                                    <th>Number</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
             </div>
         </div>

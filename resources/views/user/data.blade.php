@@ -66,12 +66,12 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="wa"><i class="fab fa-whatsapp mr-1" data-toggle="tooltip" title="WA User"></i>WA :</label>
-                        <input type="tel" name="wa" class="form-control" id="wa" placeholder="Please Enter WA" maxlength="15">
+                        <input type="tel" name="wa" class="form-control" id="wa" placeholder="Please Enter WA" maxlength="15" required>
                         <span id="err_wa" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="password"><i class="fas fa-lock mr-1" data-toggle="tooltip" title="Password User"></i>Password :</label>
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Please Enter Password" minlength="5" required>
+                        <input type="text" name="password" class="form-control" id="password" placeholder="Please Enter Password" minlength="5" required>
                         <span id="err_password" class="error invalid-feedback" style="display: hide;"></span>
                     </div>
                     <div class="form-group">
@@ -108,7 +108,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="formEdit" class="fofrm-vertical" action="" method="POST" enctype="multipart/form-data">
+                <form id="formEdit" class="form-vertical" action="" method="POST" enctype="multipart/form-data">
                     {{ method_field('PUT') }}
                     <div class="form-group">
                         <label class="control-label" for="edit_name"><i class="far fa-user mr-1" data-toggle="tooltip" title="Full Name User"></i>Name :</label>
@@ -123,8 +123,14 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_wa"><i class="fab fa-whatsapp mr-1" data-toggle="tooltip" title="WA User"></i>WA :</label>
-                        <input type="text" name="wa" class="form-control" id="edit_wa" placeholder="Please Enter WA" maxlength="15">
+                        <input type="text" name="wa" class="form-control" id="edit_wa" placeholder="Please Enter WA" maxlength="15" required>
                         <span id="err_edit_wa" class="error invalid-feedback" style="display: hide;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_password"><i class="fas fa-lock mr-1" data-toggle="tooltip" title="Password User"></i>Password :</label>
+                        <input type="text" name="password" class="form-control" id="edit_password" placeholder="Please Enter Password" autocomplete="off" minlength="5">
+                        <span id="err_edit_password" class="error invalid-feedback" style="display: hide;"></span>
+                        <small id="passwordHelpBlock" class="form-text text-muted">leave blank if not change password</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_role"><i class="fas fa-user-tag mr-1" data-toggle="tooltip" title="Role User"></i>Role :</label>
@@ -416,6 +422,7 @@
                 $('#edit_email').val(result.data.email);
                 $('#edit_wa').val(result.data.wa);
                 $('#edit_address').val(result.data.address);
+                $('#edit_password').val('');
                 if (result.data.roles.length > 0) {
                     $('#edit_role').val(result.data.roles[0].name).change();
                 } else {
@@ -449,46 +456,44 @@
         });
         row = $(this).parents('tr')[0];
         id = table.row(row).data().id
-        if (id != "{{ auth()->user()->id }}") {
-            let url = "{{ route('user.edit', ':id') }}";
-            url = url.replace(':id', id);
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(result) {
-                    unblock();
-                    $('#edit_reset').val(result.data.id);
-                    $('#edit_id').val(result.data.id);
-                    $('#edit_name').val(result.data.name);
-                    $('#edit_email').val(result.data.email);
-                    $('#edit_wa').val(result.data.wa);
-                    $('#edit_address').val(result.data.address);
-                    if (result.data.roles.length > 0) {
-                        $('#edit_role').val(result.data.roles[0].name).change();
-                    } else {
-                        $('#edit_role').val('').change();
-                    }
-                    $('#modalEdit').modal('show');
-                    $('#modalEdit').on('shown.bs.modal', function() {
-                        $('#edit_name').focus();
-                    })
-                },
-                beforeSend: function() {
-                    block();
-                },
-                error: function(xhr, status, error) {
-                    unblock();
-                    er = xhr.responseJSON.errors
-                    swal(
-                        'Failed!',
-                        'Server Error',
-                        'error'
-                    )
+        let url = "{{ route('user.edit', ':id') }}";
+        url = url.replace(':id', id);
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(result) {
+                unblock();
+                $('#edit_reset').val(result.data.id);
+                $('#edit_id').val(result.data.id);
+                $('#edit_name').val(result.data.name);
+                $('#edit_email').val(result.data.email);
+                $('#edit_wa').val(result.data.wa);
+                $('#edit_address').val(result.data.address);
+                $('#edit_password').val('');
+                if (result.data.roles.length > 0) {
+                    $('#edit_role').val(result.data.roles[0].name).change();
+                } else {
+                    $('#edit_role').val('').change();
                 }
-            });
-        } else {
-            window.open("{{ route('user.profile') }}", '_blank');
-        }
+                $('#modalEdit').modal('show');
+                $('#modalEdit').on('shown.bs.modal', function() {
+                    $('#edit_name').focus();
+                })
+            },
+            beforeSend: function() {
+                block();
+            },
+            error: function(xhr, status, error) {
+                unblock();
+                er = xhr.responseJSON.errors
+                swal(
+                    'Failed!',
+                    'Server Error',
+                    'error'
+                )
+            }
+        });
+
     });
 
     $('#formEdit').submit(function(event) {
@@ -531,10 +536,15 @@
                 },
                 success: function(res) {
                     unblock();
-                    table.ajax.reload();
                     $('button[type="submit"]').prop('disabled', false);
                     $('#reset').click();
                     if (res.status == true) {
+                        if (id != "{{ auth()->user()->id }}") {
+                            // 
+                        } else {
+                            window.location.reload()
+                        }
+                        table.ajax.reload();
                         swal(
                             'Success!',
                             res.message,

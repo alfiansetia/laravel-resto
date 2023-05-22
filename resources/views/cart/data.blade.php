@@ -251,15 +251,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="table-responsive">
-                    <div id="data_table" class="row data-container">
-                        <div class="col-1 mb-3">
-                            <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih">
-                                <b style="font-size:12pt;" class="text-primary">#1</b>
-                                <br>
-                                (cccc)
-                            </button>
-                        </div>
+                <div id="data_table" class="row data-container">
+                    <div class="col-1 mb-3">
+                        <button class="btn btn-outline-secondary btn-sm pt-2 pb-2 btn-menu btn-block pilih">
+                            <b style="font-size:12pt;" class="text-primary">#1</b>
+                            <br>
+                            (cccc)
+                        </button>
                     </div>
                 </div>
             </div>

@@ -36,8 +36,8 @@ class UserController extends Controller
         $this->validate($request, [
             'name'      => 'required|max:25|min:3',
             'email'     => 'required|email|unique:users,email',
-            'password'  => 'required|min:7',
-            'wa'        => 'max:15',
+            'password'  => 'required|min:5',
+            'wa'        => 'required|max:15',
             'address'   => 'max:150',
             'role'      => 'required',
         ]);
@@ -71,9 +71,10 @@ class UserController extends Controller
         $this->validate($request, [
             'name'      => 'required|max:25|min:3',
             'email'     => 'required|email|unique:users,email,' . $user->id,
-            'wa'        => 'max:15',
+            'wa'        => 'required|max:15',
             'address'   => 'max:150',
-            'role'      => 'required',
+            'role'      => 'required|in:admin,kasir',
+            'password'  => 'nullable|min:5'
         ]);
         $user = User::findOrFail($user->id);
         $user->update([
@@ -82,6 +83,11 @@ class UserController extends Controller
             'wa'            => $request->wa,
             'address'       => $request->address,
         ]);
+        if ($request->filled('password')) {
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+        }
         $user->syncRoles($request->role);
         if ($user) {
             return response()->json(['status' => true, 'message' => 'Success Update Data', 'data' => '']);
@@ -119,7 +125,7 @@ class UserController extends Controller
 
     public function profileUpdate(Request $request)
     {
-        $user = Auth::user();
+        $user = User::findOrFail(Auth::id());
         if ($request->has('type') && $request->type == 'profile') {
             $this->validate($request, [
                 'name'      => 'required|max:25|min:3',
