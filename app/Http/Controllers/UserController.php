@@ -142,15 +142,15 @@ class UserController extends Controller
                 'password2' => 'required',
             ]);
             if (Hash::check($request->password, $user->password)) {
-                return redirect()->route('user.password')->with(['error' => "Password tidak boleh sama dengan sebelumnya!"]);
+                return redirect()->route('user.profile')->with(['error' => "Password tidak boleh sama dengan sebelumnya!"]);
             } else {
                 $password = $user->update([
                     'password'     => Hash::make($request->password),
                 ]);
                 if ($password) {
-                    return redirect()->route('user.password')->with(['success' => 'Success Update Password!']);
+                    return redirect()->route('user.profile')->with(['success' => 'Success Update Password!']);
                 } else {
-                    return redirect()->route('user.password')->with(['error' => 'Failed Update Password!']);
+                    return redirect()->route('user.profile')->with(['error' => 'Failed Update Password!']);
                 }
             }
         } else {

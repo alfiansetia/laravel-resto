@@ -151,7 +151,7 @@
     var table = $('#table').DataTable({
         data: [],
         dom: 'lrt',
-        scrollY: '255px',
+        scrollY: '400px',
         scrollCollapse: false,
         scrollX: true,
         scroller: true,

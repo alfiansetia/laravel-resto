@@ -87,9 +87,11 @@
                 <a href="{{ route('user.profile') }}" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
+                @role('admin')
                 <a href="{{ route('company.index') }}" class="dropdown-item has-icon">
                     <i class="fas fa-cog"></i> Settings
                 </a>
+                @endrole
                 <div class="dropdown-divider"></div>
                 <a href="javascript:void(0);" onclick="logout_();" class="dropdown-item has-icon text-danger">
                     <i class="fas fa-sign-out-alt"></i> Logout
