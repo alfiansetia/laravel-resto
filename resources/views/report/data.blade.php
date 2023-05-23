@@ -27,6 +27,7 @@
                         </div>
                     </div>
                     <div class="card-footer text-right mt-0">
+                        <button class="btn btn-info" id="export">Export</button>
                         <button class="btn btn-primary" id="apply">Apply</button>
                     </div>
                 </div>
@@ -123,6 +124,12 @@
 <script>
     $('#apply').click(function() {
         getData()
+    })
+
+    $('#export').click(function() {
+        let from = $('#range').data('daterangepicker').startDate.format('YYYY-MM-DD');
+        let to = $('#range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+        window.open("{{ route('report.export') }}?from=" + from + '&to=' + to, '_blank')
     })
 
     if ($("#range").length) {

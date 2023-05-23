@@ -67,6 +67,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     });
 
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
+    Route::get('/report/export', [ReportController::class, 'export'])->name('report.export');
     Route::get('/report/getdata', [ReportController::class, 'getData'])->name('report.getdata');
     Route::get('/report/perdate', [ReportController::class, 'perDate'])->name('report.perdate');
 

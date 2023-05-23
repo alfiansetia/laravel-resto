@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comp;
 use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -107,5 +108,37 @@ class ReportController extends Controller
             ->with('user')
             ->get();
         return response()->json(['status' => true, 'data' => $data, 'message' => '']);
+    }
+
+    public function export(Request $request)
+    {
+        $this->validate($request, [
+            'from' => 'required|date_format:Y-m-d',
+            'to' => 'required|date_format:Y-m-d',
+        ]);
+        $from = Carbon::parse($request->from);
+        $to = Carbon::parse($request->to);
+        $comp = $this->comp;
+        $img = $comp->logo;
+        if ($comp->logo == '') {
+            $img = 'logodefault.png';
+        }
+        $file = public_path("images/company/$img");
+        $image = base64_encode(file_get_contents($file));
+        $param['from'] = $request->from;
+        $param['to'] = $request->to;
+        $data = [];
+        for ($date = $from; $date <= $to; $date->addDay()) {
+            if (!auth()->user()->hasRole('admin')) {
+                $result = Order::select(DB::raw('SUM(total) as total'))->where('user_id', auth()->user()->id)->whereDate('date', $date->format('Y-m-d'))->first();
+            } else {
+                $result = Order::select(DB::raw('SUM(total) as total'))->whereDate('date', $date->format('Y-m-d'))->first();
+            }
+            $data[] = [
+                'date' => $date->format('Y-m-d'),
+                'total' => ($result ? $result->total : 0) ?? 0,
+            ];
+        }
+        return view('report.export', compact(['data', 'param', 'image']))->with(['comp' => $comp, 'title' => 'Report']);
     }
 }
