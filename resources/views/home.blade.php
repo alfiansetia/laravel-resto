@@ -29,6 +29,7 @@
 
 
     <div class="row">
+        @role('admin')
         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
             <div class="card card-statistic-1">
                 <div class="card-icon bg-primary">
@@ -44,6 +45,23 @@
                 </div>
             </div>
         </div>
+        @else
+        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+            <div class="card card-statistic-1">
+                <div class="card-icon bg-primary">
+                    <i class="fas fa-cubes"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4>Table Free</h4>
+                    </div>
+                    <div class="card-body" id="total_table">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endrole
         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
             <div class="card card-statistic-1">
                 <div class="card-icon bg-danger">
@@ -109,7 +127,7 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="card gradient-bottom">
+            <div class="card">
                 <div class="card-header">
                     <h4>Top Menu</h4>
                 </div>
@@ -124,7 +142,7 @@
 
     <div class="row">
         <div class="col-lg-5">
-            <div class="card gradient-bottom">
+            <div class="card">
                 <div class="card-header">
                     <h4>Menu Stock Limit</h4>
                     <div class="card-header-action">
@@ -188,6 +206,7 @@
             height: 450
         }).niceScroll();
         // }
+        // scroll()
 
     })
 
@@ -382,6 +401,7 @@
     function getData() {
         $.get("{{ route('home.getdata') }}").done(function(response) {
             $('#total_user').text(response.data.total_user)
+            $('#total_table').text(response.data.total_table)
             $('#total_menu').text(response.data.total_menu)
             $('#total_order_today').text(response.data.total_order_today)
             $('#total_sales_today').text('Rp.' + hrg(response.data.total_sales_today))
@@ -401,6 +421,7 @@
                             </div>
                         </li>`
                 $('#top').append(text)
+                $("#top-6-scroll").getNiceScroll().resize();
             }
             for (let i = 0; i < lost.length; i++) {
                 let text = `<li class="media">
@@ -413,6 +434,7 @@
                             </div>
                         </li>`
                 $('#lost').append(text)
+                $("#top-4-scroll").getNiceScroll().resize();
             }
         }).fail(function(xhr) {
             if (xhr.status == 403) {

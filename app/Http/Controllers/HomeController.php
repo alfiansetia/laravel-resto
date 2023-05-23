@@ -6,6 +6,7 @@ use App\Models\Comp;
 use App\Models\Dtorder;
 use App\Models\Menu;
 use App\Models\Order;
+use App\Models\Table;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,12 +42,13 @@ class HomeController extends Controller
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $data['total_user'] = User::count();
             $data['total_menu'] = Menu::count();
+            $data['total_table'] = Table::where('status', 'free')->count();
             if (!auth()->user()->hasRole('admin')) {
                 $data['total_order_today'] = Order::where('user_id', auth()->user()->id)->whereDate('date', Carbon::today())->count();
                 $data['total_sales_today'] = Order::where('user_id', auth()->user()->id)->whereDate('date', Carbon::today())->sum('total');
             } else {
+                $data['total_user'] = User::count();
                 $data['total_order_today'] = Order::whereDate('date', Carbon::today())->count();
                 $data['total_sales_today'] = Order::whereDate('date', Carbon::today())->sum('total');
             }
