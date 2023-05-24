@@ -120,47 +120,52 @@ class UserController extends Controller
 
     public function profile()
     {
-        return view('user.profile')->with(['comp' => $this->comp, 'title' => 'User Profile']);
+        return view('user.profile')->with(['comp' => $this->comp, 'title' => 'Profile Setting']);
     }
 
     public function profileUpdate(Request $request)
     {
         $user = User::findOrFail(Auth::id());
-        if ($request->has('type') && $request->type == 'profile') {
-            $this->validate($request, [
-                'name'      => 'required|max:25|min:3',
-                'wa'        => 'required|max:15|min:8',
-                'address'   => 'max:150',
-            ]);
-            $update = $user->update([
-                'name'      => $request->name,
-                'wa'        => $request->wa,
-                'address'   => $request->address,
-            ]);
-            if ($update) {
-                return redirect()->route('user.profile')->with('success', 'Success Update Profile!');
-            } else {
-                return redirect()->route('user.profile')->with('error', 'Failed Update Profile!');
-            }
-        } elseif ($request->has('type') && $request->type == 'password') {
-            $this->validate($request, [
-                'password'  => ['required', 'same:password2', Password::min(8)->numbers()],
-                'password2' => 'required',
-            ]);
-            if (Hash::check($request->password, $user->password)) {
-                return redirect()->route('user.profile')->with(['error' => "Password tidak boleh sama dengan sebelumnya!"]);
-            } else {
-                $password = $user->update([
-                    'password'     => Hash::make($request->password),
-                ]);
-                if ($password) {
-                    return redirect()->route('user.profile')->with(['success' => 'Success Update Password!']);
-                } else {
-                    return redirect()->route('user.profile')->with(['error' => 'Failed Update Password!']);
-                }
-            }
+        $this->validate($request, [
+            'name'      => 'required|max:25|min:3',
+            'wa'        => 'required|max:15|min:8',
+            'address'   => 'max:150',
+        ]);
+        $update = $user->update([
+            'name'      => $request->name,
+            'wa'        => $request->wa,
+            'address'   => $request->address,
+        ]);
+        if ($update) {
+            return redirect()->route('user.profile')->with('success', 'Success Update Profile!');
         } else {
-            abort(404);
+            return redirect()->route('user.profile')->with('error', 'Failed Update Profile!');
+        }
+    }
+
+    public function password()
+    {
+        return view('user.password')->with(['comp' => $this->comp, 'title' => 'Password Setting']);
+    }
+
+    public function passwordUpdate(Request $request)
+    {
+        $user = User::findOrFail(Auth::id());
+        $this->validate($request, [
+            'password'  => ['required', 'same:password2', Password::min(8)->numbers()],
+            'password2' => 'required',
+        ]);
+        if (Hash::check($request->password, $user->password)) {
+            return redirect()->route('user.password')->with(['error' => "Password tidak boleh sama dengan sebelumnya!"]);
+        } else {
+            $password = $user->update([
+                'password'     => Hash::make($request->password),
+            ]);
+            if ($password) {
+                return redirect()->route('user.profile')->with(['success' => 'Success Update Password!']);
+            } else {
+                return redirect()->route('user.profile')->with(['error' => 'Failed Update Password!']);
+            }
         }
     }
 }

@@ -58,7 +58,7 @@
                             <tr>
                                 <th data-width="40">#</th>
                                 <th>Date</th>
-                                <th class="text-center">Amount</th>
+                                <th98>Amount</th>
                             </tr>
 
                             @foreach($data as $key => $d)

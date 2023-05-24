@@ -39,7 +39,7 @@ class ReportController extends Controller
     {
         $this->validate($request, [
             'from' => 'required|date_format:Y-m-d',
-            'to' => 'required|date_format:Y-m-d',
+            'to' => 'required|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
         ]);
         $from = Carbon::parse($request->from);
         $to = Carbon::parse($request->to);
@@ -61,7 +61,7 @@ class ReportController extends Controller
     public function perDate(Request $request)
     {
         $this->validate($request, [
-            'date' => 'required|date_format:Y-m-d',
+            'date' => 'required|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
         ]);
         if (!auth()->user()->hasRole('admin')) {
             $data = Order::where('user_id', auth()->user()->id)->whereDate('date', '=', Carbon::parse($request->date)->format('Y-m-d'))->get();
@@ -114,7 +114,8 @@ class ReportController extends Controller
     {
         $this->validate($request, [
             'from' => 'required|date_format:Y-m-d',
-            'to' => 'required|date_format:Y-m-d',
+            'to' => 'required|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+            // 'to' => 'required|date_format:Y-m-d',
         ]);
         $from = Carbon::parse($request->from);
         $to = Carbon::parse($request->to);

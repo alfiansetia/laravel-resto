@@ -56,8 +56,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::delete('/table', [TableController::class, 'destroy'])->name('table.destroy');
         Route::resource('table', TableController::class)->except('index', 'create', 'show', 'destroy');
 
-        Route::get('/company', [CompController::class, 'index'])->name('company.index');
-        Route::post('/company', [CompController::class, 'store'])->name('company.store');
+        Route::get('/company/general', [CompController::class, 'general'])->name('company.general');
+        Route::post('/company/general', [CompController::class, 'generalUpdate'])->name('company.general.update');
+        Route::get('/company/social', [CompController::class, 'social'])->name('company.social');
+        Route::post('/company/social', [CompController::class, 'socialUpdate'])->name('company.social.update');
+        Route::get('/company/image', [CompController::class, 'image'])->name('company.image');
+        Route::post('/company/image', [CompController::class, 'imageUpdate'])->name('company.image.update');
+        Route::get('/company/other', [CompController::class, 'other'])->name('company.other');
+        Route::post('/company/other', [CompController::class, 'otherUpdate'])->name('company.other.update');
+
 
         Route::post('/reqstock/{id}/change', [ReqstockController::class, 'change'])->name('reqstock.change');
 
@@ -76,7 +83,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/home/report', [HomeController::class, 'report'])->name('home.report');
 
     Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
-    Route::post('/user/profile', [UserController::class, 'profileUpdate'])->name('user.profileUpdate');
+    Route::post('/user/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
+    Route::get('/user/password', [UserController::class, 'password'])->name('user.password');
+    Route::post('/user/password', [UserController::class, 'passwordUpdate'])->name('user.password.update');
 
     Route::get('/table/paginate', [TableController::class, 'paginate'])->name('table.paginate');
     Route::post('/table/change', [TableController::class, 'change'])->name('table.change');

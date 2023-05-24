@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Comp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
 
 class CompController extends Controller
 {
@@ -17,166 +16,109 @@ class CompController extends Controller
         $this->comp = Comp::first();
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function general()
     {
-        $title = 'General Setting';
-        if ($request->has('type') && $request->type == 'image') {
-            $title = 'Image Setting';
-        } elseif ($request->has('type') && $request->type == 'social') {
-            $title = 'Social Setting';
-        } elseif ($request->has('type') && $request->type == 'other') {
-            $title = 'Other Setting';
-        }
-        return view('company.data')->with(['comp' => $this->comp, 'title' => $title]);
+        return view('company.general')->with(['comp' => $this->comp, 'title' => 'General Setting']);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function generalUpdate(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $comp = $this->comp;
-        $title = 'General Setting';
-        if ($request->has('type') && $request->type == 'general') {
-            $title = 'General Setting';
-            $validator = Validator::make($request->all(), [
-                'name'      => 'required|max:30',
-                'telp'      => 'required|max:15',
-                'address'   => 'required|max:200',
-            ]);
-            if ($validator->fails()) {
-                return redirect(route('company.index') . '?type=' . $request->type)->withErrors($validator);
-            }
-            $comp->update([
-                'name'      => $request->name,
-                'telp'      => $request->telp,
-                'address'   => $request->address,
-            ]);
-        } elseif ($request->has('type') && $request->type == 'image') {
-            $title = 'Image Setting';
-            $validator = Validator::make($request->all(), [
-                'logo'      => 'image|mimes:jpeg,png,jpg|max:2048',
-                'fav'       => 'image|mimes:png,jpg|max:1024',
-            ]);
-            if ($validator->fails()) {
-                return redirect(route('company.index') . '?type=' . $request->type)->withErrors($validator);
-            }
-            $logo = $comp->logo;
-            $fav = $comp->fav;
-            if ($files = $request->file('logo')) {
-                File::delete('images/company/' . $logo);
-                $destinationPath = 'images/company/'; // upload path
-                $logo = 'logo.' . $files->getClientOriginalExtension();
-                $files->move($destinationPath, $logo);
-            }
-            if ($files = $request->file('fav')) {
-                File::delete('images/company/' . $fav);
-                $destinationPath = 'images/company/'; // upload path
-                $fav = 'favicon.' . $files->getClientOriginalExtension();
-                $files->move($destinationPath, $fav);
-            }
-            $comp->update([
-                'logo'      => $logo,
-                'fav'       => $fav,
-            ]);
-        } elseif ($request->has('type') && $request->type == 'social') {
-            $title = 'Social Setting';
-            $validator = Validator::make($request->all(), [
-                'wa'        => 'required|max:15',
-                'fb'        => 'max:15|nullable',
-                'ig'        => 'max:15|nullable',
-            ]);
-            if ($validator->fails()) {
-                return redirect(route('company.index') . '?type=' . $request->type)->withErrors($validator);
-            }
-            $comp->update([
-                'wa'        => $request->wa,
-                'fb'        => $request->fb,
-                'ig'        => $request->ig,
-            ]);
-        } elseif ($request->has('type') && $request->type == 'other') {
-            $title = 'Other Setting';
-            $validator = Validator::make($request->all(), [
-                'footer_struk'  => 'required|max:100',
-                'tax'           => 'required|in:yes,no',
-            ]);
-            if ($validator->fails()) {
-                return redirect(route('company.index') . '?type=' . $request->type)->withErrors($validator);
-            }
-            $comp->update([
-                'footer_struk'  => $request->footer_struk,
-                'tax'           => $request->tax,
-            ]);
+        $this->validate($request, [
+            'name'      => 'required|max:30',
+            'telp'      => 'required|max:15',
+            'address'   => 'required|max:200',
+        ]);
+        $update = $this->comp->update([
+            'name'      => $request->name,
+            'telp'      => $request->telp,
+            'address'   => $request->address,
+        ]);
+        if ($update) {
+            return redirect()->route('company.general')->with('success', 'Success Update Data!');
         } else {
-            abort(404);
+            return redirect()->route('company.general')->with('error', 'Failed Update Data!');
         }
-        if ($comp) {
-            return redirect(route('company.index') . '?type=' . $request->type)->with(['success' => 'Data Berhasil Diupdate!', 'title' => $title]);
+    }
+
+    public function social()
+    {
+        return view('company.social')->with(['comp' => $this->comp, 'title' => 'Social Setting']);
+    }
+
+    public function socialUpdate(Request $request)
+    {
+        $this->validate($request, [
+            'wa'        => 'required|max:15',
+            'fb'        => 'max:15|nullable',
+            'ig'        => 'max:15|nullable',
+        ]);
+        $update = $this->comp->update([
+            'wa'        => $request->wa,
+            'fb'        => $request->fb,
+            'ig'        => $request->ig,
+        ]);
+        if ($update) {
+            return redirect()->route('company.social')->with('success', 'Success Update Data!');
         } else {
-            return redirect(route('company.index') . '?type=' . $request->type)->route('company.index')->with(['error' => 'Data Gagal Diupdate!', 'title' => $title]);
+            return redirect()->route('company.social')->with('error', 'Failed Update Data!');
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Comp  $comp
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comp $comp)
+    public function image()
     {
-        //
+        return view('company.image')->with(['comp' => $this->comp, 'title' => 'Image Setting']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Comp  $comp
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comp $comp)
+    public function imageUpdate(Request $request)
     {
-        //
+        $this->validate($request, [
+            'logo'      => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'fav'       => 'required|image|mimes:png,jpg|max:1024',
+        ]);
+        $logo = $this->comp->logo;
+        $fav = $this->comp->fav;
+        if ($files = $request->file('logo')) {
+            File::delete('images/company/' . $logo);
+            $destinationPath = 'images/company/'; // upload path
+            $logo = 'logo.' . $files->getClientOriginalExtension();
+            $files->move($destinationPath, $logo);
+        }
+        if ($files = $request->file('fav')) {
+            File::delete('images/company/' . $fav);
+            $destinationPath = 'images/company/'; // upload path
+            $fav = 'favicon.' . $files->getClientOriginalExtension();
+            $files->move($destinationPath, $fav);
+        }
+        $update = $this->comp->update([
+            'logo'      => $logo,
+            'fav'       => $fav,
+        ]);
+        if ($update) {
+            return redirect()->route('company.image')->with('success', 'Success Update Data!');
+        } else {
+            return redirect()->route('company.image')->with('error', 'Failed Update Data!');
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Comp  $comp
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Comp $comp)
+    public function other()
     {
-        //
+        return view('company.other')->with(['comp' => $this->comp, 'title' => 'Other Setting']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Comp  $comp
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Comp $comp)
+    public function otherUpdate(Request $request)
     {
-        //
+        $this->validate($request, [
+            'footer_struk'  => 'required|max:100',
+            'tax'           => 'required|in:yes,no',
+        ]);
+        $update = $this->comp->update([
+            'footer_struk'  => $request->footer_struk,
+            'tax'           => $request->tax,
+        ]);
+        if ($update) {
+            return redirect()->route('company.other')->with('success', 'Success Update Data!');
+        } else {
+            return redirect()->route('company.other')->with('error', 'Failed Update Data!');
+        }
     }
 }

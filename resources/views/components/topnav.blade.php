@@ -88,7 +88,7 @@
                     <i class="far fa-user"></i> Profile
                 </a>
                 @role('admin')
-                <a href="{{ route('company.index') }}" class="dropdown-item has-icon">
+                <a href="{{ route('company.general') }}" class="dropdown-item has-icon">
                     <i class="fas fa-cog"></i> Settings
                 </a>
                 @endrole
