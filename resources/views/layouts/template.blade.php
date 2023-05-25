@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title }} &mdash; {{ $comp->name }}</title>
-    <link rel="icon" type="image/x-icon" href="{{ url('images/company/') }}/{{ $comp->fav == '' ? 'favicondefault.ico' : $comp->fav }}" />
+    <link rel="icon" type="image/x-icon" href="{{ $comp->fav }}" />
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('library/@fortawesome/fontawesome-free/css/all.css') }}">
@@ -22,7 +22,7 @@
 <body class="layout-3">
     <div id="app">
         <div class="main-wrapper {{ $title == 'New Order' ? 'container-fluid' : 'container' }}">
-        <!-- <div class="main-wrapper container"> -->
+            <!-- <div class="main-wrapper container"> -->
             <div class="navbar-bg"></div>
             @include('components.topnav')
 

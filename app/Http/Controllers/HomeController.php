@@ -58,7 +58,15 @@ class HomeController extends Controller
                 ->groupBy('menu.id', 'menu.name', 'menu.price', 'menu.disc', 'stock', 'img', 'menu.catmenu_id', 'menu.desc', 'menu.created_at', 'menu.updated_at')
                 ->orderByDesc('total_sales')
                 ->take(10)
-                ->get();
+                ->get()
+                ->map(function ($menu) {
+                    if ($menu->img) {
+                        $menu->img =  url('/images/menu/' . $menu->img);
+                    } else {
+                        $menu->img =  url('/images/menu/default.png');
+                    }
+                    return $menu;
+                });
             return response()->json(['status' => true, 'data' => $data, 'message' => '']);
         } else {
             abort(404);

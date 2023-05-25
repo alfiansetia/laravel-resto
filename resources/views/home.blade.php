@@ -412,7 +412,7 @@
 
             for (let i = 0; i < top.length; i++) {
                 let text = `<li class="media">
-                            <img class="mr-3 rounded" width="55" src="{{ url('/images/menu/') }}/${top[i].img ?? 'default.png'}" alt="product">
+                            <img class="mr-3 rounded" width="55" src="${top[i].img}" alt="product">
                             <div class="media-body">
                                 <div class="float-right">
                                     <div class="font-weight-600 text-muted text-small">${top[i].total_sales} Sales</div>
@@ -425,7 +425,7 @@
             }
             for (let i = 0; i < lost.length; i++) {
                 let text = `<li class="media">
-                            <img class="mr-3 rounded" width="55" src="{{ url('/images/menu/') }}/${lost[i].img ?? 'default.png'}" alt="product">
+                            <img class="mr-3 rounded" width="55" src="${lost[i].img}" alt="product">
                             <div class="media-body">
                                 <div class="float-right">
                                     <div class="font-weight-600 text-muted text-small"><span class="badge badge-danger">${lost[i].stock}</span></div>

@@ -24,4 +24,22 @@ class Comp extends Model
         'footer_struk',
         'tax',
     ];
+
+    public function getLogoAttribute($value)
+    {
+        if ($value) {
+            return url('/images/company/' . $value);
+        } else {
+            return url('/images/company/logo.png');
+        }
+    }
+
+    public function getFavAttribute($value)
+    {
+        if ($value) {
+            return url('/images/company/' . $value);
+        } else {
+            return url('/images/company/favicon.ico');
+        }
+    }
 }

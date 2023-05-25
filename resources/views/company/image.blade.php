@@ -44,7 +44,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-text text-muted">The image must have a maximum size of 2MB</div>
-                                <img src="{{ url('images/company/') }}/{{ $comp->logo == '' ? 'logodefault.png' : $comp->logo }}" alt="Logo" width="100px" height="100px">
+                                <img src="{{ $comp->logo }}" alt="Logo" width="100px" height="100px">
                             </div>
                         </div>
                         <div class="form-group row ">
@@ -58,7 +58,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-text text-muted">The image must have a maximum size of 1MB</div>
-                                <img src="{{ url('images/company/') }}/{{ $comp->fav == '' ? 'favicondefault.ico' : $comp->fav }}" alt="Favicon" width="30px" height="30px">
+                                <img src="{{ $comp->fav }}" alt="Favicon" width="30px" height="30px">
                             </div>
                         </div>
 

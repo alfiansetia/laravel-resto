@@ -447,7 +447,7 @@
         for (let i = 0; i < data.length; i++) {
             text += `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-3">
                             <button onclick="add_menu('${data[i].name}', ${data[i].id}, 1)" ${data[i].stock > 0 ? '' : 'disabled'} class="btn btn-outline-${data[i].stock > 0 ? 'secondary' : 'danger'} btn-sm pt-2 pb-2 btn-menu btn-block pilih" data-id="5" fdprocessedid="ma35zh">
-                                <img src="{{ url('images/menu/') }}/${data[i].img != null ? data[i].img : 'default.png' }" class="img-fluid w-100 mb-2" style="height:100px;object-fit: cover;">
+                                <img src="${data[i].img}" class="img-fluid w-100 mb-2" style="height:100px;object-fit: cover;">
                                 <br>
                                 <b class="text-primary">${data[i].catmenu_id != '' ? ('['+data[i].catmenu.name+ '] ') : ''}${data[i].name}</b>
                                 <br>

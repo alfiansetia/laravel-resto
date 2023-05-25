@@ -249,14 +249,8 @@
             title: "Name",
             data: 'name',
             render: function(data, type, row, meta) {
-                let text = ''
-                if (row.img != null) {
-                    text = `<img src="{{ url('/images/menu/${row.img}') }}" width="60px" height="60px"> ${data}</td>`
-                } else {
-                    text = `<img src="{{ url('/images/menu/default.png') }}" width="60px" height="60px"> ${data}</td>`
-                }
                 if (type == 'display') {
-                    return text
+                    return `<img src="${row.img}" width="60px" height="60px"> ${data}</td>`
                 } else {
                     return data
                 }
@@ -606,11 +600,8 @@
         } else {
             $('#edit_catmenu').val('').change();
         }
-        if (result.data.img != null) {
-            $('#img_prev').attr('src', `{{ url('images/menu/') }}/${result.data.img}`);
-        } else {
-            $('#img_prev').attr('src', `{{ url('images/menu/default.png') }}`);
-        }
+        $('#img_prev').attr('src', result.data.img);
+
         $('#edit_price').val(result.data.price);
         $('#edit_desc').val(result.data.desc);
 

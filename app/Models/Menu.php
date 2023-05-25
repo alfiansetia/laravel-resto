@@ -20,6 +20,15 @@ class Menu extends Model
         'desc',
     ];
 
+    public function getImgAttribute($value)
+    {
+        if ($value) {
+            return url('/images/menu/' . $value);
+        } else {
+            return url('/images/menu/default.png');
+        }
+    }
+
     public function catmenu()
     {
         return $this->belongsTo(Catmenu::class);
