@@ -63,7 +63,7 @@ class HomeController extends Controller
                     if ($menu->img) {
                         $menu->img =  url('/images/menu/' . $menu->img);
                     } else {
-                        $menu->img =  url('/images/menu/default.png');
+                        $menu->img =  url('/images/menu/default/default.png');
                     }
                     return $menu;
                 });

@@ -25,7 +25,7 @@ class Menu extends Model
         if ($value) {
             return url('/images/menu/' . $value);
         } else {
-            return url('/images/menu/default.png');
+            return url('/images/menu/default/default.png');
         }
     }
 

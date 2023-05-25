@@ -30,7 +30,7 @@ class Comp extends Model
         if ($value) {
             return url('/images/company/' . $value);
         } else {
-            return url('/images/company/logo.png');
+            return url('/images/company/default/logo.png');
         }
     }
 
@@ -39,7 +39,7 @@ class Comp extends Model
         if ($value) {
             return url('/images/company/' . $value);
         } else {
-            return url('/images/company/favicon.ico');
+            return url('/images/company/default/favicon.ico');
         }
     }
 }
