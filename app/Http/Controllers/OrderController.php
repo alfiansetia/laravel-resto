@@ -12,6 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -54,10 +55,10 @@ class OrderController extends Controller
         $total = 0;
 
         foreach ($carts as $cart) {
-            if (($cart->menu->stock < $cart->qty) || $cart->menu->status == 'nonactive') {
+            if (($cart->menu->stock < $cart->qty)) {
                 array_push($fail, $cart);
             }
-            $total = $total + (($cart->qty * $cart->menu->price) - ($cart->menu->price * $cart->menu->disc / 100));
+            $total = $total + (($cart->qty * $cart->menu->price) - ($cart->qty * $cart->menu->price * $cart->menu->disc / 100));
         }
 
         if (count($fail) > 0) {
@@ -170,14 +171,11 @@ class OrderController extends Controller
             $comp = $this->comp;
             $user = Auth::user();
             $img = $comp->logo;
-            if ($comp->logo == '') {
-                $img = 'logodefault.png';
-            }
-            $file = public_path("images/company/$img");
-            $image = base64_encode(file_get_contents($file));
             if ($request->has('type') && $request->type == 'small') {
+                $image = $comp->logo;
                 return view('order.printsmall', compact(['order', 'user', 'image']))->with(['comp' => $this->comp]);
             } elseif ($request->has('type') && $request->type == 'pdf') {
+                $image = public_path('images/company/' . ($comp->getRawOriginal('logo') ?? 'default/logo.png'));
                 $pdf = Pdf::loadview('order.printsmall', ['order' => $order, 'user' => $user, 'comp' => $comp, 'image' => $image]);
                 return $pdf->download($order->number . '_' . date('ymdHis') . '.pdf');
             } else {

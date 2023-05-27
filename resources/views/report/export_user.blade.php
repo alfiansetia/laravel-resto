@@ -36,11 +36,13 @@
                         </div>
                         <div class="col-12">
                             <p class="text-left">
-                                <strong>Sales Report Summary from {{ $param['from'] }} to {{ $param['to'] }}</strong>
+                                <strong>Your Sales Report Summary from {{ $param['from'] }} to {{ $param['to'] }}</strong>
                                 <br>
                                 <strong>Date : {{ date('Y-m-d H:i:s') }}</strong>
                                 <br>
-                                <strong>Export By : {{ auth()->user()->name }}</strong>
+                                <strong>Name : {{ auth()->user()->name }}</strong>
+                                <br>
+                                <strong>Email : {{ auth()->user()->email }}</strong>
                             </p>
                         </div>
                     </div>

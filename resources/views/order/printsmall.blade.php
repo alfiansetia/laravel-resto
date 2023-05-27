@@ -135,7 +135,7 @@
     <header>
     </header>
     <center>
-        <img id="logo" width="100px" height="100px" class="media" src="data:image/png;base64,{{ $image }}" alt="Logo">
+        <img id="logo" width="100px" height="100px" class="media" src="{{ $image }}" alt="Logo">
     </center>
     <p style="text-align: center;">
         <b>

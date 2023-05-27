@@ -115,17 +115,10 @@ class ReportController extends Controller
         $this->validate($request, [
             'from' => 'required|date_format:Y-m-d',
             'to' => 'required|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
-            // 'to' => 'required|date_format:Y-m-d',
         ]);
         $from = Carbon::parse($request->from);
         $to = Carbon::parse($request->to);
         $comp = $this->comp;
-        $img = $comp->logo;
-        if ($comp->logo == '') {
-            $img = 'logodefault.png';
-        }
-        $file = public_path("images/company/$img");
-        $image = base64_encode(file_get_contents($file));
         $param['from'] = $request->from;
         $param['to'] = $request->to;
         $data = [];
@@ -140,6 +133,18 @@ class ReportController extends Controller
                 'total' => ($result ? $result->total : 0) ?? 0,
             ];
         }
-        return view('report.export', compact(['data', 'param', 'image']))->with(['comp' => $comp, 'title' => 'Report']);
+        $image = public_path('images/company/' . ($comp->getRawOriginal('logo') ?? 'default/logo.png'));
+        $view = 'report.export_user';
+        if (auth()->user()->hasRole('admin')) {
+            $view = 'report.export';
+        }
+        $pdf = Pdf::loadview($view, [
+            'data' => $data,
+            'param' => $param,
+            'comp' => $comp,
+            'image' => $image,
+            'title' => 'Report',
+        ]);
+        return $pdf->download('report_' . $request->from . '_' . $request->to . '.pdf');
     }
 }
