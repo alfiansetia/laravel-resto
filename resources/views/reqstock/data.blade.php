@@ -194,14 +194,17 @@
             placeholder: "Select a Menu",
             ajax: {
                 delay: 1000,
-                url: "{{ route('menu.index') }}",
+                url: "{{ route('menu.paginate') }}",
                 data: function(params) {
                     return {
                         name: params.term,
-                        page: params.page
+                        page: params.page || 1,
+                        pageSize: 10,
                     };
                 },
-                processResults: function(data) {
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    params.pageSize = 10
                     return {
                         results: $.map(data.data, function(item) {
                             return {
@@ -209,7 +212,10 @@
                                 text: item.name + ' => ' + item.stock,
                                 id: item.id,
                             }
-                        })
+                        }),
+                        pagination: {
+                            more: (params.page * 10) < data.total
+                        }
                     };
                 },
             }

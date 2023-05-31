@@ -52,6 +52,9 @@ class MenuController extends Controller
             if ($request->has('stock') && $request->stock == 'available') {
                 $data->where('stock', '>', 0);
             }
+            if($request->filled('name')){
+                $data->where('name', 'like', "%$request->name%");
+            }
             $result = $data->paginate($number);
             return response()->json($result);
         } else {
